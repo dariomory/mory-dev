@@ -1,4 +1,9 @@
 /* Global styles */
+::selection {
+    background-color: #83c1c51c;
+    color: #aafaffad;
+}
+
 html {
     background-color: #1e1e2e;
     color: #fdebf3;
