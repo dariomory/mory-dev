@@ -1,0 +1,34 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+const pageTitle = "Posts";
+---
+<Layout pageTitle={pageTitle}>
+    <div class="gif">
+        <img width="300" height="259" alt="RaccoonLaptopGif" src="/blog.webp"/>
+    </div>
+    <h2>Blog</h2>
+    <ul role="list" class="link-card-grid">
+        <Card
+            url="https://medium.com/@morydev/latest-trends-in-ai-development"
+            image="/blog.png"
+            title="Emerging Trends in AI Development"
+            body="Explore the latest advancements and trends in the field of AI and how they are revolutionizing software development."
+        />
+        <Card
+            url="https://medium.com/@morydev/agile-methodology-in-2023"
+            image="/blog.png"
+            title="Agile Methodology in 2023"
+            body="An in-depth analysis of how Agile methodology has evolved and its impact on software development projects."
+        />
+    </ul>
+    <h2>YouTube</h2>
+    <ul role="list" class="link-card-grid">
+        <Card
+            url="https://www.youtube.com/morydev/clean-code-tutorial"
+            image="/youtube.png"
+            title="Clean Code Techniques"
+            body="A comprehensive video tutorial on writing clean, maintainable code for long-term project success."
+        />
+    </ul>
+</Layout>
