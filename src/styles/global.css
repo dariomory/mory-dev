@@ -1,7 +1,7 @@
 /* Global styles */
 ::selection {
-    background-color: #83c1c51c;
-    color: #aafaffad;
+    background-color: #78c2ad60;
+    color: #fdebf3;
 }
 
 html {
@@ -10,7 +10,7 @@ html {
 }
 
 body {
-    max-width: 540px;
+    max-width: 448px;
     margin: 0 auto;
     text-align: justify;
 }
@@ -22,7 +22,7 @@ h1, h2 {
 }
 
 h1 {
-    font-size: 2.6em;
+    font-size: 2.2em;
     margin: 0;
 }
 
@@ -30,14 +30,14 @@ h2 {
     text-decoration: underline #375a7f;
     text-decoration-thickness: 4px;
     text-underline-offset: 6px;
-    font-size: 2.1em;
+    font-size: 1.8em;
     margin-bottom: 0;
 }
 
 /* Paragraphs */
 p {
     font-family: 'Josefin Sans', sans-serif;
-    font-size: 1.1em;
+    font-size: 0.95em;
     hyphens: auto;
     line-height: 1.5;
     text-indent: 1em;
@@ -59,7 +59,7 @@ p {
 
 .title-link, .nav-links {
     font-family: 'Pacifico', cursive;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
 }
 
 .title-link a, .nav-links a {
@@ -75,7 +75,7 @@ p {
 
 .nav-links {
     font-family: 'Josefin Sans', sans-serif;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     text-align: right;
 }
 
@@ -117,11 +117,15 @@ p {
     content: url("/li-in-white.png");
 }
 
+.medium-icon {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23fdebf3' d='M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42c1.87 0 3.38 2.88 3.38 6.42zM24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z'/%3E%3C/svg%3E");
+}
+
 /* Card listing */
 .link-card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-    gap: 1rem;
+    gap: 1.5rem;
     padding: 0;
 }
 
@@ -177,6 +181,10 @@ html.light {
 
 .light .linked-in {
     content: url("/li-in.png");
+}
+
+.light .medium-icon {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%231e1e2e' d='M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42c1.87 0 3.38 2.88 3.38 6.42zM24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z'/%3E%3C/svg%3E");
 }
 
 /* Media Query */

@@ -11,7 +11,7 @@ const { url, image, title, body } = Astro.props;
 <li class="link-card">
     <a href={url}>
         <div class="img">
-            <img width="226" height="127" src={image} class="card-img" alt="ProjectImage">
+            <img width="180" height="101" src={image} class="card-img" alt="ProjectImage">
         </div>
 	<h3 class="card-title">
 	    {title}
@@ -27,6 +27,7 @@ const { url, image, title, body } = Astro.props;
         display: flex;
         background-size: 400%;
         padding: 20px;
+        margin: 1rem 0.5rem;
     }
 
     .link-card > a {
@@ -48,13 +49,13 @@ const { url, image, title, body } = Astro.props;
     h3 {
         margin: 0;
         font-family: 'Josefin Sans', sans-serif;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         font-weight: normal;
         text-align: center;
     }
 
     p {
-        font-size: 1em;
+        font-size: 0.85em;
         line-height: 1.5;
         text-indent: 0;
         text-align: center;
