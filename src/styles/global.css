@@ -46,7 +46,7 @@ p {
 
 /* Gifs */
 .gif {
-    margin: 20px 0 0 0;
+    margin: 10px 0 0 0;
     text-align: center;
 }
 
@@ -125,8 +125,9 @@ p {
 .link-card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-    gap: 1.5rem;
+    gap: 1.5rem 1.5rem;
     padding: 0;
+    margin: 1rem 0 2rem 0;
 }
 
 /* Theme Icon */

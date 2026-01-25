@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/MarkdownWorksLayout.astro
 title: 'SDG Invoervoorziening'
-description: 'Product manager for the Single Digital Gateway (SDG) via CMS and API.'
+description: 'Single Digital Gateway (SDG) - Dutch national portal for cross-border governmental services across the EU.'
 image:
     url: '/sdg.png'
     alt: 'Placeholder for main project image'
