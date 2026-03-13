@@ -13,7 +13,7 @@ worksImage2:
     alt: 'Turf showcase 2'
 platform: Web
 stack: Node, React, GraphQL
-website: https://turf.io
+website: https://useturf.io
 github: 
 ---
 

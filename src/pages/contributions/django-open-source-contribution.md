@@ -17,4 +17,4 @@ website: https://www.djangoproject.com/
 github: https://github.com/django/django
 ---
 
-I'm proud to sponsor the Django project, actively supporting its growth and development. Explore my portfolio to see how I contribute to making Django even more valuable to the web development community.
+ I'm proud to be an official sponsor of the Django project, actively supporting its growth and development. I would like to contribute to making Django even more valuable to the Python community.
