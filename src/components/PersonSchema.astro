@@ -1,0 +1,32 @@
+---
+const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? 'https://mory.dev';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${siteUrl}/#person`,
+    name: 'Dario Mory',
+    url: siteUrl,
+    email: 'dario@mory.dev',
+    jobTitle: 'Lead Software Engineer',
+    description: 'Software engineer with a focus on leadership, open-source contributions, and developer tooling.',
+    sameAs: [
+      'https://github.com/dariomory',
+      'https://medium.com/@dariomory',
+      'https://stackoverflow.com/users/5250453/dario-mory',
+      'https://hackernoon.com/u/dariomory',
+      'https://dariomory.com',
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${siteUrl}/#website`,
+    url: siteUrl,
+    name: 'Dario Mory',
+    author: { '@id': `${siteUrl}/#person` },
+  },
+];
+---
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
