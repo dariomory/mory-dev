@@ -1,5 +1,23 @@
 import rss from '@astrojs/rss';
-import { blogPosts } from '../data/posts';
+
+type BlogFrontmatter = {
+  title: string;
+  url: string;
+  description: string;
+  image: string;
+  pubDate: string;
+};
+
+const blogPostsModules = Object.values(
+  import.meta.glob('../content/blog/*.md', { eager: true }),
+) as Array<{ frontmatter: BlogFrontmatter }>;
+
+const blogPosts = blogPostsModules
+  .map(entry => ({
+    ...entry.frontmatter,
+    pubDate: new Date(entry.frontmatter.pubDate),
+  }))
+  .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
 
 export async function GET(context: { site: URL }) {
   return rss({
