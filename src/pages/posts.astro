@@ -23,7 +23,7 @@ const blogPosts = blogPostsModules
     .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
 const pageTitle = "Posts";
 ---
-<Layout pageTitle={pageTitle}>
+<Layout pageTitle={pageTitle} preloadImage="/posts-hero.webp">
     <div class="gif">
         <div class="raccoon-frame">
             <img
@@ -32,6 +32,8 @@ const pageTitle = "Posts";
                 alt="Illustration for the Posts page"
                 src="/posts-hero.webp"
                 loading="eager"
+                fetchpriority="high"
+                decoding="async"
             />
         </div>
     </div>

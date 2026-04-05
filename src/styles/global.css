@@ -64,11 +64,13 @@ p {
     width: 100%;
     max-width: 100%;
     aspect-ratio: 16 / 9;
-    margin: 1.25rem 0 2rem;
+    margin: 1.75rem 0 2rem;
     position: relative;
     overflow: hidden;
     filter: drop-shadow(0 0 24px var(--raccoon-glow-1));
     animation: pulse-glow 3s ease-in-out infinite;
+    will-change: filter;
+    transform: translateZ(0);
 }
 
 .raccoon-frame img {
@@ -249,6 +251,11 @@ html.light {
 @media only screen and (max-width: 600px) {
     body {
         width: 320px;
+        padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
+    }
+
+    main {
+        padding-top: 0.75rem;
     }
 
     .nav-bar {

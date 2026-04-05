@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 const pageTitle = "Dario Mory";
 ---
-<Layout pageTitle={pageTitle}>
+<Layout pageTitle={pageTitle} preloadImage="/raccoon-coder.webp">
     <div class="gif">
         <div class="raccoon-frame">
             <img
@@ -11,6 +11,8 @@ const pageTitle = "Dario Mory";
                 alt="Illustration of a raccoon coding at a desk with monitors at night"
                 src="/raccoon-coder.webp"
                 loading="eager"
+                fetchpriority="high"
+                decoding="async"
             />
         </div>
     </div>
