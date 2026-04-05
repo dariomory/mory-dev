@@ -32,9 +32,6 @@
         if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
             return localStorage.getItem('theme');
         }
-        if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-            return 'light';
-        }
         return 'dark';
     })();
 
@@ -43,8 +40,6 @@
     } else {
         document.documentElement.classList.add('light');
     }
-
-    window.localStorage.setItem('theme', theme);
 
     const handleToggleClick = () => {
         const element = document.documentElement;

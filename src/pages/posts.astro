@@ -25,7 +25,15 @@ const pageTitle = "Posts";
 ---
 <Layout pageTitle={pageTitle}>
     <div class="gif">
-        <img width="180" height="160" alt="RaccoonLaptopGif" src="/blog.webp"/>
+        <div class="raccoon-frame">
+            <img
+                width="800"
+                height="450"
+                alt="Illustration for the Posts page"
+                src="/posts-hero.webp"
+                loading="eager"
+            />
+        </div>
     </div>
     <h2>Blog</h2>
     <ul role="list" class="link-card-grid">
@@ -40,12 +48,3 @@ const pageTitle = "Posts";
         ))}
     </ul>
 </Layout>
-<style>
-    .gif {
-        margin-bottom: 40px;
-    }
-    
-    .gif img {
-        margin: 0 20px;
-    }
-</style>
