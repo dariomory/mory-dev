@@ -163,6 +163,10 @@ p {
     content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23fdebf3' d='M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42c1.87 0 3.38 2.88 3.38 6.42zM24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z'/%3E%3C/svg%3E");
 }
 
+.reddit-icon {
+    content: url("/reddit-white.svg");
+}
+
 /* Card listing */
 .link-card-grid {
     display: grid;
@@ -234,6 +238,10 @@ html.light {
     content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%231e1e2e' d='M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42c1.87 0 3.38 2.88 3.38 6.42zM24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z'/%3E%3C/svg%3E");
 }
 
+.light .reddit-icon {
+    content: url("/reddit.svg");
+}
+
 .light .raccoon-frame {
     --raccoon-glow-1: rgba(120, 194, 173, 0.38);
     --raccoon-glow-2: rgba(55, 90, 127, 0.42);
@@ -272,5 +280,24 @@ html.light {
 
     .nav-links a {
         margin: 0 11px;
+    }
+
+    /* Footer: min 44×44px tap target (iOS HIG), icon centered inside */
+    footer .foot-btn {
+        box-sizing: border-box;
+        min-width: 44px;
+        min-height: 44px;
+        width: 44px;
+        height: 44px;
+        padding: 10px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    footer .foot-btn > span {
+        display: block;
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
     }
 }

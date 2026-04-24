@@ -9,6 +9,7 @@ const year = new Date().getFullYear();
                 <li><a href="mailto:dario@mory.dev" class="foot-btn"><span class="mail-icon">Email</span></a></li>
                 <li><a href="https://stackoverflow.com/users/5250453/dario-mory" target="_blank" class="foot-btn"><span class="so-icon">Stackoverflow</span></a></li>
                 <li><a href="https://medium.com/@dariomory" target="_blank" class="foot-btn"><span class="medium-icon">Medium</span></a></li>
+                <li><a href="https://www.reddit.com/user/dariomory/" target="_blank" class="foot-btn"><span class="reddit-icon">Reddit</span></a></li>
                 <li><a href="/rss.xml" target="_blank" class="foot-btn"><span class="rss-icon">RSS</span></a></li>
             </ul>
         </div>
@@ -24,11 +25,16 @@ const year = new Date().getFullYear();
         cursor: default;
         list-style: none;
         padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     ul.icons li {
         display: inline-block;
-        padding: 0 0.5rem;
+        padding: 0;
     }
 
     div {
@@ -42,5 +48,20 @@ const year = new Date().getFullYear();
     small a {
         color: #375a7f;
         text-decoration: none;
+    }
+
+    @media only screen and (max-width: 600px) {
+        ul.icons {
+            gap: 0.5rem 0.45rem;
+            /* space before the copyright line */
+            margin-bottom: 1.5rem;
+        }
+
+        footer {
+            /* a bit less space above the icon row than desktop (4rem) */
+            margin-top: 2.5rem;
+            /* room above home indicator on notched phones */
+            padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+        }
     }
 </style>
