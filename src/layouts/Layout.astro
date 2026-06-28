@@ -4,14 +4,41 @@ import { fade } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import PersonSchema from '../components/PersonSchema.astro';
+import SeoHead from '../components/SeoHead.astro';
 import '../styles/global.css';
-const { pageTitle, preloadImage } = Astro.props;
+
+interface Props {
+	pageTitle: string;
+	preloadImage?: string;
+	description?: string;
+	canonicalPath?: string;
+	ogImage?: string;
+	ogImageAlt?: string;
+	ogImageWidth?: number;
+	ogImageHeight?: number;
+	ogType?: string;
+	twitterCard?: 'summary' | 'summary_large_image';
+	jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
+}
+
+const {
+	pageTitle,
+	preloadImage,
+	description,
+	canonicalPath,
+	ogImage,
+	ogImageAlt,
+	ogImageWidth,
+	ogImageHeight,
+	ogType,
+	twitterCard,
+	jsonLd,
+} = Astro.props;
 ---
 <!DOCTYPE html>
 <html transition:animate="none" lang="en">
 	<head>
         <meta charset="utf-8" />
-        <meta name="description" content="Astro description">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
@@ -20,6 +47,18 @@ const { pageTitle, preloadImage } = Astro.props;
         <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Pacifico&display=swap" rel="stylesheet">        
         <meta name="generator" content={Astro.generator} />
         <title>{pageTitle}</title>
+        <SeoHead
+            pageTitle={pageTitle}
+            description={description}
+            canonicalPath={canonicalPath}
+            ogImage={ogImage}
+            ogImageAlt={ogImageAlt}
+            ogImageWidth={ogImageWidth}
+            ogImageHeight={ogImageHeight}
+            ogType={ogType}
+            twitterCard={twitterCard}
+            jsonLd={jsonLd}
+        />
         <PersonSchema />
         <ViewTransitions />
 	</head>

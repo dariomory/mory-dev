@@ -1,0 +1,82 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BookCard from '../../components/BookCard.astro';
+import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
+
+const books = (await getCollection('books')).sort(
+	(a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime(),
+);
+
+const booksWithCovers = await Promise.all(
+	books.map(async (book, index) => ({
+		book,
+		index,
+		cover: await getImage({
+			src: book.data.coverImage,
+			width: 168,
+			format: 'webp',
+		}),
+	})),
+);
+
+const pageTitle = 'Books by Dario Mory — Tech, Leadership & Hidden Systems';
+const description =
+	'Books on technology, power, and the systems behind everyday life — written by engineering leader Dario Mory.';
+---
+<Layout
+	pageTitle={pageTitle}
+	preloadImage="/books-hero.webp"
+	description={description}
+	canonicalPath="/books/"
+>
+	<div class="gif">
+		<div class="raccoon-frame">
+			<img
+				width="800"
+				height="450"
+				alt="Illustration for the Books page"
+				src="/books-hero.webp"
+				loading="eager"
+				fetchpriority="high"
+				decoding="async"
+			/>
+		</div>
+	</div>
+	<h1>Books</h1>
+	{booksWithCovers.length === 0 ? (
+		<p class="empty-state">No books published yet — check back soon.</p>
+	) : (
+		<ul role="list" class="link-card-grid">
+			{booksWithCovers.map(({ book, cover, index }) => (
+				<BookCard
+					url={`/books/${book.slug}/`}
+					image={cover}
+					imageAlt={`Cover of ${book.data.title} by ${book.data.author}`}
+					title={book.data.title}
+					body={book.data.tagline}
+					year={String(book.data.publishDate.getFullYear())}
+					loading={index === 0 ? 'eager' : 'lazy'}
+				/>
+			))}
+		</ul>
+	)}
+</Layout>
+<style>
+	h1 {
+		font-size: 1.8em;
+		text-decoration: underline #375a7f;
+		text-decoration-thickness: 4px;
+		text-underline-offset: 6px;
+		margin-top: 0;
+		margin-bottom: 1rem;
+	}
+
+	.empty-state {
+		font-family: 'Josefin Sans', sans-serif;
+		text-align: center;
+		text-indent: 0;
+		color: #c9b8d8;
+		margin: 2rem 0;
+	}
+</style>

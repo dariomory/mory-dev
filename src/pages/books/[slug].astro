@@ -1,0 +1,377 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+	const books = await getCollection('books');
+	return books.map((book) => ({
+		params: { slug: book.slug },
+		props: { book },
+	}));
+}
+
+interface Props {
+	book: CollectionEntry<'books'>;
+}
+
+const { book } = Astro.props;
+const { title, subtitle, author, coverImage, publishDate, publisher, format, isbn, buyLinks, quotes, seo, status } =
+	book.data;
+const siteUrl = Astro.site?.href ?? 'https://mory.dev';
+const canonicalPath = `/books/${book.slug}/`;
+
+const cover = await getImage({
+	src: coverImage,
+	width: 400,
+	format: 'webp',
+});
+
+const ogCover = await getImage({
+	src: coverImage,
+	width: 800,
+	format: 'webp',
+});
+
+const ogImageUrl = new URL(ogCover.src, siteUrl).href;
+
+const formatLabels: Record<string, string> = {
+	ebook: 'Ebook',
+	print: 'Print',
+	audiobook: 'Audiobook',
+};
+
+const bookFormatSchema: Record<string, string> = {
+	ebook: 'https://schema.org/EBook',
+	print: 'https://schema.org/Paperback',
+	audiobook: 'https://schema.org/AudiobookFormat',
+};
+
+const publishDateFormatted = publishDate.toLocaleDateString('en-US', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+	timeZone: 'UTC',
+});
+
+// isbn field in frontmatter stores an ASIN for display; real ISBNs use numeric format.
+// Emit ASIN as a typed identifier so validators don't reject it as a malformed isbn.
+const identifiers = isbn
+	? [{ '@type': 'PropertyValue', propertyID: 'ASIN', value: isbn }]
+	: [];
+
+const personId = `${siteUrl.replace(/\/$/, '')}/#person`;
+
+const bookSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'Book',
+	name: title,
+	...(subtitle && { alternativeHeadline: subtitle }),
+	author: {
+		'@type': 'Person',
+		'@id': personId,
+		name: author,
+		url: siteUrl,
+	},
+	datePublished: publishDate.toISOString().split('T')[0],
+	...(identifiers.length > 0 && { identifier: identifiers }),
+	image: ogImageUrl,
+	description: seo.description,
+	bookFormat: bookFormatSchema[format],
+	...(publisher && {
+		publisher: {
+			'@type': 'Organization',
+			name: publisher,
+		},
+	}),
+	url: new URL(canonicalPath, siteUrl).href,
+};
+
+const breadcrumbSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{
+			'@type': 'ListItem',
+			position: 1,
+			name: 'Home',
+			item: siteUrl,
+		},
+		{
+			'@type': 'ListItem',
+			position: 2,
+			name: 'Books',
+			item: new URL('/books/', siteUrl).href,
+		},
+		{
+			'@type': 'ListItem',
+			position: 3,
+			name: title,
+			item: new URL(canonicalPath, siteUrl).href,
+		},
+	],
+};
+
+const { Content } = await book.render();
+const coverAlt = `Cover of ${title} by ${author}`;
+---
+<Layout
+	pageTitle={seo.title}
+	description={seo.description}
+	canonicalPath={canonicalPath}
+	ogImage={ogImageUrl}
+	ogImageAlt={`Cover of ${title} by ${author}`}
+	ogImageWidth={ogCover.attributes.width}
+	ogImageHeight={ogCover.attributes.height}
+	ogType="book"
+	jsonLd={[bookSchema, breadcrumbSchema]}
+>
+	<article class="book-detail">
+		<figure class="cover">
+			<img
+				src={cover.src}
+				width={cover.attributes.width}
+				height={cover.attributes.height}
+				class="book-cover-img"
+				alt={coverAlt}
+				loading="eager"
+				fetchpriority="high"
+				decoding="async"
+			/>
+		</figure>
+
+		<header>
+			<h1>{title}</h1>
+			{subtitle && <p class="subtitle">{subtitle}</p>}
+			<p class="author">by {author}</p>
+			{status === 'archived' && <p class="status-badge"><small>Archived</small></p>}
+		</header>
+
+		<dl class="metadata">
+			<div>
+				<dt>Published</dt>
+				<dd>{publishDateFormatted}</dd>
+			</div>
+			{publisher && (
+				<div>
+					<dt>Publisher</dt>
+					<dd>{publisher}</dd>
+				</div>
+			)}
+			<div>
+				<dt>Format</dt>
+				<dd>{formatLabels[format]}</dd>
+			</div>
+			{isbn && (
+				<div>
+					<dt>ISBN</dt>
+					<dd>{isbn}</dd>
+				</div>
+			)}
+		</dl>
+
+		<div class="description">
+			<Content />
+		</div>
+
+		{buyLinks.length > 0 && (
+			<section class="buy-links" aria-label="Where to buy">
+				<h2>Get the book</h2>
+				<ul role="list">
+					{buyLinks.map((link) => (
+						<li>
+							<a
+								class="buy-button"
+								href={link.url}
+								target="_blank"
+								rel="nofollow sponsored noopener"
+							>
+								{link.label}
+							</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		)}
+
+		{quotes && quotes.length > 0 && (
+			<section class="pull-quote" aria-label="Pull quote">
+				{quotes.map((quote) => (
+					<blockquote>
+						<p>{quote.text}</p>
+						{quote.source && <footer>— {quote.source}</footer>}
+					</blockquote>
+				))}
+			</section>
+		)}
+	</article>
+</Layout>
+<style>
+	.book-detail {
+		font-family: 'Josefin Sans', sans-serif;
+		margin-top: 2rem;
+	}
+
+	.cover {
+		margin: 0 0 1.75rem;
+		text-align: center;
+	}
+
+	.cover img {
+		max-width: 240px;
+		width: 100%;
+		height: auto;
+	}
+
+	header {
+		text-align: center;
+		margin-bottom: 1.5rem;
+	}
+
+	h1 {
+		font-family: 'Pacifico', cursive;
+		font-size: 1.8em;
+		font-weight: normal;
+		margin: 0 0 0.5rem;
+		text-decoration: none;
+	}
+
+	.subtitle {
+		font-size: 1rem;
+		color: #c9b8d8;
+		margin: 0 0 0.5rem;
+		text-indent: 0;
+		text-align: center;
+	}
+
+	.author {
+		font-size: 0.95em;
+		margin: 0;
+		text-indent: 0;
+		text-align: center;
+	}
+
+	.status-badge {
+		margin: 0.6rem 0 0;
+		text-align: center;
+		text-indent: 0;
+	}
+
+	.status-badge small {
+		background-color: #584966;
+		color: #fdebf3;
+		border-radius: 6px;
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.75rem;
+		font-weight: 600;
+		padding: 0.3em 0.6em 0.2em;
+	}
+
+	.metadata {
+		display: grid;
+		gap: 0.75rem;
+		margin: 0 0 1.5rem;
+		padding: 1rem;
+		border-radius: 8px;
+		background: rgba(88, 73, 102, 0.35);
+	}
+
+	.metadata div {
+		display: grid;
+		grid-template-columns: 6.5rem 1fr;
+		gap: 0.5rem;
+		align-items: baseline;
+	}
+
+	dt {
+		font-size: 0.75em;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		color: #c9b8d8;
+		margin: 0;
+	}
+
+	dd {
+		margin: 0;
+		font-size: 0.9em;
+		text-indent: 0;
+	}
+
+	.description :global(p) {
+		margin-bottom: 1em;
+	}
+
+	h2 {
+		font-size: 1.4em;
+		margin-top: 1.5rem;
+	}
+
+	.buy-links ul {
+		list-style: none;
+		padding: 0;
+		margin: 0.75rem 0 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		justify-content: center;
+	}
+
+	.buy-button {
+		display: inline-block;
+		background: transparent;
+		border: 2px solid #78c2ad;
+		border-radius: 8px;
+		color: #fdebf3;
+		font: 600 14px 'Josefin Sans', sans-serif;
+		padding: 8px 16px;
+		text-decoration: none;
+		transition: background-color 0.4s, color 0.4s;
+	}
+
+	.buy-button:hover,
+	.buy-button:focus-visible {
+		background-color: #78c2ad;
+		color: #1e1e2e;
+		text-decoration: none;
+	}
+
+	.buy-button:focus-visible {
+		outline: 2px solid #375a7f;
+		outline-offset: 2px;
+	}
+
+	:global(.light) .buy-button {
+		color: #1e1e2e;
+	}
+
+	:global(.light) .buy-button:hover,
+	:global(.light) .buy-button:focus-visible {
+		color: #1e1e2e;
+	}
+
+	.pull-quote blockquote {
+		margin: 1rem 0;
+		padding: 0 0 0 1rem;
+		border-left: 3px solid #78c2ad;
+	}
+
+	.pull-quote blockquote p {
+		font-style: italic;
+		margin: 0 0 0.5rem;
+		text-indent: 0;
+	}
+
+	.pull-quote blockquote footer {
+		font-size: 0.85em;
+		color: #c9b8d8;
+		text-indent: 0;
+	}
+
+	@media only screen and (max-width: 600px) {
+		.cover img {
+			max-width: 196px;
+		}
+	}
+</style>

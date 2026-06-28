@@ -1,0 +1,113 @@
+---
+interface Props {
+	url: string;
+	image: { src: string; attributes: { width: number; height: number } };
+	imageAlt: string;
+	title: string;
+	body: string;
+	year: string;
+	loading?: 'lazy' | 'eager';
+}
+
+const { url, image, imageAlt, title, body, year, loading = 'lazy' } = Astro.props;
+---
+<li class="link-card">
+	<a href={url}>
+		<div class="img">
+			<img
+				src={image.src}
+				width={image.attributes.width}
+				height={image.attributes.height}
+				class="card-img book-cover-img"
+				alt={imageAlt}
+				loading={loading}
+				decoding="async"
+			/>
+		</div>
+		<h3 class="card-title">{title}</h3>
+		<p class="card-meta">{year}</p>
+		<p class="card-txt">{body}</p>
+	</a>
+</li>
+<style>
+	.link-card {
+		--thumb-width: 148px;
+		--thumb-height: 94px;
+		list-style: none;
+		display: flex;
+		background-size: 400%;
+		padding: 0 10px;
+	}
+
+	.link-card > a {
+		width: 100%;
+		text-decoration: none;
+		line-height: 1.4;
+		border-radius: 8px;
+		color: #fdebf3;
+	}
+
+	.link-card > a:focus-visible {
+		outline: 2px solid #78c2ad;
+		outline-offset: 4px;
+	}
+
+	.img {
+		text-align: center;
+		width: var(--thumb-width);
+		height: var(--thumb-height);
+		margin: 0 auto 0.5rem auto;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: visible;
+	}
+
+	img {
+		max-width: calc(var(--thumb-width) - 8px);
+		max-height: calc(var(--thumb-height) - 8px);
+		width: auto;
+		height: auto;
+		display: block;
+		flex-shrink: 0;
+		object-fit: contain;
+		image-rendering: auto;
+	}
+
+	h3 {
+		margin: 0;
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 1rem;
+		font-weight: normal;
+		text-align: center;
+	}
+
+	.card-meta {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.7em;
+		color: #c9b8d8;
+		text-align: center;
+		margin: 0.15rem 0;
+		text-indent: 0;
+	}
+
+
+	p {
+		font-size: 0.75em;
+		line-height: 1.5;
+		text-indent: 0;
+		text-align: center;
+		margin: 0.1rem 0;
+	}
+
+	.link-card:hover {
+		transform: scale(1.05);
+	}
+
+	@media only screen and (max-width: 600px) {
+		.link-card {
+			--thumb-width: 168px;
+			--thumb-height: 107px;
+		}
+	}
+</style>

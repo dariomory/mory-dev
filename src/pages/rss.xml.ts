@@ -1,4 +1,5 @@
 import rss from '@astrojs/rss';
+import { getCollection } from 'astro:content';
 
 type BlogFrontmatter = {
   title: string;
@@ -19,16 +20,28 @@ const blogPosts = blogPostsModules
   }))
   .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
 
+const books = (await getCollection('books')).sort(
+  (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime(),
+);
+
 export async function GET(context: { site: URL }) {
   return rss({
     title: 'Dario Mory',
-    description: 'Posts and articles by Dario Mory',
+    description: 'Posts, books, and articles by Dario Mory',
     site: context.site,
-    items: blogPosts.map(post => ({
-      title: post.title,
-      link: post.url,
-      description: post.description,
-      pubDate: post.pubDate,
-    })),
+    items: [
+      ...blogPosts.map(post => ({
+        title: post.title,
+        link: post.url,
+        description: post.description,
+        pubDate: post.pubDate,
+      })),
+      ...books.map(book => ({
+        title: book.data.title,
+        link: `/books/${book.slug}/`,
+        description: book.data.seo.description,
+        pubDate: book.data.publishDate,
+      })),
+    ].sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime()),
   });
 }

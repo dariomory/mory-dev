@@ -18,3 +18,5 @@ github:
 ---
 
 Led the cloud migration of KLM's airport slot management system, replacing legacy scheduling infrastructure with a microservices platform on Kubernetes and GCP. Designed the architecture using Python (FastAPI) for API services and C++ for high-performance scheduling logic, and modelled the overall system design in Enterprise Architect. Led API development for real-time integration with existing legacy systems, established CI/CD pipelines and infrastructure-as-code practices, and worked closely with product owners and stakeholders throughout delivery.
+
+That experience also shaped [*The KLM Code*](/books/klm-code/) — a book about the hidden stories in tech, power, and politics behind the airline.
