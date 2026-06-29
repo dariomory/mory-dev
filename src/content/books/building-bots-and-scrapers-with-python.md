@@ -9,6 +9,8 @@ status: archived
 format: ebook
 isbn: 'B08VPVLDYL'
 buyLinks:
+  - label: 'Leanpub'
+    url: 'https://leanpub.com/bots-and-scrapers-python'
   - label: 'Amazon Kindle'
     url: 'https://www.amazon.com/dp/B08VPVLDYL'
 seo:
