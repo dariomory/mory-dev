@@ -18,3 +18,5 @@ github: https://github.com/django/django
 ---
 
  I'm proud to be an official sponsor of the Django project, actively supporting its growth and development. I would like to contribute to making Django even more valuable to the Python community.
+
+The support is not abstract — Django runs in production behind work I have delivered, including the [Artis booking and ticketing system](/projects/artis-booking-ticketing-system/) and the [SDG Invoervoorziening](/projects/sdg-cms-api-development/) portal for Dutch government services.

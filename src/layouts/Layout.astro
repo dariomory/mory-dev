@@ -40,6 +40,7 @@ const {
 	<head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <script is:inline>document.documentElement.classList.add('js');</script>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -70,5 +71,40 @@ const {
 	    <slot />
             <Footer />
         </main>
+        <script>
+            // Images decode after first paint, so each one clears its own spinner.
+            // Runs on astro:page-load so it also covers view-transition navigations.
+            function whenSettled(img, done) {
+                // Cached images can already be complete before this runs.
+                if (img.complete && img.naturalWidth > 0) {
+                    done();
+                    return;
+                }
+                img.addEventListener('load', done, { once: true });
+                // On error too, otherwise a broken image spins forever.
+                img.addEventListener('error', done, { once: true });
+            }
+
+            function initImageLoaders() {
+                document.querySelectorAll('.link-card .card-img').forEach((img) => {
+                    const slot = img.closest('.img');
+                    if (slot?.classList.contains('is-loaded')) return;
+                    whenSettled(img, () => {
+                        img.classList.add('is-loaded');
+                        slot?.classList.add('is-loaded');
+                    });
+                });
+
+                document.querySelectorAll('.raccoon-frame > img').forEach((img) => {
+                    const loader = img.parentElement.querySelector('.frame-loader');
+                    if (!loader || loader.classList.contains('is-loaded')) return;
+                    // No class on the image itself — it is the LCP element and must
+                    // not be held at opacity 0 waiting on a transition.
+                    whenSettled(img, () => loader.classList.add('is-loaded'));
+                });
+            }
+
+            document.addEventListener('astro:page-load', initImageLoaders);
+        </script>
 	</body>
 </html>

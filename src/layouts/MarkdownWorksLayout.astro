@@ -23,9 +23,6 @@ const ogImage = isRaster(worksImages[0]?.url)
       : undefined;
 ---
 <BaseLayout pageTitle={pageTitle} description={frontmatter.description} ogImage={ogImage} ogImageAlt={frontmatter.image?.alt}>
-    <div class="gif">
-        <img width="220" height="180" alt="Illustration of a raccoon working on a laptop" src="/laptop.webp" loading="eager" fetchpriority="high" decoding="async"/>
-    </div>
     <h2>{frontmatter.title}</h2>
     <slot />
     {frontmatter.platform && <p><small>PLATFORM</small>{frontmatter.platform}</p>}

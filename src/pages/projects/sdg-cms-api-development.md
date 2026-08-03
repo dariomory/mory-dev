@@ -18,3 +18,5 @@ github: https://github.com/maykinmedia/sdg-invoervoorziening
 ---
 
 As the project lead for the SDG Invoervoorziening, I guided our team through the development of a robust CMS and API, focused on optimizing product management for Dutch government entities. Our work not only enhanced the uniformity and accessibility of this data but also established a framework for their efficient update and reuse. This project stands as a testament to our commitment to improving public sector information dissemination and collaboration.
+
+Both the CMS and the API were built on [Django](/contributions/django-open-source-contribution/), the same framework behind the [Artis ticketing platform](/projects/artis-booking-ticketing-system/).

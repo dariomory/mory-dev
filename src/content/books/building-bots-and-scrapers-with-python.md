@@ -23,3 +23,5 @@ The web is full of data. Most of it is not behind an API. *Building Bots and Scr
 The book starts from first principles: how HTTP works, what browsers do that `requests` does not, and why naively hitting a page in a loop will get you blocked within hours. From there it builds progressively through HTML parsing with BeautifulSoup, JavaScript-rendered pages with Playwright, handling sessions and cookies, rotating proxies, VPNs, and structuring scrapers so they survive site changes without requiring a complete rewrite.
 
 The later chapters cover scheduling, storage, rate limiting, and the ethics and legality of automated data collection — because writing a bot that works is only half the problem. Whether you are building a price monitor, a research crawler, or an internal automation tool, the patterns here are designed to be reused, not thrown away after one project.
+
+These are not hypothetical patterns. The same techniques drive the automation and internal tooling built for [Songlifty](/projects/songlifty-backend-migration-automation/), a music promotion platform operating across Spotify, YouTube, and social media at high volume.

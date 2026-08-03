@@ -17,4 +17,4 @@ website: https://www.artis.nl
 github:
 ---
 
-I contributed to the development of the online booking and ticketing system for Artis in Amsterdam. Built with Django, the platform manages the full visitor journey - from selecting time slots and purchasing tickets to generating QR-coded e-tickets and enforcing daily capacity limits. The system was designed to handle high-traffic periods such as holidays and weekends, with robust queue management and real-time availability updates. 
+I contributed to the development of the online booking and ticketing system for Artis in Amsterdam. Built with [Django](/contributions/django-open-source-contribution/), the platform manages the full visitor journey - from selecting time slots and purchasing tickets to generating QR-coded e-tickets and enforcing daily capacity limits. The system was designed to handle high-traffic periods such as holidays and weekends, with robust queue management and real-time availability updates. 

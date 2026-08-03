@@ -18,3 +18,5 @@ github:
 ---
 
 This project centered on a critical system-wide migration and the development of internal management tools for a high-traffic environment.
+
+Much of the automation work here — headless browser drivers, session handling, and keeping long-running jobs alive against sites that change underneath you — is the same ground covered in [*Building Bots and Scrapers with Python*](/books/building-bots-and-scrapers-with-python/).

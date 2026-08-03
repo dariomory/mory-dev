@@ -97,8 +97,7 @@ p {
 }
 
 .raccoon-frame {
-    /* Molding width scales with the viewport so it stays in proportion on phones */
-    --frame-w: clamp(5px, 0.75vw, 8px);
+    --frame-w: 4px;
     box-sizing: border-box;
     border-radius: 3px;
     display: block;
@@ -132,28 +131,28 @@ p {
         0 10px 24px -12px rgba(0, 0, 0, 0.45);
 }
 
-/* Outer lip of the molding: bright edge catching the light, dark seat beneath it */
+/*
+ * Profile lines are 1px each at this width. The molding is only 4px, so a 2px
+ * lip plus a 2px liner would cover the brass completely and leave no metal.
+ */
 .raccoon-frame::before {
     content: "";
     position: absolute;
     inset: calc(-1 * var(--frame-w));
     border-radius: inherit;
-    box-shadow:
-        inset 0 0 0 1px rgba(255, 248, 224, 0.26),
-        inset 0 0 0 2px rgba(74, 58, 24, 0.2);
+    box-shadow: inset 0 0 0 1px rgba(255, 248, 224, 0.26);
     pointer-events: none;
     z-index: 1;
 }
 
-/* Inner profile: gold fillet, dark liner, then a soft vignette onto the artwork */
+/* Inner profile: dark liner against the artwork, then a soft vignette */
 .raccoon-frame::after {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: 1px;
     box-shadow:
-        inset 0 0 0 1px rgba(246, 231, 180, 0.2),
-        inset 0 0 0 2px rgba(38, 30, 12, 0.5),
+        inset 0 0 0 1px rgba(38, 30, 12, 0.55),
         inset 0 0 12px rgba(0, 0, 0, 0.16);
     pointer-events: none;
     z-index: 1;
@@ -278,6 +277,122 @@ p {
 
 main > ul.link-card-grid:last-of-type {
     margin-bottom: 2.5rem;
+}
+
+/*
+ * Thumbnail loading state. Card text is already in the static HTML, so only the
+ * lazy/async images need one. Gated behind `.js` because the fade-in is cleared
+ * by script — without it, a JS-less visitor would be left with a blank slot.
+ */
+/* Thumbnails: a quiet sweep across the slot, then the image fades over it */
+.js .link-card .img {
+    border-radius: 8px;
+    background-color: rgba(253, 235, 243, 0.035);
+    background-image: linear-gradient(100deg,
+        rgba(253, 235, 243, 0) 25%,
+        rgba(253, 235, 243, 0.075) 50%,
+        rgba(253, 235, 243, 0) 75%);
+    background-size: 220% 100%;
+    background-repeat: no-repeat;
+    animation: thumb-shimmer 1.6s ease-in-out infinite;
+}
+
+/* Clearing both stops the animation costing frames for the rest of the session */
+.js .link-card .img.is-loaded {
+    background: none;
+    animation: none;
+}
+
+/* Thumbnails do fade in — they are never the LCP element */
+.js .link-card .card-img {
+    opacity: 0;
+    transition: opacity 0.45s ease;
+}
+
+.js .link-card .card-img.is-loaded {
+    opacity: 1;
+}
+
+@keyframes thumb-shimmer {
+    from { background-position: 140% 0; }
+    to { background-position: -40% 0; }
+}
+
+/*
+ * Hero loader sits behind the artwork. The hero img is inset:0 / object-fit:cover,
+ * so it covers this the moment it paints — which means the LCP element itself
+ * never gets an opacity transition and its paint time is unaffected.
+ */
+.js .raccoon-frame .frame-loader {
+    --spinner-size: 34px;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* Opaque: the frame's brass is clipped to border-box, so it fills the area
+       behind the artwork. A translucent well would just read as tinted brass. */
+    background-color: #20202f;
+    box-shadow:
+        inset 0 1px 3px rgba(0, 0, 0, 0.45),
+        inset 0 -1px 0 rgba(253, 235, 243, 0.05);
+}
+
+/* Spinner track: a ring recessed into the well, lit from below like an engraving */
+.js .raccoon-frame .frame-loader::before,
+.js .raccoon-frame .frame-loader::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--spinner-size);
+    height: var(--spinner-size);
+    margin: calc(var(--spinner-size) / -2) 0 0 calc(var(--spinner-size) / -2);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.js .raccoon-frame .frame-loader::before {
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.6),
+        inset 0 -1px 1px rgba(253, 235, 243, 0.07),
+        0 1px 0 rgba(253, 235, 243, 0.04);
+}
+
+/* The sweep itself, in the frame's brass. Masked to a 3px ring so it rides
+   inside the track rather than covering it. */
+.js .raccoon-frame .frame-loader::after {
+    background: conic-gradient(from 0deg,
+        rgba(201, 177, 132, 0) 0deg,
+        rgba(201, 177, 132, 0.15) 140deg,
+        rgba(201, 177, 132, 0.95) 320deg,
+        rgba(201, 177, 132, 0) 360deg);
+    -webkit-mask: radial-gradient(farthest-side,
+        transparent calc(100% - 3px), #000 calc(100% - 3px));
+    mask: radial-gradient(farthest-side,
+        transparent calc(100% - 3px), #000 calc(100% - 3px));
+    animation: frame-spin 0.9s linear infinite;
+}
+
+.js .raccoon-frame .frame-loader.is-loaded {
+    display: none;
+}
+
+@keyframes frame-spin {
+    to { transform: rotate(1turn); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .js .link-card .img {
+        animation: none;
+    }
+
+    .js .link-card .card-img {
+        transition-duration: 0.01ms;
+    }
+
+    /* Hold a static arc rather than spinning — still reads as "waiting" */
+    .js .raccoon-frame .frame-loader::after {
+        animation: none;
+    }
 }
 
 .book-cover-img {
