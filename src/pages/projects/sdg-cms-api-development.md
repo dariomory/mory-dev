@@ -9,7 +9,7 @@ worksImage1:
     url: '/sdg_1.gif'
     alt: 'Placeholder for first project detail image'
 worksImage2:
-    url: '/sdg_2.gif'
+    url: '/sdg_2.webp'
     alt: 'Placeholder for second project detail image'
 platform: Web
 stack: Python, Django

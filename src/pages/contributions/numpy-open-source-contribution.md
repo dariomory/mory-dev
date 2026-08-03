@@ -6,10 +6,10 @@ image:
     url: '/numpy.svg'
     alt: 'Numpy logo'
 worksImage1:
-    url: '/blackhole.png'
+    url: '/blackhole.webp'
     alt: 'Blackhole'
 worksImage2:
-    url: '/gravitional.png'
+    url: '/gravitional.webp'
     alt: 'Grabviional'
 platform: All
 stack: Python

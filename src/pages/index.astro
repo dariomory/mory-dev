@@ -1,8 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Newsletter from '../components/Newsletter.astro';
 const pageTitle = "Dario Mory";
+const description = "Dario Mory — engineering leader who still writes the code. Speaker on AI engineering and software leadership. Previously KLM and the EU Single Digital Gateway.";
 ---
-<Layout pageTitle={pageTitle} preloadImage="/raccoon-coder.webp">
+<Layout pageTitle={pageTitle} description={description} canonicalPath="/" preloadImage="/raccoon-coder.webp">
     <div class="gif">
         <div class="raccoon-frame">
             <img
@@ -18,7 +20,6 @@ const pageTitle = "Dario Mory";
     </div>
     <h1>Dario Mory</h1>
     <small>Engineering Leader</small>
-    <p class="tagline">Engineering leader who still writes the code.</p>
     <h2>About</h2>
     <p>
         I build and lead engineering teams that ship software and AI-powered products-from prototype to production. Past work includes KLM's airport operations stack, the Single Digital Gateway programme for Dutch and EU public services, and startups across Europe and the US.
@@ -27,28 +28,66 @@ const pageTitle = "Dario Mory";
         Code that ships, teams that grow-that's what matters. Cloud migrations, high-traffic APIs, and early-stage products taken to production are the kinds of problems that keep things interesting.
     </p>
     <p>
-        I speak at conferences on AI engineering and software leadership. Organizing an event? Get in touch.
+        I speak at conferences on AI engineering and software leadership. Organizing an event? <a href="mailto:dario@mory.dev?subject=Speaking%20inquiry">Get in touch</a>.
     </p>
+    <Newsletter />
 </Layout>
 <style>
-    /* small */
+    /* Hero kicker: an editorial line trailing off the name, not a badge */
     small {
-        background-color: #584966;
-        color: #fdebf3;
-        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 0.7em;
+        text-align: left;
+        text-indent: 0;
         font-family: 'Josefin Sans', sans-serif;
-        font-weight: 600;
-        padding: 0.3em 0.6em 0.2em;
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: rgba(253, 235, 243, 0.55);
+        margin: 0.6rem 0 0;
     }
 
-    /* Hero tagline */
+    /* Hairline in the hero frame's brass, fading out so the line trails away */
+    small::before {
+        content: "";
+        flex: 0 0 auto;
+        width: 26px;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(168, 144, 102, 0.8), rgba(168, 144, 102, 0.15));
+    }
+
+    /* Hero tagline: subtle bubble lead-in with a tail toward the name */
     .tagline {
-        font-size: 1.15rem;
+        position: relative;
+        display: inline-block;
+        font-size: 1.05rem;
         font-family: 'Josefin Sans', sans-serif;
+        font-style: italic;
         color: #c9b8d8;
+        text-indent: 0;
+        background: rgba(253, 235, 243, 0.045);
+        border: 1px solid rgba(253, 235, 243, 0.09);
+        border-radius: 12px;
+        padding: 0.55em 1em;
         margin: 0.9em 0 1.6em;
         max-width: 520px;
         line-height: 1.5;
+    }
+
+    .tagline::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 26px;
+        width: 10px;
+        height: 10px;
+        background: rgba(253, 235, 243, 0.045);
+        border-left: 1px solid rgba(253, 235, 243, 0.09);
+        border-top: 1px solid rgba(253, 235, 243, 0.09);
+        border-top-left-radius: 2px;
+        transform: rotate(45deg);
     }
 
     /* Button */

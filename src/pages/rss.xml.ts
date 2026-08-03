@@ -18,6 +18,7 @@ const blogPosts = blogPostsModules
     ...entry.frontmatter,
     pubDate: new Date(entry.frontmatter.pubDate),
   }))
+  .filter(post => post.url)
   .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
 
 const books = (await getCollection('books')).sort(

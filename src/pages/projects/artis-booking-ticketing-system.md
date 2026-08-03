@@ -6,10 +6,10 @@ image:
     url: '/artis.png'
     alt: 'Artis logo'
 worksImage1:
-    url: '/artis_1.png'
+    url: '/artis_1.webp'
     alt: 'Artis ticketing interface'
 worksImage2:
-    url: '/artis_2.png'
+    url: '/artis_2.webp'
     alt: 'Artis booking flow'
 platform: Web
 stack: Python, Django

@@ -6,10 +6,10 @@ image:
     url: '/briqbookings.png'
     alt: 'BriqBookings logo'
 worksImage1:
-    url: '/briqbookings_1.png'
+    url: '/briqbookings_1.webp'
     alt: 'BriqBookings widget showcase'
 worksImage2:
-    url: '/briqbookings_2.png'
+    url: '/briqbookings_2.webp'
     alt: 'BriqBookings architecture overview'
 platform: Web
 stack: JavaScript, Vue.js

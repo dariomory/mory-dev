@@ -1,0 +1,114 @@
+---
+/*
+ * Substack signup panel.
+ * TODO: create the publication, then set its URL here (one place, used site-wide).
+ * Recommended name: morydev -> https://morydev.substack.com (matches mory.dev branding)
+ */
+const SUBSTACK_URL = 'https://morydev.substack.com';
+---
+<section class="newsletter" aria-label="Newsletter signup">
+    <h2>Newsletter</h2>
+    <p class="newsletter-text">
+        New posts on AI engineering and software leadership, straight to your inbox.
+    </p>
+    <form action={`${SUBSTACK_URL}/api/v1/free?nojs=true`} method="post" target="_blank">
+        <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address" />
+        <button type="submit">Subscribe</button>
+    </form>
+    <p class="newsletter-alt">
+        or <a href={SUBSTACK_URL} target="_blank" rel="noopener">read on Substack</a>
+    </p>
+</section>
+<style>
+    .newsletter {
+        margin: 2.5rem 0;
+        padding: 1.25rem 1.25rem 1rem;
+        background: rgba(253, 235, 243, 0.04);
+        border: 1px solid rgba(253, 235, 243, 0.08);
+        border-radius: 14px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+        text-align: center;
+    }
+
+    h2 {
+        margin-top: 0;
+    }
+
+    .newsletter-text {
+        text-indent: 0;
+        text-align: center;
+        color: #c9b8d8;
+    }
+
+    form {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        margin: 1rem 0 0.5rem;
+    }
+
+    input {
+        flex: 1;
+        min-width: 0;
+        max-width: 220px;
+        background: rgba(30, 30, 46, 0.6);
+        border: 1px solid rgba(253, 235, 243, 0.15);
+        border-radius: 8px;
+        color: #fdebf3;
+        font: 400 14px 'Josefin Sans', sans-serif;
+        padding: 8px 12px;
+    }
+
+    input::placeholder {
+        color: rgba(253, 235, 243, 0.4);
+    }
+
+    input:focus-visible {
+        outline: 2px solid #78c2ad;
+        outline-offset: 1px;
+    }
+
+    button {
+        background: rgba(0, 0, 0, 0);
+        border: 2px solid #78c2ad;
+        border-radius: 8px;
+        color: #fdebf3;
+        font: 600 14px 'Josefin Sans', sans-serif;
+        padding: 8px 16px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    button:hover {
+        background-color: #78c2ad;
+        color: #1e1e2e;
+        cursor: pointer;
+    }
+
+    .newsletter-alt {
+        text-indent: 0;
+        text-align: center;
+        font-size: 0.8em;
+        margin-bottom: 0;
+    }
+
+    .newsletter-alt a {
+        color: #78c2ad;
+        text-decoration: none;
+    }
+
+    .newsletter-alt a:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    @media only screen and (max-width: 600px) {
+        form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        input {
+            max-width: none;
+        }
+    }
+</style>

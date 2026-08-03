@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
-import { youtubePosts } from '../data/posts';
+import Newsletter from '../components/Newsletter.astro';
 
 type BlogFrontmatter = {
     title: string;
@@ -20,10 +20,12 @@ const blogPosts = blogPostsModules
         ...entry.frontmatter,
         pubDate: new Date(entry.frontmatter.pubDate),
     }))
+    .filter(post => post.url)
     .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
-const pageTitle = "Posts";
+const pageTitle = "Posts — Dario Mory";
+const description = "Articles on AI engineering, software leadership, and reverse engineering by Dario Mory.";
 ---
-<Layout pageTitle={pageTitle} preloadImage="/posts-hero.webp">
+<Layout pageTitle={pageTitle} description={description} canonicalPath="/posts/" preloadImage="/posts-hero.webp">
     <div class="gif">
         <div class="raccoon-frame">
             <img
@@ -43,10 +45,5 @@ const pageTitle = "Posts";
             <Card url={post.url} image={post.image} title={post.title} body={post.description} />
         ))}
     </ul>
-    <h2>YouTube</h2>
-    <ul role="list" class="link-card-grid">
-        {youtubePosts.map(post => (
-            <Card url={post.url} image={post.image} title={post.title} body={post.description} />
-        ))}
-    </ul>
+    <Newsletter />
 </Layout>

@@ -32,7 +32,9 @@ const {
 const canonicalUrl = canonicalPath
 	? new URL(canonicalPath, siteUrl).href
 	: Astro.url.href;
-const resolvedOgImage = ogImage ?? new URL('/raccoon-coder.webp', siteUrl).href;
+const resolvedOgImage = ogImage
+	? new URL(ogImage, siteUrl).href
+	: new URL('/raccoon-coder.webp', siteUrl).href;
 const jsonLdBlocks = jsonLd
 	? Array.isArray(jsonLd)
 		? jsonLd

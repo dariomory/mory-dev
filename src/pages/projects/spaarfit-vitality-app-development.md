@@ -6,10 +6,10 @@ image:
     url: '/spaarfit.png'
     alt: 'Placeholder for SpaarFit project image'
 worksImage1:
-    url: '/spaarfit_1.png'
+    url: '/spaarfit_1.webp'
     alt: 'Placeholder for first detail image of SpaarFit project'
 worksImage2:
-    url: '/spaarfit_2.png'
+    url: '/spaarfit_2.webp'
     alt: 'Placeholder for second detail image of SpaarFit project'
 platform: iOS/Android
 stack: NativeScript, Vue

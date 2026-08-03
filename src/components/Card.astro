@@ -11,7 +11,7 @@ const { url, image, title, body } = Astro.props;
 <li class="link-card">
     <a href={url}>
         <div class="img">
-            <img src={image} class="card-img" alt="ProjectImage" loading="lazy" decoding="async">
+            <img src={image} class="card-img" alt="" loading="lazy" decoding="async">
         </div>
 	<h3 class="card-title">
 	    {title}
@@ -29,14 +29,31 @@ const { url, image, title, body } = Astro.props;
         display: flex;
         background-size: 400%;
         padding: 0 10px;
+        transition: transform 0.25s ease;
     }
 
     .link-card > a {
         width: 100%;
         text-decoration: none;
         line-height: 1.4;
-        border-radius: 8px;
+        border-radius: 14px;
         color: #fdebf3;
+        background: rgba(253, 235, 243, 0.04);
+        border: 1px solid rgba(253, 235, 243, 0.08);
+        padding: 0.9rem 0.75rem 0.75rem;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+        transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .link-card > a:hover {
+        border-color: rgba(120, 194, 173, 0.45);
+        background: rgba(253, 235, 243, 0.065);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .link-card > a:focus-visible {
+        outline: 2px solid #78c2ad;
+        outline-offset: 4px;
     }
 
     .img {

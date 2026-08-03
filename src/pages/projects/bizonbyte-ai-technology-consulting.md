@@ -6,10 +6,10 @@ image:
     url: '/bizonbyte.png'
     alt: 'Bizonbyte logo'
 worksImage1:
-    url: '/bizonbyte_1.png'
+    url: '/bizonbyte_1.webp'
     alt: 'first image of your project.'
 worksImage2:
-    url: '/bizonbyte_2.png'
+    url: '/bizonbyte_2.webp'
     alt: 'second image of your project.'
 platform: Web
 stack: NextJS

@@ -7,12 +7,52 @@
 html {
     background-color: #1e1e2e;
     color: #fdebf3;
+    /* Dark is now the only theme — tells the browser to render form controls
+       and scrollbars dark instead of assuming a light UI. */
+    color-scheme: dark;
 }
 
 body {
     max-width: 448px;
     margin: 0 auto;
     text-align: justify;
+}
+
+/*
+ * Premium backdrop: a lit reading column over ambient tints, finished with grain.
+ * Layers paint top-first. Zero-alpha stops are hue-matched to their start colour
+ * rather than `transparent` so the falloff stays in the same hue throughout.
+ */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background:
+        /* Soft spotlight over the content column, so the eye starts at the hero */
+        radial-gradient(620px 380px at 50% 0%,
+            rgba(253, 235, 243, 0.05), rgba(253, 235, 243, 0) 72%),
+        /* Vignette: lets the wide empty margins fall away and the column read as lit */
+        radial-gradient(120% 92% at 50% 38%,
+            rgba(12, 12, 20, 0) 42%, rgba(12, 12, 20, 0.55) 100%),
+        /* Ambient tints, pulled back so they colour the light instead of washing it */
+        radial-gradient(1000px 520px at 18% -10%,
+            rgba(88, 73, 102, 0.32), rgba(88, 73, 102, 0) 62%),
+        radial-gradient(820px 460px at 88% -14%,
+            rgba(55, 90, 127, 0.24), rgba(55, 90, 127, 0) 62%),
+        radial-gradient(720px 560px at 50% 112%,
+            rgba(120, 194, 173, 0.06), rgba(120, 194, 173, 0) 62%);
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.022;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* Headings */
@@ -57,20 +97,66 @@ p {
 }
 
 .raccoon-frame {
-    --raccoon-glow-1: rgba(0, 200, 255, 0.2);
-    --raccoon-glow-2: rgba(0, 200, 255, 0.35);
-    border-radius: 8px;
+    /* Molding width scales with the viewport so it stays in proportion on phones */
+    --frame-w: clamp(5px, 0.75vw, 8px);
+    box-sizing: border-box;
+    border-radius: 3px;
     display: block;
     width: 100%;
     max-width: 100%;
     aspect-ratio: 16 / 9;
     margin: 1.75rem 0 2rem;
     position: relative;
-    overflow: hidden;
-    filter: drop-shadow(0 0 24px var(--raccoon-glow-1));
-    animation: pulse-glow 3s ease-in-out infinite;
-    will-change: filter;
-    transform: translateZ(0);
+    /*
+     * Antique brass fillet. A conic sweep gives each of the four rails its own
+     * tone with mitred corners: lit from the top-left, darkest at bottom-right.
+     * (A linear gradient can't do this — it shades diagonally across the whole box.)
+     * The tonal range is kept narrow on purpose — enough to read as metal, not
+     * enough to compete with the artwork.
+     */
+    border: var(--frame-w) solid transparent;
+    background:
+        conic-gradient(from 315deg at 50% 50%,
+            #ac9569 0deg,
+            #c9b184 45deg,
+            #a08a60 90deg,
+            #7e6c4a 135deg,
+            #6b5b3f 180deg,
+            #766446 225deg,
+            #857152 270deg,
+            #a89066 315deg,
+            #ac9569 360deg) border-box;
+    /* Contact shadow + cast shadow, so the frame sits on the page instead of floating */
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.3),
+        0 10px 24px -12px rgba(0, 0, 0, 0.45);
+}
+
+/* Outer lip of the molding: bright edge catching the light, dark seat beneath it */
+.raccoon-frame::before {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--frame-w));
+    border-radius: inherit;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 248, 224, 0.26),
+        inset 0 0 0 2px rgba(74, 58, 24, 0.2);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Inner profile: gold fillet, dark liner, then a soft vignette onto the artwork */
+.raccoon-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 1px;
+    box-shadow:
+        inset 0 0 0 1px rgba(246, 231, 180, 0.2),
+        inset 0 0 0 2px rgba(38, 30, 12, 0.5),
+        inset 0 0 12px rgba(0, 0, 0, 0.16);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .raccoon-frame img {
@@ -81,15 +167,7 @@ p {
     object-fit: cover;
     object-position: center;
     display: block;
-}
-
-@keyframes pulse-glow {
-    0%, 100% {
-        filter: drop-shadow(0 0 24px var(--raccoon-glow-1));
-    }
-    50% {
-        filter: drop-shadow(0 0 40px var(--raccoon-glow-2));
-    }
+    border-radius: 2px;
 }
 
 /* Navigation Bar */
@@ -133,38 +211,60 @@ p {
     width: 20px;
     border-radius: 50%;
     border: 2px solid #fdebf3;
+    color: #fdebf3;
 }
 
 .foot-btn:hover {
     border-color: #78c2ad;
 }
 
-.light .foot-btn {
-    border: 2px solid #1e1e2e;
+/* Icon glyphs: CSS masks tinted with currentColor (works in all browsers, theme-aware) */
+.foot-btn > span {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-color: currentColor;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-size: contain;
 }
 
 .git-icon {
-    content: url("/github-mark-white.svg");
+    -webkit-mask-image: url("/github-mark.svg");
+    mask-image: url("/github-mark.svg");
 }
 
 .so-icon {
-    content: url("/stackoverflow-white.svg");
+    -webkit-mask-image: url("/stackoverflow.svg");
+    mask-image: url("/stackoverflow.svg");
 }
 
 .mail-icon {
-    content: url("/mail-white.svg");
+    -webkit-mask-image: url("/mail.svg");
+    mask-image: url("/mail.svg");
 }
 
 .linked-in {
-    content: url("/li-in-white.png");
+    -webkit-mask-image: url("/li-in.png");
+    mask-image: url("/li-in.png");
 }
 
 .medium-icon {
-    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23fdebf3' d='M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42c1.87 0 3.38 2.88 3.38 6.42zM24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23fdebf3' d='M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42c1.87 0 3.38 2.88 3.38 6.42zM24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23fdebf3' d='M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42c1.87 0 3.38 2.88 3.38 6.42zM24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z'/%3E%3C/svg%3E");
 }
 
 .reddit-icon {
-    content: url("/reddit-white.svg");
+    -webkit-mask-image: url("/reddit.svg");
+    mask-image: url("/reddit.svg");
+}
+
+.rss-icon {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='%23fdebf3' d='M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='%23fdebf3' d='M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z'/%3E%3C/svg%3E");
 }
 
 /* Card listing */
@@ -187,89 +287,6 @@ main > ul.link-card-grid:last-of-type {
         4px 6px 20px rgba(0, 0, 0, 0.5),
         inset -3px 0 8px rgba(0, 0, 0, 0.15);
     outline: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-/* Theme Icon */
-html.light {
-    background-color: #fdebf3;
-    color: #1e1e2e;
-}
-
-.light .title-link a {
-    color: #1e1e2e;
-}
-
-.light .card-title {
-    color: #1e1e2e; 
-}
-
-.light .card-txt {
-    color: #1e1e2e; 
-}
-
-.light .nav-links a {
-    color: #1e1e2e;
-}
-
-.light .link-card > a {
-    color: #1e1e2e; 
-}
-
-.light .book-cover-img {
-    box-shadow:
-        -4px 0 8px rgba(30, 30, 46, 0.2),
-        4px 6px 20px rgba(30, 30, 46, 0.25),
-        inset -3px 0 8px rgba(30, 30, 46, 0.08);
-    outline: 1px solid rgba(30, 30, 46, 0.08);
-}
-
-.light .button {
-    color: #1e1e2e;
-}
-
-.light .button:hover {
-    color: #fdebf3;
-}
-
-.light .foot-btn:hover {
-	border-color: #78c2ad;
-}
-
-.light .git-icon {
-    content: url("/github-mark.svg");
-}
-
-.light .so-icon {
-    content: url("/stackoverflow.svg");
-}
-
-.light .mail-icon {
-    content: url("/mail.svg");
-}
-
-.light .linked-in {
-    content: url("/li-in.png");
-}
-
-.light .medium-icon {
-    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%231e1e2e' d='M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42c1.87 0 3.38 2.88 3.38 6.42zM24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z'/%3E%3C/svg%3E");
-}
-
-.light .reddit-icon {
-    content: url("/reddit.svg");
-}
-
-.light .raccoon-frame {
-    --raccoon-glow-1: rgba(120, 194, 173, 0.38);
-    --raccoon-glow-2: rgba(55, 90, 127, 0.42);
-}
-
-.rss-icon {
-    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='%23fdebf3' d='M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z'/%3E%3C/svg%3E");
-}
-
-.light .rss-icon {
-    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='%231e1e2e' d='M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z'/%3E%3C/svg%3E");
 }
 
 /* Media Query */

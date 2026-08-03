@@ -1,21 +1,44 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
 import BaseLayout from './Layout.astro';
 const { frontmatter } = Astro.props;
+
+const pageTitle = `${frontmatter.title} — Dario Mory`;
+
+/* Only render showcase images that actually exist in public/ */
+const publicImageExists = (url?: string) =>
+    !!url && fs.existsSync(path.join(process.cwd(), 'public', url));
+
+const worksImages = [frontmatter.worksImage1, frontmatter.worksImage2].filter(
+    (img) => img?.url && publicImageExists(img.url)
+);
+
+/* Social/OG image: prefer a showcase screenshot, then the project logo (raster only) */
+const isRaster = (url?: string) => !!url && /\.(png|jpe?g|webp|gif)$/i.test(url);
+const ogImage = isRaster(worksImages[0]?.url)
+    ? worksImages[0].url
+    : isRaster(frontmatter.image?.url)
+      ? frontmatter.image.url
+      : undefined;
 ---
-<BaseLayout pageTitle={frontmatter.title}>
+<BaseLayout pageTitle={pageTitle} description={frontmatter.description} ogImage={ogImage} ogImageAlt={frontmatter.image?.alt}>
     <div class="gif">
-        <img width="220" height="180" alt="RaccoonLaptopGif" src="/laptop.webp" loading="eager" fetchpriority="high" decoding="async"/>
+        <img width="220" height="180" alt="Illustration of a raccoon working on a laptop" src="/laptop.webp" loading="eager" fetchpriority="high" decoding="async"/>
     </div>
     <h2>{frontmatter.title}</h2>
     <slot />
-    <p><small>PLATFORM</small>{frontmatter.platform}</p>
-    <p><small>STACK</small>{frontmatter.stack}</p>
-    <p><small>WEBSITE</small><a href={frontmatter.website} target="_blank">{frontmatter.website}</a></p>
-    <p><small>GITHUB</small><a href={frontmatter.github} target="_blank">{frontmatter.github}</a></p>
-    <div class="img">
-        <img src={frontmatter.worksImage1.url} alt={frontmatter.worksImage1.alt} class="project-img" loading="lazy" decoding="async"/>
-        <img src={frontmatter.worksImage2.url} alt={frontmatter.worksImage2.alt} class="project-img" loading="lazy" decoding="async"/>
-    </div>
+    {frontmatter.platform && <p><small>PLATFORM</small>{frontmatter.platform}</p>}
+    {frontmatter.stack && <p><small>STACK</small>{frontmatter.stack}</p>}
+    {frontmatter.website && <p><small>WEBSITE</small><a href={frontmatter.website} target="_blank">{frontmatter.website}</a></p>}
+    {frontmatter.github && <p><small>GITHUB</small><a href={frontmatter.github} target="_blank">{frontmatter.github}</a></p>}
+    {worksImages.length > 0 && (
+        <div class="img">
+            {worksImages.map((img) => (
+                <img src={img.url} alt={img.alt} class="project-img" loading="lazy" decoding="async"/>
+            ))}
+        </div>
+    )}
 </BaseLayout>
 <style>
     .img {
