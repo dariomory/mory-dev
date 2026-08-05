@@ -41,7 +41,7 @@ const description = "Articles on AI engineering, software leadership, and revers
         </div>
     </div>
     <h2>Blog</h2>
-    <ul role="list" class="link-card-grid">
+    <ul role="list" class="link-card-grid post-list">
         {blogPosts.map(post => (
             <Card url={post.url} image={post.image} title={post.title} body={post.description} />
         ))}

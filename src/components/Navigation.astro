@@ -1,12 +1,25 @@
 ---
+const path = Astro.url.pathname;
+
+// Deep pages keep their section lit: a project or contribution still lives under Works.
+const links = [
+    { href: '/works/', label: 'Works', match: ['/works', '/projects', '/contributions'] },
+    { href: '/books/', label: 'Books', match: ['/books'] },
+    { href: '/posts/', label: 'Posts', match: ['/posts'] },
+];
+
+const isCurrent = (match: string[]) =>
+    match.some((p) => path === p || path.startsWith(p + '/'));
 ---
 <div class="nav-bar">
     <div class="title-link">
-        <a href="/">Dario Mory</a>
+        <a href="/" aria-current={path === '/' ? 'page' : undefined}>Dario Mory</a>
     </div>
     <div class="nav-links">
-        <a href="/works/">Works</a>
-        <a href="/books/">Books</a>
-        <a href="/posts/">Posts</a>
+        {links.map((link) => (
+            <a href={link.href} aria-current={isCurrent(link.match) ? 'page' : undefined}>
+                {link.label}
+            </a>
+        ))}
     </div>
 </div>
