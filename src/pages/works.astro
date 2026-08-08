@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 const allProjects = await Astro.glob('../pages/projects/*.md');
 const allContributions = await Astro.glob('../pages/contributions/*.md');
-const pageTitle = "Works — Dario Mory";
+const pageTitle = "Projects & Open-Source Contributions — Dario Mory";
 const description = "Projects and open-source contributions led by Dario Mory — from KLM's airport operations platform to the EU Single Digital Gateway.";
 ---
 <Layout pageTitle={pageTitle} description={description} canonicalPath="/works/" preloadImage="/works-hero.webp">

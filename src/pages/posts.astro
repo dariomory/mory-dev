@@ -22,7 +22,7 @@ const blogPosts = blogPostsModules
     }))
     .filter(post => post.url)
     .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
-const pageTitle = "Posts — Dario Mory";
+const pageTitle = "Articles on AI Engineering & Leadership — Dario Mory";
 const description = "Articles on AI engineering, software leadership, and reverse engineering by Dario Mory.";
 ---
 <Layout pageTitle={pageTitle} description={description} canonicalPath="/posts/" preloadImage="/posts-hero.webp">
@@ -40,7 +40,7 @@ const description = "Articles on AI engineering, software leadership, and revers
             />
         </div>
     </div>
-    <h2>Blog</h2>
+    <h1>Blog</h1>
     <ul role="list" class="link-card-grid post-list">
         {blogPosts.map(post => (
             <Card url={post.url} image={post.image} title={post.title} body={post.description} />
@@ -48,3 +48,12 @@ const description = "Articles on AI engineering, software leadership, and revers
     </ul>
     <Newsletter />
 </Layout>
+<style>
+    h1 {
+        font-size: 1.5em;
+        text-decoration: underline #375a7f;
+        text-decoration-thickness: 4px;
+        text-underline-offset: 6px;
+        margin: 0;
+    }
+</style>

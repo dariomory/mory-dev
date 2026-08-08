@@ -23,7 +23,7 @@ const ogImage = isRaster(worksImages[0]?.url)
       : undefined;
 ---
 <BaseLayout pageTitle={pageTitle} description={frontmatter.description} ogImage={ogImage} ogImageAlt={frontmatter.image?.alt}>
-    <h2>{frontmatter.title}</h2>
+    <h1>{frontmatter.title}</h1>
     <slot />
     {frontmatter.platform && <p><small>PLATFORM</small>{frontmatter.platform}</p>}
     {frontmatter.stack && <p><small>STACK</small>{frontmatter.stack}</p>}
@@ -38,6 +38,14 @@ const ogImage = isRaster(worksImages[0]?.url)
     )}
 </BaseLayout>
 <style>
+    h1 {
+        font-size: 1.5em;
+        text-decoration: underline #375a7f;
+        text-decoration-thickness: 4px;
+        text-underline-offset: 6px;
+        margin: 0.83em 0 0;
+    }
+
     .img {
         text-align: center;
     }

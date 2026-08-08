@@ -19,7 +19,7 @@ interface Props {
 const { book } = Astro.props;
 const { title, subtitle, author, coverImage, publishDate, publisher, format, isbn, buyLinks, quotes, seo, status } =
 	book.data;
-const siteUrl = Astro.site?.href ?? 'https://mory.dev';
+const siteUrl = Astro.site?.href ?? 'https://www.mory.dev';
 const canonicalPath = `/books/${book.slug}/`;
 
 const cover = await getImage({

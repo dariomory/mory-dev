@@ -1,13 +1,12 @@
 ---
-const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? 'https://mory.dev';
+const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? 'https://www.mory.dev';
 
-const schema = [
-  {
+const personSchema = {
     '@context': 'https://schema.org',
     '@type': 'Person',
     '@id': `${siteUrl}/#person`,
     name: 'Dario Mory',
-    url: siteUrl,
+    url: `${siteUrl}/`,
     email: 'dario@mory.dev',
     jobTitle: 'Lead Software Engineer',
     description: 'Software engineer with a focus on leadership, open-source contributions, and developer tooling.',
@@ -21,15 +20,21 @@ const schema = [
       'https://www.reddit.com/user/dariomory/',
       'https://dariomory.com',
     ],
-  },
-  {
+};
+
+const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     '@id': `${siteUrl}/#website`,
-    url: siteUrl,
+    url: `${siteUrl}/`,
     name: 'Dario Mory',
+    alternateName: 'mory.dev',
     author: { '@id': `${siteUrl}/#person` },
-  },
-];
+};
+
+// Google uses WebSite markup from the domain homepage to determine the site name.
+const schema = Astro.url.pathname === '/'
+  ? [personSchema, websiteSchema]
+  : personSchema;
 ---
 <script type="application/ld+json" set:html={JSON.stringify(schema)} />
