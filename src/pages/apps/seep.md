@@ -7,6 +7,7 @@ tagline: 'Learn languages while you browse.'
 order: 5
 status: 'Shipped — v2.0.0 on the Chrome Web Store'
 image: { url: '/apps/seep.png', alt: 'Seep logo' }
+appImage1: { url: '/apps/seep-1.webp', alt: 'Seep translating words inline on a webpage, with the language and difficulty picker open' }
 website: https://tryseep.com
 pricing: 'Free'
 platform: 'Chrome (Manifest V3)'

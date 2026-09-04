@@ -7,6 +7,8 @@ tagline: 'Commerce context for GitHub issues.'
 order: 8
 status: 'Beta — awaiting app review'
 image: { url: '/apps/shopify-for-github.png', alt: 'Shopify for GitHub logo' }
+appImage1: { url: '/apps/shopify-for-github-1.webp', alt: 'The Shopify for GitHub landing page' }
+appImage2: { url: '/apps/shopify-for-github-2.webp', alt: 'A GitHub issue with the bot comment listing verified product, theme and order references' }
 website: https://shopify.mory.dev
 github: https://github.com/dariomory/shopify-for-github
 pricing: 'Not published — free during beta'
