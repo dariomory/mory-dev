@@ -7,6 +7,8 @@ tagline: 'Security scanners give you a list. The aim here is a story.'
 order: 9
 status: 'Pre-alpha — not yet functional'
 image: { url: '/apps/matadore.png', alt: 'matadore logo' }
+appImage1: { url: '/apps/matadore-1.webp', alt: 'matadore intended high-level architecture' }
+appImage2: { url: '/apps/matadore-2.webp', alt: 'matadore models package class diagram' }
 website: https://dariomory.github.io/matadore/
 github: https://github.com/dariomory/matadore
 pricing: 'Free · MIT'
@@ -40,5 +42,8 @@ GitHub organisations, cloud accounts and container registries, wrapping existing
 than replacing them. Two constraints are baked into the models: every finding must carry a
 verifiable evidence reference, and inference can run entirely locally through Ollama, so
 nothing has to leave your network.
+
+The diagrams below are the intended architecture and the model layer as designed — the
+models are real code, the boxes around them mostly are not yet.
 
 Progress is tracked in the open on GitHub.

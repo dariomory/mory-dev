@@ -10,6 +10,7 @@ image: { url: '/apps/nomadwifi.png', alt: 'NomadWiFi logo' }
 appImage1: { url: '/apps/nomadwifi-1.webp', alt: 'NomadWiFi desktop app' }
 appImage2: { url: '/apps/nomadwifi-2.webp', alt: 'NomadWiFi command-line scan output' }
 website: https://nomadwifi.mory.dev
+github: https://github.com/mory-dev/nomadwifi
 pricing: 'Free · MIT'
 platform: 'Windows 10 and 11'
 stack: 'Go 1.24, WPF (.NET Framework 4.8), Windows Native Wifi API'
@@ -19,6 +20,8 @@ version: '1.2.0'
 license: 'https://opensource.org/licenses/MIT'
 price: 0
 priceCurrency: 'USD'
+sameAs:
+  - https://github.com/mory-dev/nomadwifi
 ---
 
 Hotel and cafe Wi-Fi is rarely one network — it is a dozen access points, and Windows will
