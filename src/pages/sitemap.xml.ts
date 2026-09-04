@@ -26,9 +26,13 @@ export async function GET(context: { site: URL }) {
 	const contributionPaths = Object.keys(
 		import.meta.glob('../pages/contributions/*.md', { eager: false }),
 	);
+	const appPaths = Object.keys(
+		import.meta.glob('../pages/apps/*.md', { eager: false }),
+	);
 
 	const urls = [
 		urlEntry(toUrl(site, '/')),
+		urlEntry(toUrl(site, '/apps/')),
 		urlEntry(toUrl(site, '/works/')),
 		urlEntry(toUrl(site, '/books/')),
 		urlEntry(toUrl(site, '/posts/')),
@@ -40,6 +44,9 @@ export async function GET(context: { site: URL }) {
 		),
 		...contributionPaths.map((path) =>
 			urlEntry(toUrl(site, `/contributions/${slugFromPath(path)}/`)),
+		),
+		...appPaths.map((path) =>
+			urlEntry(toUrl(site, `/apps/${slugFromPath(path)}/`)),
 		),
 	];
 

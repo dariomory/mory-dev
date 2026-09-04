@@ -172,7 +172,9 @@ p {
 /* Navigation Bar */
 .nav-bar {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* auto sizes the brand to its text, leaving the rest for the links; 1fr 1fr
+       left too little room for a fourth item plus its emphasis dot at 448px. */
+    grid-template-columns: auto 1fr;
     align-items: center;
     margin-top: 0.8rem;
 }
@@ -209,6 +211,19 @@ p {
 
 .nav-links a[aria-current="page"] {
     color: #78c2ad;
+}
+
+/* Emphasis mark on the Apps link. Deliberately a shape, not a colour: #78c2ad is
+   the aria-current tint above, so colouring the label would fake an active state
+   on every page. */
+.nav-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-right: 0.38em;
+    border-radius: 50%;
+    background-color: #78c2ad;
+    vertical-align: 0.15em;
 }
 
 a:focus-visible {

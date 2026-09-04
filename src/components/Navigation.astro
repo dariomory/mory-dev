@@ -2,7 +2,9 @@
 const path = Astro.url.pathname;
 
 // Deep pages keep their section lit: a project or contribution still lives under Works.
-const links = [
+// `featured` is declared on the type, not just one literal, so link.featured stays accessible.
+const links: { href: string; label: string; match: string[]; featured?: boolean }[] = [
+    { href: '/apps/', label: 'Apps', match: ['/apps'], featured: true },
     { href: '/works/', label: 'Works', match: ['/works', '/projects', '/contributions'] },
     { href: '/books/', label: 'Books', match: ['/books'] },
     { href: '/posts/', label: 'Posts', match: ['/posts'] },
@@ -18,6 +20,7 @@ const isCurrent = (match: string[]) =>
     <div class="nav-links">
         {links.map((link) => (
             <a href={link.href} aria-current={isCurrent(link.match) ? 'page' : undefined}>
+                {link.featured && <span class="nav-dot" aria-hidden="true"></span>}
                 {link.label}
             </a>
         ))}
