@@ -15,7 +15,6 @@ platform: Backend, internal systems
 stack: Python, automation
 website: https://www.greenresidential.com
 github: 
-role: 'Backend engineer — process automation'
 updated: 2026-09-05
 ---
 Automated the manual processes behind the internal systems at

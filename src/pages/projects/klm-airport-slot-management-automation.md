@@ -15,7 +15,6 @@ platform: GCP, Cloud, Kubernetes
 stack: Python (FastAPI), C++, GCP, Kubernetes, Enterprise Architect
 website: https://www.klm.com
 github:
-role: 'Lead engineer — architecture, API development, delivery'
 updated: 2026-09-05
 ---
 
@@ -67,11 +66,6 @@ Alongside that I led API development for real-time integration with the existing
 systems, and established the CI/CD pipelines and infrastructure-as-code practices the team
 delivered through.
 
-### My role
-
-Lead engineer. Architecture and the decisions above, hands-on API development, and working
-directly with product owners and stakeholders through delivery rather than through a layer of
-reporting.
 
 ### Outcome
 

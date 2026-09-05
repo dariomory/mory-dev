@@ -15,7 +15,6 @@ platform: Web
 stack: Node, React, GraphQL
 website: https://useturf.io
 github: 
-role: 'Core platform engineering — feed, feedback and integrations'
 updated: 2026-09-05
 ---
 Core engineering on [Turf](https://useturf.io), the all-in-one community platform SaaS companies

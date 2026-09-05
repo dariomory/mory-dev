@@ -15,7 +15,6 @@ platform: Web
 stack: Python, Django
 website: https://vng.nl/projecten/single-digital-gateway
 github: https://github.com/maykinmedia/sdg-invoervoorziening
-role: 'Project lead — CMS and API for Dutch government bodies'
 updated: 2026-09-05
 ---
 
@@ -63,10 +62,6 @@ admin and content modelling, a very large pool of developers who can maintain it
 governance model that will still exist in ten years. For public infrastructure that is a
 feature, not a compromise.
 
-### My role
-
-Project lead. Guided the team through delivery, owned the shape of the CMS and API, and worked
-with the government stakeholders who define what a product description has to contain.
 
 ### Outcome
 

@@ -15,7 +15,6 @@ platform: Internal automation
 stack: Python, automation
 website: https://kansaifixer.com
 github: 
-role: 'Internal process automation'
 updated: 2026-09-05
 ---
 

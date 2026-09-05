@@ -15,7 +15,6 @@ platform: Web
 stack: Python
 website: https://www.djangoproject.com/
 github: https://github.com/django/django
-role: 'Sponsor'
 updated: 2026-09-05
 ---
 I am an official sponsor of the Django project, supporting its continued development.

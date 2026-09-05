@@ -15,7 +15,6 @@ platform: Web, Medical
 stack: Simulation Tech
 website: 
 github: 
-role: 'Core platform engineering — scenario model and mechanics'
 updated: 2026-09-05
 ---
 Core engineering on Sagesim, the medical simulation platform developed for Dr. Sage Wexner, MD,

@@ -15,7 +15,6 @@ platform: Web, Cloud
 stack: AWS, Azure, GCP
 website: https://koalabs.dev
 github: 
-role: 'Built the platform'
 updated: 2026-09-05
 ---
 Built the platform for [Koalabs](https://koalabs.dev), a US software consultancy delivering

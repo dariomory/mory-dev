@@ -15,7 +15,6 @@ platform: Web
 stack: API integrations, real-time data
 website: https://flatpeak.com
 github: 
-role: 'Data access — opened and built the Dutch energy supplier integrations'
 updated: 2026-09-05
 ---
 
@@ -61,10 +60,6 @@ developer building on FlatPeak should not need to know which supplier a customer
 of the three routes their data arrived by, or what that supplier calls a standing charge. One
 schema, one answer, regardless.
 
-### My role
-
-I was responsible for energy provider data access in the Netherlands — establishing the routes
-and building the integrations behind them.
 
 ### Outcome
 

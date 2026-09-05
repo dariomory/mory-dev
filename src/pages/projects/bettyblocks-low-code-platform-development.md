@@ -15,7 +15,6 @@ platform: Web, Cloud
 stack: Elixir, React, GraphQL, WebAssembly
 website: https://www.bettyblocks.com
 github: 
-role: 'Full-stack contributor — platform services, builder components, extensions'
 updated: 2026-09-05
 ---
 Contributed to the core of an enterprise low-code platform that lets both professional and
@@ -48,10 +47,6 @@ in advance.
 **WebAssembly extensions** as the escape hatch: the point where a developer can drop out of
 visual composition into custom code without leaving the platform to do it.
 
-### My role
-
-Full-stack contributor across those layers, working closely with product, design and platform
-teams on workflow automation and enterprise integrations.
 
 ### Outcome
 

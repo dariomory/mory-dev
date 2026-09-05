@@ -15,7 +15,6 @@ platform: iOS/Android
 stack: NativeScript, Vue
 website: https://www.spaarfit.nl/
 github: 
-role: 'Project lead'
 updated: 2026-09-05
 ---
 Led development of SpaarFit, the workplace vitality app that motivates and empowers employees to
@@ -43,9 +42,6 @@ Built with **NativeScript and Vue**, so one codebase reached both platforms with
 components rather than a wrapped web view. For a product whose main risk is people not opening
 it, feeling like a real app is not a detail.
 
-### My role
-
-Project lead — owned the shape of the product and led the team through delivery.
 
 ### Outcome
 

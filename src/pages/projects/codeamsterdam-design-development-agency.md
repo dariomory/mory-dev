@@ -15,7 +15,6 @@ platform: Web
 stack: React, Node, API Integrations
 website: https://codeamsterdam.nl
 github: 
-role: 'Built the platform'
 updated: 2026-09-05
 ---
 Built the platform for [Codeamsterdam](https://codeamsterdam.nl), a subscription-based design and

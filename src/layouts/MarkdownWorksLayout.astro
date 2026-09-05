@@ -37,7 +37,6 @@ const workSchema = {
     description: frontmatter.description,
     url: canonicalUrl,
     inLanguage: 'en',
-    ...(frontmatter.role && { creditText: frontmatter.role }),
     ...(frontmatter.stack && { keywords: frontmatter.stack }),
     ...(frontmatter.stack && isContribution && { programmingLanguage: frontmatter.stack }),
     ...(frontmatter.github && { codeRepository: frontmatter.github }),
@@ -82,7 +81,6 @@ const breadcrumbSchema = {
         <h1>{frontmatter.title}</h1>
     </div>
     <div class="works-body"><slot /></div>
-    {frontmatter.role && <p><small>ROLE</small>{frontmatter.role}</p>}
     {frontmatter.platform && <p><small>PLATFORM</small>{frontmatter.platform}</p>}
     {frontmatter.stack && <p><small>STACK</small>{frontmatter.stack}</p>}
     {frontmatter.website && <p><small>WEBSITE</small><a href={frontmatter.website} target="_blank">{frontmatter.website}</a></p>}

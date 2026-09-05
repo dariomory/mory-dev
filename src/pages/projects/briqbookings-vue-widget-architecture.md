@@ -15,7 +15,6 @@ platform: Web
 stack: JavaScript, Vue.js
 website: https://www.briqbookings.com
 github:
-role: 'Widget architecture and delivery, prototype to production'
 updated: 2026-09-05
 ---
 Built the embeddable booking widget for [BriqBookings](https://www.briqbookings.com), a property

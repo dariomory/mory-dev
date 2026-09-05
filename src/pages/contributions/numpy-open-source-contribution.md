@@ -15,7 +15,6 @@ platform: All
 stack: Python
 website: https://numpy.org/
 github: https://github.com/numpy/numpy
-role: 'Documentation contributor'
 updated: 2026-09-05
 ---
 Contributed to NumPy, principally to its documentation.

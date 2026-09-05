@@ -15,7 +15,6 @@ platform: Internal systems, GCP
 stack: Google Cloud Platform, internal tooling
 website: https://yielder.nl
 github: 
-role: 'Senior engineer — led development and maintenance of the internal systems'
 updated: 2026-09-05
 ---
 Senior engineer on the internal systems at [Yielder](https://yielder.nl), a provider of tailored
@@ -52,10 +51,6 @@ original authors had moved on, extending them as the business changed, and keepi
 dependable. This is the least glamorous category of engineering and among the most valuable —
 the systems a company runs on are exactly the ones where an outage is felt immediately.
 
-### My role
-
-The most senior engineer on the team, and the one responsible for the direction of the
-codebase.
 
 ### Outcome
 

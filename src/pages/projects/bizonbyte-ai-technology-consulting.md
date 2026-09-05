@@ -15,7 +15,6 @@ platform: Web
 stack: NextJS
 website: https://bizonbyte.nl
 github: https://github.com/bizonbyte/bizonbyte
-role: 'Built the platform'
 updated: 2026-09-05
 ---
 Built the platform for [Bizonbyte](https://bizonbyte.nl), a leading consulting firm in the

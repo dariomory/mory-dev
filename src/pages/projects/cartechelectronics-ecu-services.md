@@ -15,7 +15,6 @@ platform: Internal web platform
 stack: Python, Django, Shopify and carrier integrations, automation
 website: https://cartechelectronics.com
 github: 
-role: 'Lead engineer — architecture, build and ongoing development'
 updated: 2026-09-05
 ---
 Designed and built the operational platform that
@@ -33,25 +32,27 @@ diagnosed, repaired or cloned, then shipped back — often to another country. M
 storefront has taken an order, the workshop has a job, a carrier needs a label and customs
 paperwork, and stock has to reflect what is actually available to sell.
 
-Those are separate systems that do not naturally know about each other. Left alone, the join
-between them is a person retyping the same details several times.
+Those are separate systems with no shared model of an order, a job or a shipment. Left alone,
+the integration layer between them is a human — someone holding three interfaces open and
+reconciling them by hand, which is the most expensive possible way to run a business process.
 
 ### Constraints
 
-Manual re-keying is not just slow, it is where the errors live: a wrong address on an
+Every unautomated boundary between two systems is where the errors live: a wrong address on an
 international shipment, a job that does not match the order it belongs to, a customer asking
-where their part is and nobody able to answer quickly.
+where their part is and nobody able to answer quickly. Throughput is capped by how fast a person
+can move data across those boundaries, and accuracy degrades exactly when volume rises.
 
 Worldwide shipping raises the cost of each of those mistakes, because the feedback loop is
 measured in days and the customer is usually without their vehicle for the duration.
 
 ### What I built
 
-I lead the engineering end to end — architecture, build and ongoing development.
+Focusing end to end — architecture, build and ongoing development.
 
-A Django system that automates the path between the storefront, the workshop and the carrier,
-so an order becomes a job and a job becomes a shipment without anyone copying fields between
-systems. Inventory is kept in step with **Shopify**, shipping and carrier paperwork are
+A Django system that owns the path between the storefront, the workshop and the carrier, so an
+order becomes a job and a job becomes a shipment as a single automated flow rather than three
+disconnected ones. Inventory is kept in step with **Shopify**, shipping and carrier paperwork are
 generated rather than typed, and ECU data extraction feeds the parts of the process that depend
 on knowing what a unit actually is.
 
@@ -63,8 +64,9 @@ step in when a case is genuinely unusual.
 ### Outcome
 
 The business runs on it. Orders, workshop jobs and international shipments move through one
-system instead of being reconciled by hand between three, which removes both the manual handling
-and the class of error that only surfaces once a package is already in another country.
+automated flow instead of three systems reconciled by hand — which lifts the ceiling on volume
+and removes the class of error that only surfaces once a package is already in another
+country.
 
 This commerce integration work inspired the development of [Shopify for
 GitHub](/apps/shopify-for-github/) — the same problem, getting store context in front of the

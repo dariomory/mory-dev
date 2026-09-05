@@ -15,7 +15,6 @@ platform: Web
 stack: Python, Django
 website: https://www.artis.nl
 github:
-role: 'Contributor — booking flow, capacity and queue handling'
 updated: 2026-09-05
 ---
 I contributed to the online booking and ticketing system for [Artis](https://www.artis.nl), the

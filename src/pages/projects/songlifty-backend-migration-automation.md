@@ -15,7 +15,6 @@ platform: Web, Async Systems
 stack: Python 3, REST API, Selenium, Puppeteer
 website: https://songlifty.com
 github: 
-role: 'Migration lead — led the backend migration and built the internal tooling'
 updated: 2026-09-05
 ---
 
@@ -61,9 +60,6 @@ and observable enough that an operator can see what ran, what did not, and why.
 
 That last property is what decides whether operational automation is trusted or quietly bypassed.
 
-### My role
-
-I led the migration and built the tooling — both the plan and the execution.
 
 ### Outcome
 

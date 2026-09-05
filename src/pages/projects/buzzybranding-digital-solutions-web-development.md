@@ -15,7 +15,6 @@ platform: Web, automation pipeline
 stack: Python, JavaScript, multi-source data collection, automation
 website: https://buzzybranding.com
 github: 
-role: 'Built the lead generation system and rebuilt the front end'
 updated: 2026-09-05
 ---
 Built an automated lead generation system and rebuilt the front end for
