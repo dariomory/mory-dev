@@ -67,6 +67,25 @@ const softwareSchema = {
     ...(frontmatter.image?.url && { image: new URL(frontmatter.image.url, siteUrl + '/').href }),
 };
 
+/* FAQ markup no longer earns a rich result for a site like this one — Google
+   restricted those to gov/health domains. It is here for retrieval: a question
+   with a self-contained answer is the shape an assistant can lift wholesale,
+   which a paragraph of prose is not. */
+const faq = (frontmatter.faq ?? []).filter((item: { q?: string; a?: string }) => item?.q && item?.a);
+
+const faqSchema = faq.length
+    ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          '@id': `${canonicalUrl}#faq`,
+          mainEntity: faq.map((item: { q: string; a: string }) => ({
+              '@type': 'Question',
+              name: item.q,
+              acceptedAnswer: { '@type': 'Answer', text: item.a },
+          })),
+      }
+    : undefined;
+
 const breadcrumbSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -83,7 +102,7 @@ const breadcrumbSchema = {
     canonicalPath={canonicalPath}
     ogImage={ogImage}
     ogImageAlt={frontmatter.image?.alt}
-    jsonLd={[softwareSchema, breadcrumbSchema]}
+    jsonLd={[softwareSchema, breadcrumbSchema, ...(faqSchema ? [faqSchema] : [])]}
 >
     <div class="page-head">
         {frontmatter.image?.url && (
@@ -99,7 +118,7 @@ const breadcrumbSchema = {
         <h1>{frontmatter.title}</h1>
     </div>
     {frontmatter.tagline && <p class="tagline">{frontmatter.tagline}</p>}
-    <slot />
+    <div class="app-body"><slot /></div>
     {frontmatter.status && <p><small>STATUS</small>{frontmatter.status}</p>}
     {frontmatter.pricing && <p><small>PRICING</small>{frontmatter.pricing}</p>}
     {frontmatter.platform && <p><small>PLATFORM</small>{frontmatter.platform}</p>}
@@ -110,6 +129,17 @@ const breadcrumbSchema = {
     )}
     {frontmatter.github && (
         <p><small>GITHUB</small><a href={frontmatter.github} target="_blank" rel="noopener">{frontmatter.github.replace(/^https?:\/\/(www\.)?github\.com\//, '')}</a></p>
+    )}
+    {faq.length > 0 && (
+        <section class="faq">
+            <h2>Questions</h2>
+            {faq.map((item: { q: string; a: string }) => (
+                <div class="faq-item">
+                    <h3>{item.q}</h3>
+                    <p>{item.a}</p>
+                </div>
+            ))}
+        </section>
     )}
     {appImages.length > 0 && (
         <div class="img">
@@ -150,6 +180,42 @@ const breadcrumbSchema = {
         color: #c9b8d8;
         text-indent: 0;
         margin: 0.6em 0 0;
+    }
+
+    .app-body :global(h3) {
+        font-family: 'Josefin Sans', sans-serif;
+        font-size: 1.15em;
+        color: #fdebf3;
+        margin: 1.6em 0 0;
+    }
+
+    .faq {
+        margin-top: 2rem;
+    }
+
+    .faq h2 {
+        font-family: 'Josefin Sans', sans-serif;
+        font-size: 1.05em;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #c9b8d8;
+        margin: 0 0 0.4em;
+    }
+
+    .faq-item {
+        margin-top: 1.1em;
+    }
+
+    .faq-item h3 {
+        font-family: 'Josefin Sans', sans-serif;
+        font-size: 0.98em;
+        color: #fdebf3;
+        margin: 0 0 0.2em;
+    }
+
+    .faq-item p {
+        margin: 0;
+        text-indent: 0;
     }
 
     .img {
