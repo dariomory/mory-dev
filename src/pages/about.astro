@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { contentCounts, numberWord, titleCaseNumber, yearsActive } from '../utils/counts';
 import * as si from 'simple-icons';
+import ProfileScanner from '../components/ProfileScanner.astro';
 
 const n = await contentCounts();
 
@@ -86,10 +87,11 @@ const brand = (slug?: string) => {
 type Pill = { label: string; slug?: string };
 
 type Fact = { icon: string; term: string; value?: string; pills?: Pill[]; flag?: string;
-	countries?: { flag: string; name: string }[] };
+	countries?: { flag: string; name: string }[]; quip?: string };
 
 const facts: Fact[] = [
-	{ icon: 'role', term: 'Role', value: 'Engineering leader — hands-on, still writes code' },
+	{ icon: 'role', term: 'Role', value: 'Engineering leader — hands-on, still writes code',
+		quip: 'Claude drafts. I still read the diff. Mostly.' },
 	{ icon: 'place', term: 'From', value: 'Spain', flag: 'es' },
 	{ icon: 'place', term: 'Building in', countries: [
 		{ flag: 'nl', name: 'Netherlands' },
@@ -148,6 +150,8 @@ const facts: Fact[] = [
 		<a href="/books/">{numberWord(n.books)} books</a>.
 	</p>
 
+	<ProfileScanner />
+
 	<h2>At a glance</h2>
 	<dl class="facts">
 		{facts.map((f) => (
@@ -188,6 +192,12 @@ const facts: Fact[] = [
 						</span>
 					)}
 					{f.value}
+					{f.quip && (
+						<span class="quip" tabindex="0">
+							<span class="quip-dot" aria-hidden="true"></span>
+							<span class="quip-bubble" role="note">{f.quip}</span>
+						</span>
+					)}
 				</dd>
 			</div>
 		))}
@@ -555,6 +565,71 @@ const facts: Fact[] = [
 
 	a:hover {
 		text-decoration: underline;
+	}
+
+	/* Hidden until hover or focus. tabindex makes it reachable by keyboard and
+	   gives touch devices a tap target, since :hover never fires there. */
+	.quip {
+		position: relative;
+		display: inline-block;
+		margin-left: 0.4em;
+		vertical-align: 0.1em;
+		cursor: help;
+		outline: none;
+	}
+
+	.quip-dot {
+		display: block;
+		width: 5px;
+		height: 5px;
+		border-radius: 50%;
+		background: #78c2ad;
+		opacity: 0.55;
+		transition: opacity 0.2s ease, transform 0.2s ease;
+	}
+
+	.quip:hover .quip-dot,
+	.quip:focus-visible .quip-dot,
+	.quip:focus .quip-dot {
+		opacity: 1;
+		transform: scale(1.35);
+	}
+
+	.quip-bubble {
+		position: absolute;
+		bottom: calc(100% + 9px);
+		left: 50%;
+		transform: translate(-50%, 3px);
+		width: max-content;
+		max-width: 15rem;
+		padding: 0.42em 0.7em;
+		border-radius: 8px;
+		border: 1px solid rgba(120, 194, 173, 0.35);
+		background: #14171c;
+		color: #c9b8d8;
+		font-size: 0.86em;
+		line-height: 1.4;
+		font-style: italic;
+		text-align: center;
+		white-space: normal;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.2s ease, transform 0.2s ease;
+		z-index: 3;
+	}
+
+	.quip:hover .quip-bubble,
+	.quip:focus-visible .quip-bubble,
+	.quip:focus .quip-bubble {
+		opacity: 1;
+		transform: translate(-50%, 0);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.quip-dot,
+		.quip-bubble {
+			transition: none;
+		}
 	}
 
 	.countries {
