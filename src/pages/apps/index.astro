@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Card from '../../components/Card.astro';
+import AppsHero from '../../components/AppsHero.astro';
 import { logoTransitionName } from '../../utils/transitionName';
 
 const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? 'https://www.mory.dev';
@@ -50,23 +51,9 @@ const breadcrumbSchema = {
     pageTitle={pageTitle}
     description={description}
     canonicalPath="/apps/"
-    preloadImage="/apps-hero.webp"
     jsonLd={[itemListSchema, breadcrumbSchema]}
 >
-    <div class="gif">
-        <div class="raccoon-frame">
-            <span class="frame-loader" aria-hidden="true"></span>
-            <img
-                width="800"
-                height="450"
-                alt="The nine apps released under mory.dev, shown as a grid of their icons"
-                src="/apps-hero.webp"
-                loading="eager"
-                fetchpriority="high"
-                decoding="async"
-            />
-        </div>
-    </div>
+    <AppsHero apps={apps} />
     <h1>Apps</h1>
     <p class="intro">
         Software I build and release myself, under mory.dev — as opposed to the client work and

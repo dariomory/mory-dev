@@ -1,0 +1,269 @@
+---
+/*
+ * Live replacement for the old apps-hero.webp: a holographic net whose nodes
+ * are the apps themselves. Geometry is computed once here and shared by the
+ * SVG and the CSS positioning, so the lines and the icons cannot drift apart.
+ */
+interface Props {
+    apps: any[];
+}
+
+const { apps } = Astro.props;
+
+const cols = apps.length <= 9 ? 3 : 4;
+const rows = Math.ceil(apps.length / cols);
+
+/*
+ * One 0-100 space for both axes: the SVG uses viewBox="0 0 100 100" with
+ * preserveAspectRatio="none", so these same numbers double as CSS left/top
+ * percentages. Strokes carry vector-effect="non-scaling-stroke" so the
+ * non-uniform scale doesn't smear them.
+ * The vertical range stops at 76 rather than mirroring the top inset — the
+ * bottom row needs room underneath for its name to appear on hover.
+ */
+const lerp = (n: number, count: number, a: number, b: number) =>
+    count === 1 ? (a + b) / 2 : a + (n * (b - a)) / (count - 1);
+
+const nodes = apps.map((app, i) => ({
+    app,
+    x: lerp(i % cols, cols, 17, 83),
+    y: lerp(Math.floor(i / cols), rows, 14, 76),
+}));
+
+/* Orthogonal links carry the net's structure; diagonals are drawn much dimmer
+   so the mesh reads as depth rather than noise in a 448px column. */
+const links: { a: (typeof nodes)[0]; b: (typeof nodes)[0]; diag: boolean }[] = [];
+nodes.forEach((n, i) => {
+    const c = i % cols;
+    const r = Math.floor(i / cols);
+    const push = (j: number, diag: boolean) => {
+        if (nodes[j]) links.push({ a: n, b: nodes[j], diag });
+    };
+    if (c + 1 < cols) push(i + 1, false);
+    if (r + 1 < rows) push(i + cols, false);
+    if (c + 1 < cols && r + 1 < rows) push(i + cols + 1, true);
+    if (c > 0 && r + 1 < rows) push(i + cols - 1, true);
+});
+
+const straight = links.filter((l) => !l.diag);
+---
+<div class="gif">
+    {/* No .frame-loader here on purpose: the loader script queries
+        `.raccoon-frame > img` and there is no direct-child image to clear it,
+        so an opaque well would sit over the panel spinning forever. */}
+    <div class="raccoon-frame apps-holo">
+        <div class="holo-floor" aria-hidden="true"></div>
+        <svg class="holo-net" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <g class="net-base">
+                {links.map(({ a, b, diag }) => (
+                    <line
+                        x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+                        class={diag ? 'holo-link is-diag' : 'holo-link'}
+                        vector-effect="non-scaling-stroke"
+                    />
+                ))}
+            </g>
+            <g class="net-pulse">
+                {straight.map(({ a, b }) => (
+                    <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} vector-effect="non-scaling-stroke" />
+                ))}
+            </g>
+        </svg>
+        <div class="holo-sweep" aria-hidden="true"></div>
+        <div class="holo-grain" aria-hidden="true"></div>
+        <nav class="holo-nodes" aria-label="Apps">
+            {nodes.map(({ app, x, y }) => (
+                <a class="app-node" href={`${app.url}/`} style={`left:${x}%;top:${y}%`}>
+                    <span class="node-plate">
+                        {/* alt is empty by design — .node-name already names the link */}
+                        <img src={app.frontmatter.image.url} alt="" width="48" height="48" decoding="async" />
+                    </span>
+                    <span class="node-name">{app.frontmatter.title}</span>
+                </a>
+            ))}
+        </nav>
+    </div>
+</div>
+<style>
+    .apps-holo {
+        --plate: clamp(44px, 11vw, 54px);
+        overflow: hidden;
+    }
+
+    .holo-floor,
+    .holo-net,
+    .holo-sweep,
+    .holo-grain {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /*
+     * Ground. The frame paints its brass across the whole border-box, so the
+     * interior needs its own opaque layer or the metal shows through. Falls
+     * off into the corners the way the painted heroes do.
+     */
+    .holo-floor {
+        overflow: hidden;
+        background: radial-gradient(120% 100% at 50% 42%, #1b1b29 0%, #14141f 68%, #101018 100%);
+    }
+
+    /* Perspective mesh receding to a horizon in the upper third */
+    .holo-floor::before {
+        content: "";
+        position: absolute;
+        left: -60%;
+        right: -60%;
+        bottom: -12%;
+        height: 130%;
+        background-image:
+            repeating-linear-gradient(to right, rgba(120, 194, 173, 0.20) 0 1px, transparent 1px 44px),
+            repeating-linear-gradient(to bottom, rgba(120, 194, 173, 0.20) 0 1px, transparent 1px 44px);
+        transform: perspective(300px) rotateX(64deg);
+        transform-origin: 50% 100%;
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 42%, #000 100%);
+        mask-image: linear-gradient(to bottom, transparent 0%, #000 42%, #000 100%);
+        animation: holo-drift 5s linear infinite;
+    }
+
+    /* Only the horizontal rails scroll, by exactly one cell, so it loops seamlessly */
+    @keyframes holo-drift {
+        from { background-position: 0 0, 0 0; }
+        to   { background-position: 0 0, 0 44px; }
+    }
+
+    .holo-net {
+        width: 100%;
+        height: 100%;
+    }
+
+    .holo-link {
+        stroke: rgba(120, 194, 173, 0.38);
+        stroke-width: 1;
+        fill: none;
+    }
+
+    .holo-link.is-diag {
+        stroke: rgba(120, 194, 173, 0.15);
+    }
+
+    /* A brighter dash travelling the orthogonal links, over the solid base */
+    .net-pulse line {
+        stroke: rgba(196, 255, 238, 0.55);
+        stroke-width: 1;
+        fill: none;
+        stroke-dasharray: 2 14;
+        animation: holo-pulse 3.4s linear infinite;
+    }
+
+    @keyframes holo-pulse {
+        to { stroke-dashoffset: -16; }
+    }
+
+    /* The strongest hologram cue: a slow diagonal light passing over the glass */
+    .holo-sweep {
+        inset: -40%;
+        background: linear-gradient(115deg,
+            transparent 42%,
+            rgba(190, 255, 240, 0.07) 50%,
+            transparent 58%);
+        animation: holo-sweep 9s linear infinite;
+    }
+
+    @keyframes holo-sweep {
+        from { transform: translateX(-70%); }
+        to   { transform: translateX(70%); }
+    }
+
+    /* Same grain as body::after, so the panel shares the webps' texture */
+    .holo-grain {
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .holo-nodes {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+    }
+
+    .app-node {
+        position: absolute;
+        width: var(--plate);
+        height: var(--plate);
+        transform: translate(-50%, -50%);
+        text-decoration: none;
+    }
+
+    .node-plate {
+        display: block;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        padding: 6px;
+        border-radius: 12px;
+        background: rgba(120, 194, 173, 0.07);
+        border: 1px solid rgba(120, 194, 173, 0.28);
+        box-shadow: 0 0 12px rgba(120, 194, 173, 0.18), inset 0 0 10px rgba(120, 194, 173, 0.06);
+        transition: background-color 0.25s ease, border-color 0.25s ease,
+                    box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    /*
+     * .raccoon-frame img is a *descendant* rule (absolute, inset 0, cover) —
+     * without this override every mark would be stretched across the whole
+     * panel. contain, not cover: matadore is a 4.4:1 wordmark.
+     */
+    .apps-holo .node-plate img {
+        position: static;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        border-radius: 0;
+    }
+
+    .node-name {
+        position: absolute;
+        top: calc(100% + 5px);
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font-family: 'Josefin Sans', sans-serif;
+        font-size: 0.7rem;
+        color: #d9fff4;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+    }
+
+    .app-node:hover .node-plate,
+    .app-node:focus-visible .node-plate {
+        background: rgba(120, 194, 173, 0.16);
+        border-color: rgba(160, 226, 208, 0.65);
+        box-shadow: 0 0 20px rgba(120, 194, 173, 0.38), inset 0 0 12px rgba(120, 194, 173, 0.12);
+        transform: translateY(-2px);
+    }
+
+    /* Keyboard users need the name too, not just pointer users */
+    .app-node:hover .node-name,
+    .app-node:focus-visible .node-name {
+        opacity: 1;
+    }
+
+    .app-node:focus-visible {
+        outline: 2px solid #78c2ad;
+        outline-offset: 4px;
+        border-radius: 14px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .holo-floor::before,
+        .net-pulse line,
+        .holo-sweep {
+            animation: none;
+        }
+    }
+</style>
