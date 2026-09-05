@@ -19,6 +19,37 @@ priceCurrency: 'USD'
 sameAs:
   - https://github.com/mory-dev/hexdigest-crawl-sharding
   - https://github.com/mory-dev/hexdigest-scrapy-fingerprint
+faq:
+  - q: 'What does a dataset cost?'
+    a: >-
+      499 USD as a one-time purchase per dataset, not a subscription. A preview of
+      roughly 1,000 records from any tracker is free.
+  - q: 'Which marketplaces are covered?'
+    a: >-
+      Three are live: Gumroad, the Chrome Web Store (341,000+ extensions across
+      64,000+ creators) and the Shopify App Store (26,000+ apps).
+  - q: 'What formats do the datasets come in?'
+    a: 'CSV, JSONL and Parquet. The trackers are also browsable on the web.'
+  - q: 'How often does the data refresh?'
+    a: >-
+      Trackers refresh daily. Every crawl writes one row per product rather than
+      overwriting the last one, so price moves, rating drift and review velocity are
+      recoverable from history rather than inferred from a single snapshot.
+  - q: 'Can I see the data before buying?'
+    a: >-
+      Yes. Each tracker offers a free preview of around 1,000 records, which is
+      enough to check the schema and coverage against your own use case.
+  - q: 'Why is sales_count sometimes empty?'
+    a: >-
+      Because it is nullable by design on platforms that do not publish sales
+      figures. A NULL there means the marketplace hides the number, not that the
+      crawl failed — the data contract treats that distinction as meaningful.
+  - q: 'Is any of it open source?'
+    a: >-
+      Two pieces of the crawler infrastructure are, both MIT licensed:
+      crawl-sharding for deterministic lease-aware work distribution, and
+      scrapy-fingerprint for browser TLS fingerprints and adaptive proxy fallback
+      in Scrapy. The datasets themselves are commercial.
 ---
 
 HexDigest compiles daily market intelligence from public marketplace listings — products,
@@ -40,3 +71,16 @@ Two pieces of the crawler infrastructure are open source and MIT licensed —
 lease-aware work distribution, and
 [scrapy-fingerprint](https://github.com/mory-dev/hexdigest-scrapy-fingerprint) for browser TLS
 fingerprints and adaptive proxy fallback in Scrapy.
+
+### How it compares
+
+Against **subscription analytics products**, the model here is a one-time purchase of a dataset
+you keep, in formats you can load into your own tools. There is no dashboard, no seat pricing
+and no ongoing licence — and equally, no hosted UI to log into and no live API.
+
+Against **writing your own crawler**, you skip proxy rotation, fingerprinting, sharding and the
+daily operational burden of keeping three marketplaces flowing. The two hardest pieces of that
+infrastructure are open source here if you would rather build it yourself.
+
+Coverage is the real limit. Three marketplaces are live. If your category sits on Amazon,
+Etsy, the App Store or Google Play, this is not the dataset you need.

@@ -45,6 +45,7 @@ const {
         <link rel="icon" type="image/png" sizes="48x48" href="/favicon-round-48.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-round-32.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="alternate" type="application/rss+xml" title="Dario Mory" href="/rss.xml" />
         {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -98,10 +99,31 @@ const {
 
                 document.querySelectorAll('.raccoon-frame > img').forEach((img) => {
                     const loader = img.parentElement.querySelector('.frame-loader');
-                    if (!loader || loader.classList.contains('is-loaded')) return;
-                    // No class on the image itself — it is the LCP element and must
-                    // not be held at opacity 0 waiting on a transition.
-                    whenSettled(img, () => loader.classList.add('is-loaded'));
+                    if (loader && !loader.classList.contains('is-loaded')) {
+                        // No class on the image itself — it is the LCP element and must
+                        // not be held at opacity 0 waiting on a transition.
+                        whenSettled(img, () => loader.classList.add('is-loaded'));
+                    }
+
+                    // The animated original is ~80x the poster's weight. Fetch it only
+                    // once the poster has painted and the browser is idle, and decode it
+                    // fully off-screen before swapping, so the visible frame never blanks.
+                    const animated = img.dataset.animated;
+                    if (!animated || img.dataset.animatedPending) return;
+                    img.dataset.animatedPending = '1';
+                    whenSettled(img, () => {
+                        const load = () => {
+                            const full = new Image();
+                            full.decoding = 'async';
+                            full.addEventListener('load', () => { img.src = animated; }, { once: true });
+                            full.src = animated;
+                        };
+                        if ('requestIdleCallback' in window) {
+                            requestIdleCallback(load, { timeout: 2000 });
+                        } else {
+                            setTimeout(load, 200);
+                        }
+                    });
                 });
             }
 

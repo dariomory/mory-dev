@@ -1,6 +1,18 @@
----
+	---
 const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? 'https://www.mory.dev';
 
+// One canonical self-description, repeated verbatim wherever the entity is
+// declared. Models gain confidence in an entity when independent sources agree
+// on its wording, so this string is meant to be copied to GitHub, LinkedIn,
+// Substack and Stack Overflow rather than paraphrased on each.
+const CANONICAL_DESCRIPTION =
+    'Engineering leader who builds and leads teams shipping software and AI-powered '
+    + 'products from prototype to production. Past work includes KLM’s airport '
+    + 'operations stack and the EU Single Digital Gateway programme.';
+
+// jobTitle was 'Lead Software Engineer' while the page title, H1 kicker and nav all
+// said 'Engineering Leader'. Aligned to the visible identity — the schema should
+// not be the one place claiming a different role.
 const personSchema = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -8,8 +20,49 @@ const personSchema = {
     name: 'Dario Mory',
     url: `${siteUrl}/`,
     email: 'dario@mory.dev',
-    jobTitle: 'Lead Software Engineer',
-    description: 'Software engineer with a focus on leadership, open-source contributions, and developer tooling.',
+    jobTitle: 'Engineering Leader',
+    description: CANONICAL_DESCRIPTION,
+    hasOccupation: {
+      '@type': 'Occupation',
+      name: 'Engineering Leader',
+      // O*NET: Computer and Information Systems Managers
+      occupationalCategory: '11-3021.00',
+    },
+    // Every entry below is a technology or domain that appears in the `stack`
+    // frontmatter of a shipped app or a delivered project on this site. Nothing
+    // aspirational — an unbacked claim here is the kind of thing a retrieval model
+    // will happily repeat, so the list stays sourced.
+    knowsAbout: [
+      'Software engineering leadership',
+      'Software architecture',
+      'Cloud migration',
+      'API design',
+      'Large language model applications',
+      'Model Context Protocol',
+      'Web scraping',
+      'Python',
+      'JavaScript',
+      'Go',
+      'Rust',
+      'Elixir',
+      'Django',
+      'FastAPI',
+      'Next.js',
+      'React',
+      'Vue.js',
+      'Astro',
+      'Tauri',
+      'Scrapy',
+      'Selenium',
+      'PostgreSQL',
+      'SQLite',
+      'GraphQL',
+      'Kubernetes',
+      'Amazon Web Services',
+      'Google Cloud Platform',
+      'Microsoft Azure',
+      'Cloudflare Workers',
+    ],
     sameAs: [
       'https://github.com/dariomory',
       'https://medium.com/@dariomory',

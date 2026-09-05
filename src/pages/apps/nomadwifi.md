@@ -22,7 +22,44 @@ price: 0
 priceCurrency: 'USD'
 sameAs:
   - https://github.com/mory-dev/nomadwifi
+faq:
+  - q: 'Is NomadWiFi free?'
+    a: 'Yes, free and MIT licensed.'
+  - q: 'Which versions of Windows does it support?'
+    a: >-
+      Windows 10 and 11. It uses the Windows Native Wifi API directly, so there is no
+      macOS or Linux build.
+  - q: 'Does it need administrator rights?'
+    a: >-
+      No. No admin rights, no driver patches and no service install — it runs as a
+      normal user application.
+  - q: 'How quickly does it react to a bad connection?'
+    a: >-
+      It subscribes to the wireless service notifications rather than polling, so a
+      dropped link is noticed in around 100 ms. A roam that then fails to carry
+      traffic is rolled back automatically.
+  - q: 'How does it decide one access point is better than another?'
+    a: >-
+      It scores measured signal, band, 802.11 standard and BSS-Load airtime
+      congestion for every radio in range, rather than trusting the driver opinion of
+      the access point you are already on.
+  - q: 'Will it break my VPN when it switches?'
+    a: >-
+      It automates the sequence instead: hold the tunnel, roam, verify the new link
+      carries traffic, resume the tunnel, flush DNS.
+  - q: 'What about hotel captive portals?'
+    a: >-
+      Captive portals are detected explicitly and never mistaken for a bad access
+      point, which is the usual failure mode for tools that only watch for internet
+      reachability.
+  - q: 'Is there a command-line interface?'
+    a: >-
+      Yes. Every command-line operation accepts a JSON flag for scripting, and the
+      desktop app covers the same ground.
 ---
+
+NomadWiFi is a free Windows utility that fixes sticky Wi-Fi: it scores every access point in
+range and moves you off the one your laptop is needlessly bonded to.
 
 Hotel and cafe Wi-Fi is rarely one network — it is a dozen access points, and Windows will
 happily stay bonded to the first one it met while reporting 99% link quality. NomadWiFi measures
@@ -42,3 +79,21 @@ Every command-line operation takes a JSON flag, and there is a desktop app cover
 ground. No admin rights, no driver patches, no service install.
 
 Built for people who work from hotels, cafes and coworking spaces.
+
+### How it compares
+
+Against **the Windows roaming aggressiveness setting**, which is the free thing everyone tries
+first: that is a single driver-level dial with no visibility into what it is choosing. NomadWiFi
+measures each access point, tells you why it picked one, and can undo a roam that made things
+worse.
+
+Against **profile managers** such as NetSetMan: those switch between networks you have
+configured. This decides which radio of one network you should be on, which is a different
+problem.
+
+Against **proper enterprise roaming** — 802.11k, v and r: where a venue has deployed it
+correctly, the network already handles this and you do not need NomadWiFi. It exists because
+hotel and cafe deployments usually have not.
+
+It cannot make a bad access point good. If every radio in the building is congested, the honest
+answer is that it will find you the least bad one.

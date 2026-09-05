@@ -1,0 +1,179 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts
+		.filter((post) => post.data.status !== 'draft')
+		.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, description, image, pubDate, updatedDate, tags, syndication, status } = post.data;
+
+const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? 'https://www.mory.dev';
+const canonicalPath = `/posts/${post.slug}/`;
+const canonicalUrl = `${siteUrl}${canonicalPath}`;
+const personId = `${siteUrl}/#person`;
+
+const isArchived = status === 'archived';
+const { Content } = await post.render();
+
+const formatted = (d: Date) =>
+	d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+
+/* An archived post has no body to describe, so it gets no BlogPosting node —
+   marking an empty page as an article would misrepresent it to anything reading
+   the graph. */
+const articleSchema = isArchived
+	? undefined
+	: {
+			'@context': 'https://schema.org',
+			'@type': 'BlogPosting',
+			'@id': `${canonicalUrl}#article`,
+			headline: title,
+			description,
+			url: canonicalUrl,
+			datePublished: pubDate.toISOString().split('T')[0],
+			dateModified: (updatedDate ?? pubDate).toISOString().split('T')[0],
+			image: new URL(image, siteUrl + '/').href,
+			inLanguage: 'en',
+			...(tags.length && { keywords: tags.join(', ') }),
+			author: { '@id': personId },
+			publisher: { '@id': personId },
+			mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+		};
+
+const breadcrumbSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Posts', item: `${siteUrl}/posts/` },
+		{ '@type': 'ListItem', position: 3, name: title, item: canonicalUrl },
+	],
+};
+---
+<Layout
+	pageTitle={`${title} — Dario Mory`}
+	description={description}
+	canonicalPath={canonicalPath}
+	ogImage={image}
+	ogImageAlt={title}
+	ogType="article"
+	jsonLd={articleSchema ? [articleSchema, breadcrumbSchema] : [breadcrumbSchema]}
+>
+	<article class="post">
+		<h1>{title}</h1>
+		<p class="meta">
+			<time datetime={pubDate.toISOString().split('T')[0]}>{formatted(pubDate)}</time>
+			{updatedDate && <span> · updated {formatted(updatedDate)}</span>}
+		</p>
+
+		{isArchived ? (
+			<p class="archived">
+				This article was originally published elsewhere and has since been taken
+				down. It is listed here as part of the writing history; the full text is
+				no longer available.
+			</p>
+		) : (
+			<div class="post-body"><Content /></div>
+		)}
+
+		{syndication.length > 0 && (
+			<p class="syndication">
+				{isArchived ? 'Originally published on ' : 'Also published on '}
+				{syndication.map((s, i) => (<>{i > 0 && ', '}<a href={s.url} target="_blank" rel="noopener">{s.platform}</a></>))}.
+			</p>
+		)}
+	</article>
+	<p class="back"><a href="/posts/">← All posts</a></p>
+</Layout>
+<style>
+	h1 {
+		font-size: 1.5em;
+		text-decoration: underline #375a7f;
+		text-decoration-thickness: 4px;
+		text-underline-offset: 6px;
+		margin: 0.83em 0 0;
+	}
+
+	.meta {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.85em;
+		color: #c9b8d8;
+		text-indent: 0;
+		margin: 0.5em 0 0;
+	}
+
+	.post-body :global(h2) {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 1.2em;
+		color: #fdebf3;
+		text-decoration: none;
+		margin: 1.8em 0 0;
+	}
+
+	.post-body :global(h3) {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 1.05em;
+		color: #fdebf3;
+		margin: 1.5em 0 0;
+	}
+
+	.post-body :global(pre) {
+		background: rgba(253, 235, 243, 0.06);
+		border: 1px solid rgba(253, 235, 243, 0.1);
+		border-radius: 8px;
+		padding: 0.9em 1em;
+		overflow-x: auto;
+		font-size: 0.85em;
+		text-indent: 0;
+	}
+
+	.post-body :global(blockquote) {
+		border-left: 3px solid #584966;
+		margin: 1.4em 0;
+		padding-left: 1em;
+		color: #c9b8d8;
+	}
+
+	.post-body :global(a) {
+		color: #78c2ad;
+	}
+
+	.archived {
+		color: #c9b8d8;
+		font-style: italic;
+		text-indent: 0;
+	}
+
+	.syndication {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.9em;
+		color: #c9b8d8;
+		text-indent: 0;
+		margin-top: 2rem;
+	}
+
+	.syndication a, .back a {
+		color: #78c2ad;
+		text-decoration: none;
+	}
+
+	.syndication a:hover, .back a:hover {
+		text-decoration: underline;
+	}
+
+	.back {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.9em;
+		text-indent: 0;
+		margin-top: 2rem;
+	}
+</style>

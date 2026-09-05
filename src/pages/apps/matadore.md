@@ -23,6 +23,37 @@ priceCurrency: 'USD'
 sameAs:
   - https://github.com/dariomory/matadore
   - https://pypi.org/project/matadore/
+faq:
+  - q: 'Can I use matadore today?'
+    a: >-
+      No. It does not perform scans. The entry point, all six input handlers, all
+      five tool plugins and every report method raise NotImplementedError, and the
+      command-line interface is still scaffolding.
+  - q: 'It is on PyPI though — should I install it?'
+    a: >-
+      Only to read it. Version 0.1.0 is published and documented, but treat it as a
+      design worked out in the open rather than a tool to reach for.
+  - q: 'What actually exists in the codebase?'
+    a: >-
+      The Pydantic domain models, a dry-run planner that describes exactly what an
+      engagement would touch, a state store over SQLite with optional DuckDB for
+      team-shared runs, a multi-provider LLM client through LiteLLM, and a test suite
+      around all of it.
+  - q: 'What is it intended to do?'
+    a: >-
+      Adversarial reasoning rather than another checklist — chaining findings into
+      narrative attack paths mapped to MITRE ATT&CK, across domains, network ranges,
+      repositories, GitHub organisations, cloud accounts and container registries,
+      and wrapping existing tools rather than replacing them.
+  - q: 'Would it send my infrastructure data to an LLM provider?'
+    a: >-
+      Not necessarily. Inference goes through LiteLLM, so the provider is yours to
+      choose, and it can run entirely locally through Ollama — nothing has to leave
+      your network. That constraint is baked into the design rather than added later.
+  - q: 'Is it free?'
+    a: 'Free and MIT licensed.'
+  - q: 'Where can I follow progress?'
+    a: 'Progress is tracked in the open on GitHub.'
 ---
 
 **This one is pre-alpha, and the honest version matters more than the pitch.** matadore is

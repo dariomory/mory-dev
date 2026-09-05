@@ -228,9 +228,7 @@ p {
     stroke: #78c2ad;
     stroke-linejoin: round;
     filter: drop-shadow(0 0 2px rgba(120, 194, 173, 0.75));
-    /* 7s against 11s: the two never line up the same way twice for over a
-       minute, so the interference reads as random rather than looped. */
-    animation: holo-flicker 7s linear infinite, holo-glitch 11s linear infinite;
+    animation: holo-flicker 7s linear infinite;
 }
 
 /*
@@ -261,26 +259,6 @@ p {
  * uneven intervals. Evenly spaced dips would read as a pulse, not a fault —
  * the arrhythmia is the whole effect.
  */
-/*
- * Poor signal: the picture tears sideways and shears for a few frames, then
- * locks back in. Held at identity for long stretches — a glitch that is always
- * happening is just noise. Transform only, so it composes with the opacity
- * flicker above instead of fighting it.
- */
-@keyframes holo-glitch {
-    0%, 17%     { transform: none; }
-    17.6%       { transform: translateX(-1.6px) skewX(-14deg) scaleY(0.86); }
-    18.2%       { transform: translateX(1.8px) skewX(10deg) scaleY(1.08); }
-    18.8%       { transform: translateX(-0.6px) skewX(-4deg); }
-    19.4%, 58%  { transform: none; }
-    58.5%       { transform: translateX(2px) skewX(16deg) scaleY(0.78); }
-    59%         { transform: translateX(-1.2px) skewX(-7deg); }
-    59.6%       { transform: translateX(0.5px) skewX(3deg); }
-    60.2%, 88%  { transform: none; }
-    88.4%       { transform: translateX(-1px) skewX(8deg) scaleY(0.92); }
-    89%, 100%   { transform: none; }
-}
-
 @keyframes holo-flicker {
     0%, 2%    { opacity: 1; }
     3%        { opacity: 0.4; }
@@ -620,6 +598,10 @@ main > ul.link-card-grid:last-of-type {
     .nav-links a {
         display: inline-flex;
         align-items: center;
+        /* The Apps link leads with the SVG, so as an inline-flex box it takes its
+           baseline from that icon rather than from text — which lifts it above the
+           other three. All four boxes are the same height, so centre them instead. */
+        vertical-align: middle;
         min-height: 44px;
         padding: 0 0.5rem;
         margin: 0 4px;

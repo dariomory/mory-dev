@@ -1,31 +1,54 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 import Newsletter from '../components/Newsletter.astro';
 
-type BlogFrontmatter = {
-    title: string;
-    url: string;
-    description: string;
-    image: string;
-    pubDate: string;
-};
+const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? 'https://www.mory.dev';
 
-const blogPostsModules = Object.values(
-    import.meta.glob('../content/blog/*.md', { eager: true })
-) as Array<{ frontmatter: BlogFrontmatter }>;
+/* Posts now live on this domain, so cards link internally. Drafts stay out;
+   archived posts stay in, because they are part of the writing history even
+   though the original is gone. */
+const blogPosts = (await getCollection('blog'))
+    .filter(post => post.data.status !== 'draft')
+    .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
-const blogPosts = blogPostsModules
-    .map(entry => ({
-        ...entry.frontmatter,
-        pubDate: new Date(entry.frontmatter.pubDate),
-    }))
-    .filter(post => post.url)
-    .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
 const pageTitle = "Articles on AI Engineering & Leadership — Dario Mory";
 const description = "Articles on AI engineering, software leadership, and reverse engineering by Dario Mory.";
+
+const published = blogPosts.filter(post => post.data.status !== 'archived');
+
+const blogSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    '@id': `${siteUrl}/posts/#blog`,
+    name: 'Dario Mory',
+    description,
+    url: `${siteUrl}/posts/`,
+    inLanguage: 'en',
+    author: { '@id': `${siteUrl}/#person` },
+    blogPost: published.map(post => ({
+        '@type': 'BlogPosting',
+        '@id': `${siteUrl}/posts/${post.slug}/#article`,
+        headline: post.data.title,
+        description: post.data.description,
+        url: `${siteUrl}/posts/${post.slug}/`,
+        datePublished: post.data.pubDate.toISOString().split('T')[0],
+        image: new URL(post.data.image, siteUrl + '/').href,
+        author: { '@id': `${siteUrl}/#person` },
+    })),
+};
+
+const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+        { '@type': 'ListItem', position: 2, name: 'Posts', item: `${siteUrl}/posts/` },
+    ],
+};
 ---
-<Layout pageTitle={pageTitle} description={description} canonicalPath="/posts/" preloadImage="/posts-hero.webp">
+<Layout pageTitle={pageTitle} description={description} canonicalPath="/posts/" preloadImage="/posts-hero.webp" jsonLd={[blogSchema, breadcrumbSchema]}>
     <div class="gif">
         <div class="raccoon-frame">
             <span class="frame-loader" aria-hidden="true"></span>
@@ -43,7 +66,12 @@ const description = "Articles on AI engineering, software leadership, and revers
     <h1>Blog</h1>
     <ul role="list" class="link-card-grid post-list">
         {blogPosts.map(post => (
-            <Card url={post.url} image={post.image} title={post.title} body={post.description} />
+            <Card
+                url={`/posts/${post.slug}/`}
+                image={post.data.image}
+                title={post.data.title}
+                body={post.data.description}
+            />
         ))}
     </ul>
     <Newsletter />
