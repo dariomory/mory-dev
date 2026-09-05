@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
+import { logoTransitionName } from '../utils/transitionName';
 const allProjects = await Astro.glob('../pages/projects/*.md');
 const allContributions = await Astro.glob('../pages/contributions/*.md');
 const pageTitle = "Projects & Open-Source Contributions â€” Dario Mory";
@@ -28,6 +29,7 @@ const description = "Projects and open-source contributions led by Dario Mory â€
             image={card.frontmatter.image.url} 
             title={card.frontmatter.title} 
             body={card.frontmatter.description}
+            transitionName={logoTransitionName(card.url)}
         />)}
     </ul>
     <h2>Projects</h2>
@@ -37,6 +39,7 @@ const description = "Projects and open-source contributions led by Dario Mory â€
             image={card.frontmatter.image.url} 
             title={card.frontmatter.title} 
             body={card.frontmatter.description}
+            transitionName={logoTransitionName(card.url)}
         />)}
     </ul>
 </Layout>

@@ -453,6 +453,13 @@ main > ul.link-card-grid:last-of-type {
     .js .raccoon-frame .frame-loader::after {
         animation: none;
     }
+
+    /* Drop the logo out of the shared-element morph — it crossfades with the
+       page instead. `!important` beats Astro's generated per-scope rule. */
+    .page-logo,
+    .link-card .card-img {
+        view-transition-name: none !important;
+    }
 }
 
 .book-cover-img {

@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import BaseLayout from './Layout.astro';
+import { logoTransitionName } from '../utils/transitionName';
 
 const { frontmatter, url } = Astro.props;
 
@@ -84,7 +85,19 @@ const breadcrumbSchema = {
     ogImageAlt={frontmatter.image?.alt}
     jsonLd={[softwareSchema, breadcrumbSchema]}
 >
-    <h1>{frontmatter.title}</h1>
+    <div class="page-head">
+        {frontmatter.image?.url && (
+            <img
+                class="page-logo"
+                src={frontmatter.image.url}
+                alt={frontmatter.image.alt ?? ''}
+                width="44" height="44"
+                decoding="async"
+                transition:name={logoTransitionName(url)}
+            />
+        )}
+        <h1>{frontmatter.title}</h1>
+    </div>
     {frontmatter.tagline && <p class="tagline">{frontmatter.tagline}</p>}
     <slot />
     {frontmatter.status && <p><small>STATUS</small>{frontmatter.status}</p>}
@@ -108,12 +121,27 @@ const breadcrumbSchema = {
     <p class="back"><a href="/apps/">← All apps</a></p>
 </BaseLayout>
 <style>
+    .page-head {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin: 0.83em 0 0;
+    }
+
+    .page-logo {
+        width: 44px;
+        height: 44px;
+        object-fit: contain;
+        flex-shrink: 0;
+        border-radius: 6px;
+    }
+
     h1 {
         font-size: 1.5em;
         text-decoration: underline #375a7f;
         text-decoration-thickness: 4px;
         text-underline-offset: 6px;
-        margin: 0.83em 0 0;
+        margin: 0;
     }
 
     .tagline {

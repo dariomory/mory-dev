@@ -4,14 +4,17 @@ interface Props {
     image: string;
     title: string;
     body: string;
+    transitionName?: string;   // omitted for off-site cards (posts) — no target to morph to
 }
 
-const { url, image, title, body } = Astro.props;
+const { url, image, title, body, transitionName } = Astro.props;
 ---
 <li class="link-card">
     <a href={url}>
         <div class="img">
-            <img src={image} class="card-img" alt="" loading="lazy" decoding="async">
+            {transitionName
+                ? <img src={image} class="card-img" alt="" loading="lazy" decoding="async" transition:name={transitionName} />
+                : <img src={image} class="card-img" alt="" loading="lazy" decoding="async" />}
         </div>
 	<h3 class="card-title">
 	    {title}

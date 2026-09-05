@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Card from '../../components/Card.astro';
+import { logoTransitionName } from '../../utils/transitionName';
 
 const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? 'https://www.mory.dev';
 
@@ -80,6 +81,7 @@ const breadcrumbSchema = {
                 image={app.frontmatter.image.url}
                 title={app.frontmatter.title}
                 body={app.frontmatter.tagline ?? app.frontmatter.description}
+                transitionName={logoTransitionName(app.url)}
             />
         ))}
     </ul>

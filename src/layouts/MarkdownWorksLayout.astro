@@ -2,7 +2,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import BaseLayout from './Layout.astro';
-const { frontmatter } = Astro.props;
+import { logoTransitionName } from '../utils/transitionName';
+const { frontmatter, url } = Astro.props;
 
 const pageTitle = `${frontmatter.title} — Dario Mory`;
 
@@ -23,7 +24,19 @@ const ogImage = isRaster(worksImages[0]?.url)
       : undefined;
 ---
 <BaseLayout pageTitle={pageTitle} description={frontmatter.description} ogImage={ogImage} ogImageAlt={frontmatter.image?.alt}>
-    <h1>{frontmatter.title}</h1>
+    <div class="page-head">
+        {frontmatter.image?.url && (
+            <img
+                class="page-logo"
+                src={frontmatter.image.url}
+                alt={frontmatter.image.alt ?? ''}
+                width="44" height="44"
+                decoding="async"
+                transition:name={logoTransitionName(url)}
+            />
+        )}
+        <h1>{frontmatter.title}</h1>
+    </div>
     <slot />
     {frontmatter.platform && <p><small>PLATFORM</small>{frontmatter.platform}</p>}
     {frontmatter.stack && <p><small>STACK</small>{frontmatter.stack}</p>}
@@ -38,12 +51,27 @@ const ogImage = isRaster(worksImages[0]?.url)
     )}
 </BaseLayout>
 <style>
+    .page-head {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin: 0.83em 0 0;
+    }
+
+    .page-logo {
+        width: 44px;
+        height: 44px;
+        object-fit: contain;
+        flex-shrink: 0;
+        border-radius: 6px;
+    }
+
     h1 {
         font-size: 1.5em;
         text-decoration: underline #375a7f;
         text-decoration-thickness: 4px;
         text-underline-offset: 6px;
-        margin: 0.83em 0 0;
+        margin: 0;
     }
 
     .img {
