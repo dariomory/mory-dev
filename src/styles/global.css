@@ -198,7 +198,12 @@ p {
 .nav-links {
     font-family: 'Josefin Sans', sans-serif;
     font-size: 0.95rem;
-    text-align: right;
+    /* Flex so items align on their centres. Baseline alignment is what put the
+       Apps hologram and the About glyph on different lines from the words. */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
     margin-right: -0.55rem;
 }
 
@@ -591,7 +596,7 @@ main > ul.link-card-grid:last-of-type {
     }
 
     .nav-links {
-        text-align: center;
+        justify-content: center;
         margin-right: 0;
     }
 

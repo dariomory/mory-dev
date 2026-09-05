@@ -79,6 +79,10 @@ Not affiliated with, endorsed by, or sponsored by Shopify.
 
 Currently in beta while the app listing goes through review.
 
+Its development was inspired by commerce integration work on client systems — see the
+[Cartechelectronics project](/projects/cartechelectronics-ecu-services/) — where the recurring
+problem was getting store context in front of whoever had to act on it.
+
 ### How it compares
 
 Against **doing it by hand**, which is the real incumbent: someone opens the admin, finds the

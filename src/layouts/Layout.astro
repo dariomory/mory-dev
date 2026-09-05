@@ -73,6 +73,11 @@ const {
 	    <slot />
             <Footer />
         </main>
+        {/* Vercel Web Analytics. Same-origin, cookieless, and the exact script the
+            @vercel/analytics package injects — loaded directly so the deliberately
+            lean dependency list stays that way. Needs Web Analytics switched on in
+            the Vercel project, otherwise this 404s harmlessly. */}
+        <script defer src="/_vercel/insights/script.js"></script>
         <script>
             // Images decode after first paint, so each one clears its own spinner.
             // Runs on astro:page-load so it also covers view-transition navigations.

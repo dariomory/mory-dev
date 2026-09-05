@@ -33,5 +33,71 @@ const isCurrent = (match: string[]) =>
                 {link.label}
             </a>
         ))}
+        <a
+            href="/about/"
+            class="nav-about"
+            title="About"
+            aria-current={isCurrent(['/about']) ? 'page' : undefined}
+        >
+            {/* Icon rather than a fifth text label — five labels overflow the 320px
+                mobile width. The hidden span keeps real anchor text for crawlers and
+                screen readers; currentColor makes it light up like the others when
+                it is the current page. */}
+            <svg class="about-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <circle cx="10" cy="10" r="8.4" fill="none" stroke="currentColor" stroke-width="1.5" />
+                <circle cx="10" cy="5.8" r="1.15" fill="currentColor" stroke="none" />
+                <path d="M10 9.1 v5.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none" />
+            </svg>
+            <span class="visually-hidden">About</span>
+        </a>
     </div>
 </div>
+<style>
+    /* A utility rather than a fifth section: smaller than the labels, set off by a
+       hairline so its position at the end reads as deliberate instead of stranded. */
+    .nav-about {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 0 0.5rem 0.6rem;
+        margin-left: 0.5rem;
+        border-left: 1px solid rgba(253, 235, 243, 0.16);
+        color: #c9b8d8;
+        transition: color 0.2s ease;
+    }
+
+    .nav-about[aria-current="page"] {
+        color: #78c2ad;
+    }
+
+    .about-icon {
+        width: 15px;
+        height: 15px;
+        display: block;
+    }
+
+    .nav-about:hover .about-icon {
+        color: #78c2ad;
+    }
+
+    /* Anchor text that is read but not seen. */
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .nav-about {
+            min-height: 44px;
+            padding: 0 0.5rem 0 0.7rem;
+            margin-left: 0.3rem;
+        }
+    }
+</style>

@@ -15,6 +15,39 @@ platform: iOS/Android
 stack: NativeScript, Vue
 website: https://www.spaarfit.nl/
 github: 
+role: 'Project lead'
+updated: 2026-09-05
 ---
+Led development of SpaarFit, the workplace vitality app that motivates and empowers employees to
+take charge of their own health and well-being.
 
-Leading the SpaarFit project, our goal was to create a user-friendly app that motivates and empowers employees to take charge of their health and well-being. The app features a range of programs focusing on exercise, nutrition, and mental health, coupled with a rewards system to encourage ongoing participation. It's a testament to our commitment to enhancing health and wellness in the workplace.
+### The problem
+
+Corporate wellness programmes fail in a predictable way: people sign up in the first week and
+stop by the third. The hard part is not delivering health content — that is abundant and free —
+it is sustaining participation long enough for any of it to matter.
+
+### Constraints
+
+Employees are not a captive audience. Nobody is obliged to open a wellness app, so every
+friction point is an exit. It also had to reach people on whatever phone they already carried,
+which made two native codebases an expensive way to solve a distribution problem.
+
+### What I built
+
+An app covering programmes across exercise, nutrition and mental health, with a **rewards
+system** as the retention mechanism — the deliberate answer to the drop-off problem above,
+rather than an afterthought bolted on for engagement metrics.
+
+Built with **NativeScript and Vue**, so one codebase reached both platforms with native
+components rather than a wrapped web view. For a product whose main risk is people not opening
+it, feeling like a real app is not a detail.
+
+### My role
+
+Project lead — owned the shape of the product and led the team through delivery.
+
+### Outcome
+
+A wellness app employees returned to, which is the only measure that separates this category
+from a well-intentioned launch.

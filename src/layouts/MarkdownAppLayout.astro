@@ -55,7 +55,7 @@ const softwareSchema = {
               priceCurrency: frontmatter.priceCurrency ?? 'USD',
           },
     /* Binds every app to the one Person entity emitted by PersonSchema.astro, so
-       the nine products read as one author's portfolio rather than nine strangers. */
+       every product reads as one author's portfolio rather than a set of strangers. */
     author: {
         '@type': 'Person',
         '@id': `${siteUrl}/#person`,

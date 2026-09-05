@@ -38,5 +38,8 @@ Allow: /
 
 # RSS is a valid sitemap format, so it is listed as one — it carries the dates
 # the XML sitemap omits for posts.
+# An index of this site written for language models.
+# Llms-txt: https://www.mory.dev/llms.txt
+
 Sitemap: https://www.mory.dev/sitemap.xml
 Sitemap: https://www.mory.dev/rss.xml

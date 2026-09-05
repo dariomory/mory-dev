@@ -1,0 +1,595 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { contentCounts, numberWord, titleCaseNumber, yearsActive } from '../utils/counts';
+import * as si from 'simple-icons';
+
+const n = await contentCounts();
+
+/* Listed from the app pages themselves, in the same editorial maturity order as
+   /apps/, so shipping a product updates this panel with it. */
+const appList = (await Astro.glob('./apps/*.md'))
+	.sort((a, b) => (a.frontmatter.order ?? 99) - (b.frontmatter.order ?? 99))
+	.map((a) => ({
+		slug: a.url?.split('/').filter(Boolean).pop() ?? '',
+		name: a.frontmatter.title,
+		tagline: a.frontmatter.tagline ?? a.frontmatter.description,
+	}));
+
+const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? 'https://www.mory.dev';
+const personId = `${siteUrl}/#person`;
+
+const pageTitle = 'About Dario Mory — Engineering Leader';
+const description =
+	`Dario Mory is an engineering leader based in the Netherlands, ${numberWord(yearsActive())} years building `
+	+ 'and leading teams that ship software and AI-powered products from prototype to production.';
+
+/* ProfilePage is the type Google documents for a page about one person, and it
+   points at the same Person node every other page on this site references, so
+   this reads as the canonical page for that entity rather than a second one. */
+const profileSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'ProfilePage',
+	'@id': `${siteUrl}/about/#profilepage`,
+	url: `${siteUrl}/about/`,
+	name: pageTitle,
+	description,
+	inLanguage: 'en',
+	mainEntity: { '@id': personId },
+};
+
+const breadcrumbSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+		{ '@type': 'ListItem', position: 2, name: 'About', item: `${siteUrl}/about/` },
+	],
+};
+
+/* Icons are 20x20 stroke paths drawn with currentColor, so a row tints with the
+   accent on hover without a second asset to keep in sync. */
+const icons: Record<string, string> = {
+	role: 'M10 2.5 12.2 7l5 .7-3.6 3.5.9 5-4.5-2.4L5.5 16.2l.9-5L2.8 7.7l5-.7Z',
+	place: 'M10 17.5s5.5-5 5.5-9a5.5 5.5 0 1 0-11 0c0 4 5.5 9 5.5 9Z M10 8.5v.01',
+	time: 'M10 2.8a7.2 7.2 0 1 0 0 14.4 7.2 7.2 0 0 0 0-14.4Z M10 6.2v4.1l2.8 1.7',
+	code: 'M7.2 6.4 3.2 10l4 3.6 M12.8 6.4l4 3.6-4 3.6',
+	stack: 'M10 2.9 17 6.6l-7 3.7-7-3.7Z M3 10.2l7 3.7 7-3.7 M3 13.6l7 3.7 7-3.7',
+	cloud: 'M6 15.2a3.4 3.4 0 0 1-.3-6.8 4.6 4.6 0 0 1 8.8-.6 3.7 3.7 0 0 1 .3 7.4Z',
+	domain: 'M3.2 10a6.8 6.8 0 1 0 13.6 0 6.8 6.8 0 0 0-13.6 0Z M3.4 7.8h13.2 M3.4 12.2h13.2 M10 3.2c-3.4 3.6-3.4 10 0 13.6 3.4-3.6 3.4-10 0-13.6Z',
+	mail: 'M3.2 5.6h13.6v8.8H3.2Z M3.4 6 10 10.8 16.6 6',
+};
+
+/* Drawn rather than emoji: Windows renders regional-indicator pairs as boxed
+   letters, not flags, so the emoji version reads as "NL" on a large share of
+   visitors' machines. */
+const flags: Record<string, string> = {
+	nl: '<rect width="20" height="14" fill="#21468B"/><rect width="20" height="9.34" fill="#F5F5F5"/><rect width="20" height="4.67" fill="#AE1C28"/>',
+	es: '<rect width="20" height="14" fill="#AA151B"/><rect y="3.5" width="20" height="7" fill="#F1BF00"/>',
+	gb: '<rect width="20" height="14" fill="#012169"/>'
+		+ '<path d="M0 0 20 14M20 0 0 14" fill="none" stroke="#F5F5F5" stroke-width="2.9"/>'
+		+ '<path d="M0 0 20 14M20 0 0 14" fill="none" stroke="#C8102E" stroke-width="1.5"/>'
+		+ '<path d="M10 0V14M0 7H20" fill="none" stroke="#F5F5F5" stroke-width="4.6"/>'
+		+ '<path d="M10 0V14M0 7H20" fill="none" stroke="#C8102E" stroke-width="2.7"/>',
+	us: '<rect width="20" height="14" fill="#F5F5F5"/><rect width="20" height="2" fill="#B22234"/><rect y="4" width="20" height="2" fill="#B22234"/><rect y="8" width="20" height="2" fill="#B22234"/><rect y="12" width="20" height="2" fill="#B22234"/><rect width="9" height="8" fill="#3C3B6E"/>',
+};
+
+/* AWS and Azure are absent from simple-icons — both were withdrawn on trademark
+   request — so those two render as text-only pills. */
+const brand = (slug?: string) => {
+	if (!slug) return null;
+	const icon = (si as Record<string, { path: string; hex: string; title: string }>)[
+		'si' + slug.charAt(0).toUpperCase() + slug.slice(1)
+	];
+	return icon ? { path: icon.path, hex: '#' + icon.hex, title: icon.title } : null;
+};
+
+type Pill = { label: string; slug?: string };
+
+type Fact = { icon: string; term: string; value?: string; pills?: Pill[]; flag?: string;
+	countries?: { flag: string; name: string }[] };
+
+const facts: Fact[] = [
+	{ icon: 'role', term: 'Role', value: 'Engineering leader — hands-on, still writes code' },
+	{ icon: 'place', term: 'From', value: 'Spain', flag: 'es' },
+	{ icon: 'place', term: 'Building in', countries: [
+		{ flag: 'nl', name: 'Netherlands' },
+		{ flag: 'gb', name: 'United Kingdom' },
+		{ flag: 'us', name: 'United States' },
+	] },
+	{ icon: 'time', term: 'Active', value: `${titleCaseNumber(yearsActive())} years` },
+	{ icon: 'code', term: 'Languages', pills: [
+		{ label: 'Python', slug: 'python' },
+		{ label: 'C / C++', slug: 'cplusplus' },
+		{ label: 'JavaScript', slug: 'javascript' },
+		{ label: 'TypeScript', slug: 'typescript' },
+		{ label: 'Go', slug: 'go' },
+		{ label: 'Rust', slug: 'rust' },
+		{ label: 'Elixir', slug: 'elixir' },
+	] },
+	{ icon: 'stack', term: 'Builds with', pills: [
+		{ label: 'Django', slug: 'django' },
+		{ label: 'FastAPI', slug: 'fastapi' },
+		{ label: 'Next.js', slug: 'nextdotjs' },
+		{ label: 'React', slug: 'react' },
+		{ label: 'Vue', slug: 'vuedotjs' },
+		{ label: 'Astro', slug: 'astro' },
+		{ label: 'Tauri', slug: 'tauri' },
+	] },
+	{ icon: 'cloud', term: 'Runs on', pills: [
+		{ label: 'AWS' },
+		{ label: 'Google Cloud', slug: 'googlecloud' },
+		{ label: 'Azure' },
+		{ label: 'Kubernetes', slug: 'kubernetes' },
+		{ label: 'Cloudflare', slug: 'cloudflare' },
+		{ label: 'Vercel', slug: 'vercel' },
+	] },
+	{ icon: 'domain', term: 'Domains', pills: [
+		{ label: 'Aviation' }, { label: 'Government' }, { label: 'Energy data' },
+		{ label: 'Marketplaces' }, { label: 'Developer tooling' },
+	] },
+	{ icon: 'mail', term: 'Contact', value: 'dario@mory.dev' },
+];
+---
+<Layout
+	pageTitle={pageTitle}
+	description={description}
+	canonicalPath="/about/"
+	jsonLd={[profileSchema, breadcrumbSchema]}
+>
+	<h1>About</h1>
+
+	<p class="lede">
+		Dario Mory is an engineering leader based in the Netherlands who builds and leads
+		teams shipping software and AI-powered products from prototype to production. Over
+		{numberWord(yearsActive())} years his work has ranged from <a href="/projects/klm-airport-slot-management-automation/">KLM's
+		airport operations stack</a> and the <a href="/projects/sdg-cms-api-development/">EU
+		Single Digital Gateway programme</a> to startups across Europe and the United States,
+		alongside <a href="/apps/">the software released under mory.dev</a> and
+		<a href="/books/">{numberWord(n.books)} books</a>.
+	</p>
+
+	<h2>At a glance</h2>
+	<dl class="facts">
+		{facts.map((f) => (
+			<div class="fact">
+				<svg class="fact-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+					<path d={icons[f.icon]} />
+				</svg>
+				<dt>{f.term}</dt>
+				<dd>
+					{f.flag && (
+						<svg class="fact-flag" viewBox="0 0 20 14" aria-hidden="true" focusable="false" set:html={flags[f.flag]} />
+					)}
+					{f.countries && (
+						<span class="countries">
+							{f.countries.map((c) => (
+								<span class="country">
+									<svg class="fact-flag" viewBox="0 0 20 14" aria-hidden="true" focusable="false" set:html={flags[c.flag]} />
+									{c.name}
+								</span>
+							))}
+						</span>
+					)}
+					{f.pills && (
+						<span class="pills">
+							{f.pills.map((t) => {
+								const b = brand(t.slug);
+								return (
+									<span class="pill">
+										{b && (
+											<svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" style={`color:${b.hex}`}>
+												<path d={b.path} fill="currentColor" />
+											</svg>
+										)}
+										{t.label}
+									</span>
+								);
+							})}
+						</span>
+					)}
+					{f.value}
+				</dd>
+			</div>
+		))}
+	</dl>
+
+	<h2>What I do</h2>
+	<p>
+		Four kinds of problem come up again and again, and they are the ones I take on.
+	</p>
+	<p>
+		<strong>Taking AI products past the demo.</strong> A prototype that answers well in a
+		notebook is not a product. The distance between the two is evaluation, cost control,
+		fallback behaviour when a model is wrong or slow, and a team that understands which
+		model to reach for. I have run that migration and written about
+		<a href="/posts/the-multi-llm-stack/">the stack it produced</a>.
+	</p>
+	<p>
+		<strong>Systems that cannot go down.</strong> Airport slot management does not get a
+		maintenance window. Neither does a public-service gateway used across the EU. That
+		constraint changes architecture, deployment and how a team is organised around it.
+	</p>
+	<p>
+		<strong>Cloud migration and high-traffic APIs.</strong> Moving load-bearing systems
+		between platforms without a rewrite, and keeping them fast once the traffic arrives.
+	</p>
+	<p>
+		<strong>Growing engineers.</strong> The leverage is rarely in my own commits. It is in
+		review habits, decomposition, and the practices a team keeps under deadline pressure —
+		which is what <a href="/posts/teaching-engineers-to-think-in-smaller-commits/">teaching
+		engineers to think in smaller commits</a> is really about.
+	</p>
+
+	<h2>Selected work</h2>
+	<p>
+		<strong><a href="/projects/klm-airport-slot-management-automation/">KLM</a></strong> —
+		airport slot management automation, built with Python (FastAPI), C++, Google Cloud and
+		Kubernetes. The subject of <a href="/books/klm-code/">The KLM Code</a>.
+	</p>
+	<p>
+		<strong><a href="/projects/sdg-cms-api-development/">Single Digital Gateway</a></strong> —
+		CMS and API work on the Invoervoorziening for the EU programme that gives citizens and
+		businesses one route into Dutch and European public services.
+	</p>
+	<p>
+		<strong><a href="/projects/flatpeak-energy-data-platform/">FlatPeak</a></strong> —
+		real-time energy tariff data delivered through a public API.
+	</p>
+	<p>
+		<strong><a href="/projects/bettyblocks-low-code-platform-development/">Betty Blocks</a></strong> —
+		low-code platform engineering in Elixir, React, GraphQL and WebAssembly.
+	</p>
+	<p>
+		{titleCaseNumber(n.projects)} projects and {numberWord(n.contributions)} open-source contributions — to
+		<a href="/contributions/django-open-source-contribution/">Django</a> and
+		<a href="/contributions/numpy-open-source-contribution/">NumPy</a> — are listed under
+		<a href="/works/">Works</a>.
+	</p>
+
+	<h2>Software I build</h2>
+	<p>
+		I ship products under mory.dev regularly — most free and open source, a couple
+		commercial, one honestly labelled pre-alpha.
+	</p>
+
+	<div class="term" role="img" aria-label="A terminal listing of the products released under mory.dev">
+		<div class="term-bar" aria-hidden="true">
+			<span class="dot dot-a"></span><span class="dot dot-b"></span><span class="dot dot-c"></span>
+			<span class="term-title">dario@mory.dev — ~/apps</span>
+		</div>
+		<div class="term-body">
+			<p class="term-cmd"><span class="prompt">$</span> ls ~/apps</p>
+			<ul class="term-list">
+				{appList.map((a) => (
+					<li>
+						<a href={`/apps/${a.slug}/`}><span class="term-name">{a.slug}</span></a>
+						<span class="term-desc">{a.tagline}</span>
+					</li>
+				))}
+			</ul>
+			<p class="term-cmd term-foot">
+				<span class="prompt">$</span> <a href="/apps/">open ./apps</a><span class="cursor" aria-hidden="true"></span>
+			</p>
+		</div>
+		<div class="scanlines" aria-hidden="true"></div>
+	</div>
+
+	<h2>Writing and speaking</h2>
+	<p>
+		{titleCaseNumber(n.books)} books — <a href="/books/klm-code/">The KLM Code</a>, on tech, power and politics
+		inside a national carrier, and
+		<a href="/books/building-bots-and-scrapers-with-python/">Building Bots and Scrapers
+		with Python</a>. Articles on AI engineering, reverse engineering and leadership are
+		collected under <a href="/posts/">Posts</a>.
+	</p>
+	<p>
+		I speak at conferences on AI engineering and software leadership. Organising an event?
+		<a href="mailto:dario@mory.dev?subject=Speaking%20inquiry">Get in touch</a>.
+	</p>
+
+	<h2>Working together</h2>
+	<p>
+		The work that suits me best is leading a team through something hard: an AI product
+		that has to become real, a migration that cannot break, a codebase that needs to
+		outlive the people who wrote it. Consulting, fractional leadership and advisory all
+		work.
+	</p>
+	<p>
+		Reach me at <a href="mailto:dario@mory.dev">dario@mory.dev</a>, or on
+		<a href="https://github.com/dariomory" rel="me">GitHub</a>.
+	</p>
+</Layout>
+<style>
+	h1 {
+		font-size: 1.5em;
+		text-decoration: underline #375a7f;
+		text-decoration-thickness: 4px;
+		text-underline-offset: 6px;
+		margin: 0.83em 0 0;
+	}
+
+	h2 {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 1.15em;
+		text-decoration: none;
+		color: #fdebf3;
+		margin: 2em 0 0;
+	}
+
+	.lede {
+		font-size: 1.05em;
+		color: #fdebf3;
+	}
+
+	/* A framed spec panel rather than a plain list — this is the block a reader
+	   scans first, so it earns the weight. */
+	.facts {
+		margin: 1em 0 0;
+		padding: 0.3em 0;
+		border: 1px solid rgba(120, 194, 173, 0.28);
+		border-radius: 14px;
+		background:
+			linear-gradient(160deg, rgba(120, 194, 173, 0.07), rgba(88, 73, 102, 0.12));
+		text-align: left;
+	}
+
+	.fact {
+		display: grid;
+		grid-template-columns: 22px max-content 1fr;
+		align-items: baseline;
+		gap: 0.55em 0.85em;
+		padding: 0.5em 1.1em;
+	}
+
+	.fact + .fact {
+		border-top: 1px solid rgba(253, 235, 243, 0.07);
+	}
+
+	.fact-icon {
+		width: 15px;
+		height: 15px;
+		align-self: center;
+		fill: none;
+		stroke: #78c2ad;
+		stroke-width: 1.5;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.facts dt {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.78em;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: #c9b8d8;
+	}
+
+	/* dd had no font-family and was falling back to the browser serif. */
+	.facts dd {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.95em;
+		margin: 0;
+		color: #fdebf3;
+		text-indent: 0;
+	}
+
+	.flag {
+		width: 19px;
+		height: 13.3px;
+		border-radius: 2px;
+		margin-right: 0.45em;
+		vertical-align: -0.18em;
+		/* Keeps the white bands from bleeding into the page. */
+		outline: 1px solid rgba(253, 235, 243, 0.28);
+		outline-offset: -1px;
+	}
+
+	.pills {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.3em;
+	}
+
+	.pill-icon {
+		width: 12px;
+		height: 12px;
+		margin-right: 0.4em;
+		flex-shrink: 0;
+	}
+
+	.pill {
+		display: inline-flex;
+		align-items: center;
+		font-size: 0.85em;
+		line-height: 1.35;
+		padding: 0.2em 0.6em;
+		border-radius: 999px;
+		background: rgba(88, 73, 102, 0.75);
+		border: 1px solid rgba(253, 235, 243, 0.12);
+		color: #fdebf3;
+		white-space: nowrap;
+	}
+
+	/* CRT panel. Everything here is decoration over real, crawlable markup — the
+	   product names and taglines are ordinary links underneath. */
+	.term {
+		position: relative;
+		margin: 1.1em 0 0;
+		border: 1px solid rgba(120, 194, 173, 0.32);
+		border-radius: 10px;
+		background: #0f1417;
+		overflow: hidden;
+		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.35);
+		animation: term-flicker 9s steps(1) infinite;
+	}
+
+	.term-bar {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding: 0.5em 0.8em;
+		background: rgba(253, 235, 243, 0.05);
+		border-bottom: 1px solid rgba(253, 235, 243, 0.08);
+	}
+
+	.dot {
+		width: 9px;
+		height: 9px;
+		border-radius: 50%;
+		display: block;
+	}
+
+	.dot-a { background: #d9645f; }
+	.dot-b { background: #d9b45f; }
+	.dot-c { background: #78c2ad; }
+
+	.term-title {
+		font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+		font-size: 0.72em;
+		color: #8fa3a0;
+		margin-left: 0.5em;
+	}
+
+	.term-body {
+		padding: 0.9em 1em 1em;
+		font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+		font-size: 0.78em;
+		line-height: 1.7;
+		color: #9fe6d2;
+		text-shadow: 0 0 6px rgba(120, 194, 173, 0.35);
+		text-align: left;
+	}
+
+	.term-cmd {
+		font-family: inherit;
+		font-size: 1em;
+		margin: 0;
+		text-indent: 0;
+		color: #d9fff4;
+	}
+
+	.prompt { color: #78c2ad; }
+
+	.term-list {
+		list-style: none;
+		margin: 0.5em 0;
+		padding: 0;
+	}
+
+	.term-list li {
+		display: flex;
+		gap: 0.9em;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+
+	.term-name {
+		display: inline-block;
+		min-width: 11ch;
+		color: #78c2ad;
+	}
+
+	.term-list a { color: inherit; }
+	.term-list a:hover .term-name { color: #d9fff4; }
+
+	/* Taglines vary a lot in length; clipping keeps the column rhythm and the full
+	   text stays in the markup. */
+	.term-desc {
+		color: #8fa3a0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.term-foot { margin-top: 0.4em; }
+	.term-foot a { color: #d9fff4; }
+
+	.cursor {
+		display: inline-block;
+		width: 0.55em;
+		height: 1em;
+		margin-left: 0.15em;
+		background: #78c2ad;
+		vertical-align: -0.15em;
+		animation: term-cursor 1.1s steps(1) infinite;
+	}
+
+	.scanlines {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background: repeating-linear-gradient(
+			to bottom,
+			rgba(0, 0, 0, 0) 0px,
+			rgba(0, 0, 0, 0) 2px,
+			rgba(0, 0, 0, 0.16) 3px,
+			rgba(0, 0, 0, 0.16) 4px
+		);
+	}
+
+	/* Two brief dips per nine seconds — nowhere near the three-per-second
+	   threshold that makes flashing a seizure risk. */
+	@keyframes term-flicker {
+		0%, 22%   { opacity: 1; }
+		22.6%     { opacity: 0.82; }
+		23.2%     { opacity: 1; }
+		68%       { opacity: 1; }
+		68.5%     { opacity: 0.88; }
+		69%       { opacity: 1; }
+		100%      { opacity: 1; }
+	}
+
+	@keyframes term-cursor {
+		0%, 50%   { opacity: 1; }
+		50.1%, 100% { opacity: 0; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.term, .cursor { animation: none; }
+		.cursor { opacity: 1; }
+	}
+
+	a {
+		color: #78c2ad;
+		text-decoration: none;
+	}
+
+	a:hover {
+		text-decoration: underline;
+	}
+
+	.countries {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.2em 1.1em;
+	}
+
+	.country {
+		display: inline-flex;
+		align-items: center;
+		white-space: nowrap;
+	}
+
+	.fact-flag {
+		width: 19px;
+		height: 13.3px;
+		fill: none;
+		border-radius: 2px;
+		margin-right: 0.45em;
+		vertical-align: -0.18em;
+		outline: 1px solid rgba(253, 235, 243, 0.28);
+		outline-offset: -1px;
+	}
+
+	@media only screen and (max-width: 600px) {
+		.fact {
+			grid-template-columns: 22px 1fr;
+			gap: 0.15em 0.7em;
+			padding: 0.65em 0.9em;
+		}
+
+		/* Value drops under the label, still clear of the icon column. */
+		.facts dd {
+			grid-column: 2;
+		}
+	}
+</style>

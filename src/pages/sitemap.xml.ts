@@ -26,18 +26,27 @@ export async function GET(context: { site: URL }) {
 	const posts = (await getCollection('blog')).filter(
 		(post) => post.data.status !== 'draft' && post.data.status !== 'archived',
 	);
-	const projectPaths = Object.keys(
-		import.meta.glob('../pages/projects/*.md', { eager: false }),
-	);
-	const contributionPaths = Object.keys(
-		import.meta.glob('../pages/contributions/*.md', { eager: false }),
-	);
+	/* Eager so `updated` can supply a real lastmod. Pages without one emit no
+	   lastmod at all rather than a guessed date — Google ignores the signal
+	   entirely once it looks invented. */
+	type Md = { frontmatter?: { updated?: string } };
+	const dated = (glob: Record<string, unknown>) =>
+		Object.entries(glob).map(([path, mod]) => ({
+			path,
+			updated: (mod as Md).frontmatter?.updated
+				? new Date((mod as Md).frontmatter!.updated!)
+				: undefined,
+		}));
+
+	const projects = dated(import.meta.glob('../pages/projects/*.md', { eager: true }));
+	const contributions = dated(import.meta.glob('../pages/contributions/*.md', { eager: true }));
 	const appPaths = Object.keys(
 		import.meta.glob('../pages/apps/*.md', { eager: false }),
 	);
 
 	const urls = [
 		urlEntry(toUrl(site, '/')),
+		urlEntry(toUrl(site, '/about/')),
 		urlEntry(toUrl(site, '/apps/')),
 		urlEntry(toUrl(site, '/works/')),
 		urlEntry(toUrl(site, '/books/')),
@@ -51,11 +60,11 @@ export async function GET(context: { site: URL }) {
 				post.data.updatedDate ?? post.data.pubDate,
 			),
 		),
-		...projectPaths.map((path) =>
-			urlEntry(toUrl(site, `/projects/${slugFromPath(path)}/`)),
+		...projects.map((p) =>
+			urlEntry(toUrl(site, `/projects/${slugFromPath(p.path)}/`), p.updated),
 		),
-		...contributionPaths.map((path) =>
-			urlEntry(toUrl(site, `/contributions/${slugFromPath(path)}/`)),
+		...contributions.map((c) =>
+			urlEntry(toUrl(site, `/contributions/${slugFromPath(c.path)}/`), c.updated),
 		),
 		...appPaths.map((path) =>
 			urlEntry(toUrl(site, `/apps/${slugFromPath(path)}/`)),

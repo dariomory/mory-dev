@@ -19,7 +19,7 @@ operations stack and the EU Single Digital Gateway programme.**
 The source for my personal site: portfolio, writing, books, and the software I
 release under mory.dev.
 
-## Software
+## Selected software
 
 Products are developed across two GitHub accounts — [@dariomory](https://github.com/dariomory)
 for personal projects and [@mory-dev](https://github.com/mory-dev) for the
@@ -37,6 +37,7 @@ organisation.
 | [Shopify for GitHub](https://shopify.mory.dev) | Commerce context in GitHub issues |
 | [matadore](https://dariomory.github.io/matadore/) | Attack-surface mapping toolkit (pre-alpha) |
 
+The full, current list is at [mory.dev/apps](https://www.mory.dev/apps/).
 ## Stack
 
 [Astro](https://astro.build) static site, no runtime framework. Content lives in

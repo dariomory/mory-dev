@@ -15,8 +15,45 @@ platform: Web, Cloud
 stack: Elixir, React, GraphQL, WebAssembly
 website: https://www.bettyblocks.com
 github: 
+role: 'Full-stack contributor — platform services, builder components, extensions'
+updated: 2026-09-05
 ---
+Contributed to the core of an enterprise low-code platform that lets both professional and
+citizen developers build web applications without writing boilerplate.
 
-Contributed to the core platform that enables both professional and citizen developers to build complex web applications without writing boilerplate. Work spanned the full stack: Elixir backend services for concurrency and fault tolerance, React and TypeScript front-end components, and GraphQL APIs connecting both layers. Integrated WebAssembly extensions to balance visual development with the flexibility of custom code. Worked closely with product, design, and platform teams on workflow automation and enterprise integrations.
+### The problem
 
+A low-code platform has to serve two audiences with incompatible expectations. Citizen
+developers want to assemble an application visually and never see a runtime. Professional
+developers want an escape hatch the moment the visual model stops fitting their problem — and
+they will abandon the platform entirely if it does not exist.
 
+Serving only the first group produces a toy. Serving only the second produces a framework
+nobody needed.
+
+### What I built
+
+Work spanned the full stack.
+
+**Elixir for the backend services.** A platform like this runs many customers' applications
+side by side, which makes concurrency and fault isolation the central problem rather than an
+optimisation. The BEAM's process model is built for exactly that shape: one tenant's failure
+stays that tenant's failure.
+
+**React and TypeScript for the front-end components** that make up the visual builder, with
+**GraphQL** joining the two layers — a fit for a product where the client decides what it needs
+rather than the server anticipating it, since the shape of a generated application is not known
+in advance.
+
+**WebAssembly extensions** as the escape hatch: the point where a developer can drop out of
+visual composition into custom code without leaving the platform to do it.
+
+### My role
+
+Full-stack contributor across those layers, working closely with product, design and platform
+teams on workflow automation and enterprise integrations.
+
+### Outcome
+
+Platform capability that holds both audiences at once — visual development that stays genuinely
+visual, and a route to custom code that does not require abandoning it.
