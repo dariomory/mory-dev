@@ -3,7 +3,6 @@ const siteUrl = Astro.site?.href ?? 'https://www.mory.dev';
 
 interface Props {
 	pageTitle: string;
-	preloadImage?: string;
 	description?: string;
 	canonicalPath?: string;
 	ogImage?: string;
@@ -17,7 +16,6 @@ interface Props {
 
 const {
 	pageTitle,
-	preloadImage,
 	description = 'Engineering leader, author, and builder of software and AI-powered products.',
 	canonicalPath,
 	ogImage,
@@ -37,8 +35,10 @@ const resolvedOgImage = ogImage
 	: new URL('/raccoon-coder.webp', siteUrl).href;
 const resolvedOgImageAlt = ogImageAlt
 	?? (ogImage ? undefined : 'Illustration of a raccoon coding at a desk with monitors at night');
-const resolvedOgImageWidth = ogImageWidth ?? (ogImage ? undefined : 800);
-const resolvedOgImageHeight = ogImageHeight ?? (ogImage ? undefined : 450);
+// The fallback image is 540x314 on disk; it was previously declared as 800x450,
+// which made every scraper's aspect ratio wrong.
+const resolvedOgImageWidth = ogImageWidth ?? (ogImage ? undefined : 540);
+const resolvedOgImageHeight = ogImageHeight ?? (ogImage ? undefined : 314);
 const jsonLdBlocks = jsonLd
 	? Array.isArray(jsonLd)
 		? jsonLd
