@@ -4,15 +4,19 @@ import Newsletter from '../components/Newsletter.astro';
 const pageTitle = "Dario Mory — Engineering Leader, Speaker & Author";
 const description = "Engineering leader, speaker, and author focused on AI engineering and software leadership. Projects at KLM and the EU Single Digital Gateway.";
 ---
-<Layout pageTitle={pageTitle} description={description} canonicalPath="/" preloadImage="/raccoon-coder.webp">
+<Layout pageTitle={pageTitle} description={description} canonicalPath="/" preloadImage="/raccoon-coder-poster.webp">
     <div class="gif">
         <div class="raccoon-frame">
             <span class="frame-loader" aria-hidden="true"></span>
+            {/* The animation is 2.2MB and this is the LCP element, so the static
+                first frame (28KB) is what gets preloaded and painted. The script in
+                Layout.astro swaps in `data-animated` once the page is idle. */}
             <img
-                width="800"
-                height="450"
+                width="540"
+                height="314"
                 alt="Illustration of a raccoon coding at a desk with monitors at night"
-                src="/raccoon-coder.webp"
+                src="/raccoon-coder-poster.webp"
+                data-animated="/raccoon-coder.webp"
                 loading="eager"
                 fetchpriority="high"
                 decoding="async"
@@ -27,10 +31,6 @@ const description = "Engineering leader, speaker, and author focused on AI engin
     </p>
     <p>
         Code that ships, teams that grow-that's what matters. Cloud migrations, high-traffic APIs, and early-stage products taken to production are the kinds of problems that keep things interesting.
-    </p>
-    <p>
-        I also release my own software under mory.dev — <a href="/apps/">nine apps</a> so far, from
-        marketplace intelligence and developer tooling to a local-first photo editor.
     </p>
     <p>
         I speak at conferences on AI engineering and software leadership. Organizing an event? <a href="mailto:dario@mory.dev?subject=Speaking%20inquiry">Get in touch</a>.
