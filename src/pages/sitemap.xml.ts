@@ -20,6 +20,12 @@ export async function GET(context: { site: URL }) {
 	const { site } = context;
 
 	const books = await getCollection('books');
+	/* Archived posts carry no body, so they stay out of the index — submitting a
+	   page whose only content is "this is no longer available" invites a thin
+	   content judgement on the whole section. */
+	const posts = (await getCollection('blog')).filter(
+		(post) => post.data.status !== 'draft' && post.data.status !== 'archived',
+	);
 	const projectPaths = Object.keys(
 		import.meta.glob('../pages/projects/*.md', { eager: false }),
 	);
@@ -38,6 +44,12 @@ export async function GET(context: { site: URL }) {
 		urlEntry(toUrl(site, '/posts/')),
 		...books.map((book) =>
 			urlEntry(toUrl(site, `/books/${book.slug}/`), book.data.publishDate),
+		),
+		...posts.map((post) =>
+			urlEntry(
+				toUrl(site, `/posts/${post.slug}/`),
+				post.data.updatedDate ?? post.data.pubDate,
+			),
 		),
 		...projectPaths.map((path) =>
 			urlEntry(toUrl(site, `/projects/${slugFromPath(path)}/`)),
