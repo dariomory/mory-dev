@@ -38,6 +38,55 @@ const profileSchema = {
 	mainEntity: { '@id': personId },
 };
 
+/* An FAQ block is the shape an assistant lifts wholesale, and it answers the
+   questions a hiring reader actually arrives with. Every answer is drawn from
+   what is already true elsewhere on this site. */
+const faq = [
+	{
+		q: 'What kind of work do you take on?',
+		a: 'Four kinds, mostly: AI products that have to get past the demo, systems that cannot go '
+			+ 'down, cloud migrations and high-traffic APIs, and teams that need to grow. Consulting, '
+			+ 'fractional leadership and advisory all work.',
+	},
+	{
+		q: 'Are you available for new work?',
+		a: 'Yes. The best fit is leading a team through something hard rather than a defined '
+			+ 'implementation task. Email dario@mory.dev.',
+	},
+	{
+		q: 'Where are you based, and do you work remotely?',
+		a: 'Based in the Netherlands, originally from Spain, and currently building in the '
+			+ 'Netherlands, the United Kingdom and the United States. Remote is normal.',
+	},
+	{
+		q: 'Are you hands-on or purely leading?',
+		a: 'Hands-on. Architecture and delivery decisions, and still writing and reviewing code — '
+			+ 'the leverage is rarely in my own commits, but the judgement comes from staying in them.',
+	},
+	{
+		q: 'What is your background?',
+		a: 'Eleven years building and leading engineering teams, including KLM’s airport slot '
+			+ 'management system and the CMS and API behind the Dutch Single Digital Gateway '
+			+ 'programme, alongside startups across Europe and the United States.',
+	},
+	{
+		q: 'Do you speak at events?',
+		a: 'Yes, on AI engineering and software leadership. Organising something? Get in touch at '
+			+ 'dario@mory.dev.',
+	},
+];
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	'@id': `${siteUrl}/about/#faq`,
+	mainEntity: faq.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
+};
+
 const breadcrumbSchema = {
 	'@context': 'https://schema.org',
 	'@type': 'BreadcrumbList',
@@ -136,7 +185,7 @@ const facts: Fact[] = [
 	pageTitle={pageTitle}
 	description={description}
 	canonicalPath="/about/"
-	jsonLd={[profileSchema, breadcrumbSchema]}
+	jsonLd={[profileSchema, faqSchema, breadcrumbSchema]}
 >
 	<h1>About</h1>
 
@@ -259,7 +308,7 @@ const facts: Fact[] = [
 	<h2>Software I build</h2>
 	<p>
 		I ship products under mory.dev regularly — most free and open source, a couple
-		commercial, one honestly labelled pre-alpha.
+		commercial.
 	</p>
 
 	<div class="term" role="img" aria-label="A terminal listing of the products released under mory.dev">
@@ -297,6 +346,14 @@ const facts: Fact[] = [
 		<a href="mailto:dario@mory.dev?subject=Speaking%20inquiry">Get in touch</a>.
 	</p>
 
+	<h2>Questions</h2>
+	{faq.map((f) => (
+		<div class="faq-item">
+			<h3>{f.q}</h3>
+			<p>{f.a}</p>
+		</div>
+	))}
+
 	<h2>Working together</h2>
 	<p>
 		The work that suits me best is leading a team through something hard: an AI product
@@ -329,6 +386,22 @@ const facts: Fact[] = [
 	.lede {
 		font-size: 1.05em;
 		color: #fdebf3;
+	}
+
+	.faq-item {
+		margin-top: 1.1em;
+	}
+
+	.faq-item h3 {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.98em;
+		color: #fdebf3;
+		margin: 0 0 0.2em;
+	}
+
+	.faq-item p {
+		margin: 0;
+		text-indent: 0;
 	}
 
 	/* A framed spec panel rather than a plain list — this is the block a reader
