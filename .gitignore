@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # sudonotes ideas
 IDEAS.md
+
+# LLM visibility tracking lives in the private embrr repo, not here.
+/docs/llm-visibility-*
+/scripts/baseline.mjs
