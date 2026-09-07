@@ -549,16 +549,6 @@ main > ul.link-card-grid:last-of-type {
         animation: none;
     }
 
-    .nav-holo,
-    .holo-core,
-    .holo-meridians polygon {
-        animation: none;
-    }
-
-    .holo-meridians polygon:nth-child(1) { transform: scaleX(1); }
-    .holo-meridians polygon:nth-child(2) { transform: scaleX(0.5); }
-    .holo-meridians polygon:nth-child(3) { transform: scaleX(0.06); }
-
     /* Drop the logo out of the shared-element morph — it crossfades with the
        page instead. `!important` beats Astro's generated per-scope rule. */
     .page-logo,

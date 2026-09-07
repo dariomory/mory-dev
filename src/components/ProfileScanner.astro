@@ -133,8 +133,11 @@ const hex = (cx: number, cy: number, r: number) =>
     }
 
     @keyframes scan-spin {
-        from { transform: rotateY(0deg); }
-        to   { transform: rotateY(360deg); }
+        0%   { transform: scaleX(1);    animation-timing-function: ease-in; }
+        25%  { transform: scaleX(0.06); animation-timing-function: ease-out; }
+        50%  { transform: scaleX(-1);   animation-timing-function: ease-in; }
+        75%  { transform: scaleX(0.06); animation-timing-function: ease-out; }
+        100% { transform: scaleX(1); }
     }
 
     @keyframes scan-core {
@@ -145,16 +148,6 @@ const hex = (cx: number, cy: number, r: number) =>
     @keyframes scan-bar {
         0%, 100% { transform: scaleY(0.55); opacity: 0.4; }
         50%      { transform: scaleY(1.25); opacity: 0.9; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .ring, .core, .bars rect {
-            animation: none;
-        }
-
-        .ring-1 { transform: scaleX(1); }
-        .ring-2 { transform: scaleX(0.5); }
-        .ring-3 { transform: scaleX(0.06); }
     }
 
     @media only screen and (max-width: 600px) {
