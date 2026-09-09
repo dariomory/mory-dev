@@ -59,6 +59,9 @@ const serviceSchemas = SERVICES.map((s) => ({
 	description: s.summary,
 	url: canonicalUrl,
 	provider: { '@id': personId },
+	/* What the engagement produces, in the property schema.org has for exactly
+	   this. Same list the page shows, so the graph and the copy cannot diverge. */
+	serviceOutput: s.deliverables.map((d) => ({ '@type': 'Thing', name: d })),
 	areaServed: AREA_SERVED.map((name) => ({ '@type': 'Place', name })),
 	availableChannel: {
 		'@type': 'ServiceChannel',
@@ -168,13 +171,53 @@ const evidence = [
 			: <Fragment><strong>Currently booked</strong> — enquiries still welcome for later in the year.</Fragment>}
 	</p>
 
+	{/* The booking route was previously only in the closing section and the FAQ,
+	    which is a long way down a page whose whole job is to be acted on. */}
+	<p class="cta">
+		<a class="cta-go" href={CALENDLY} target="_blank" rel="noopener">Book a call</a>
+		<a class="cta-alt" href={`mailto:${EMAIL}?subject=Advisory%20enquiry`}>{EMAIL}</a>
+	</p>
+
 	<h2>Engagements</h2>
+
+	{/* The four side by side, because the question a reader arrives with is which
+	    one they need, and that is a comparison rather than four descriptions. It
+	    scrolls sideways rather than shrinking: a four-column table squeezed into a
+	    448px column is unreadable, and this is the one block on the site where the
+	    content is genuinely tabular. */}
+	<div class="table-scroll">
+		<table class="compare">
+			<thead>
+				<tr>
+					<th scope="col">Engagement</th>
+					<th scope="col">Owns</th>
+					<th scope="col">Commitment</th>
+					<th scope="col">Fits</th>
+				</tr>
+			</thead>
+			<tbody>
+				{SERVICES.map((s) => (
+					<tr>
+						<th scope="row"><a href={`#${s.id}`}>{s.name}</a></th>
+						<td>{s.owns}</td>
+						<td>{s.commitment}</td>
+						<td>{s.pick}</td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+	</div>
+
 	{SERVICES.map((s) => (
 		<div class="service" id={s.id}>
 			<h3>{s.name}</h3>
 			<p>{s.summary}</p>
-			<p class="service-meta"><span class="label">Shape</span>{s.shape}</p>
-			<p class="service-meta"><span class="label">Fits</span>{s.fit}</p>
+			<p class="service-meta"><span class="label">Shape</span>{' '}{s.shape}</p>
+			<p class="service-meta"><span class="label">Fits</span>{' '}{s.fit}</p>
+			<p class="service-meta"><span class="label">You get</span></p>
+			<ul class="deliverables">
+				{s.deliverables.map((d) => <li>{d}</li>)}
+			</ul>
 		</div>
 	))}
 
@@ -326,6 +369,142 @@ const evidence = [
 	.service-meta {
 		font-size: 0.9em;
 		color: #c9b8d8;
+	}
+
+	/* Hexagon bullets, same as the post lists and the work phases on /about/. */
+	.deliverables {
+		list-style: none;
+		margin: 0.15em 0 0;
+		padding: 0;
+	}
+
+	.deliverables li {
+		position: relative;
+		padding-left: 1.35em;
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.9em;
+		line-height: 1.5;
+		color: #c9b8d8;
+		text-align: left;
+	}
+
+	.deliverables li + li {
+		margin-top: 0.3em;
+	}
+
+	.deliverables li::before {
+		content: "";
+		position: absolute;
+		left: 0.15em;
+		top: 0.52em;
+		width: 6px;
+		height: 7px;
+		background: #78c2ad;
+		opacity: 0.8;
+		clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+	}
+
+	/* Two actions, the primary one filled. Dark text on the accent rather than
+	   teal-on-dark: at this size a filled button is the only thing on the page
+	   that should read as a control. */
+	.cta {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.6em;
+		margin: 1em 0 0;
+		text-indent: 0;
+	}
+
+	.cta a {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.9em;
+		letter-spacing: 0.02em;
+		padding: 0.5em 1em;
+		border-radius: 8px;
+		text-decoration: none;
+		transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+	}
+
+	.cta-go {
+		background: #78c2ad;
+		color: #14171c;
+		font-weight: 600;
+	}
+
+	.cta-go:hover {
+		background: #8fd3bf;
+		text-decoration: none;
+	}
+
+	.cta-alt {
+		border: 1px solid rgba(120, 194, 173, 0.4);
+		color: #78c2ad;
+	}
+
+	.cta-alt:hover {
+		border-color: #78c2ad;
+		background: rgba(120, 194, 173, 0.08);
+		text-decoration: none;
+	}
+
+	/* No min-width, so it fits the column instead of scrolling: the cells are the
+	   terse forms from SERVICES rather than the full sentences the blocks below
+	   use. overflow-x stays as a backstop for a long word, not as the normal case. */
+	.table-scroll {
+		margin: 1em 0 0.4em;
+		overflow-x: auto;
+		border: 1px solid rgba(120, 194, 173, 0.2);
+		border-radius: 10px;
+	}
+
+	.compare {
+		width: 100%;
+		border-collapse: collapse;
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.78em;
+		line-height: 1.4;
+		text-align: left;
+	}
+
+	.compare th,
+	.compare td {
+		padding: 0.5em 0.55em;
+		vertical-align: top;
+		text-align: left;
+		hyphens: auto;
+	}
+
+	.compare thead th {
+		font-size: 0.82em;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: #c9b8d8;
+		background: rgba(88, 73, 102, 0.3);
+	}
+
+
+	.compare tbody tr + tr th,
+	.compare tbody tr + tr td {
+		border-top: 1px solid rgba(253, 235, 243, 0.08);
+	}
+
+	/* Not nowrap: "Fractional VP of Engineering" on one line is what forced the
+	   whole table wider than the column in the first place. */
+	.compare tbody th {
+		font-weight: 600;
+		color: #fdebf3;
+	}
+
+	.compare tbody td {
+		color: #c9b8d8;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.cta a {
+			transition: none;
+		}
 	}
 
 	/* Same purple chip as the STATUS/PRICING rows on the app pages, so a spec line

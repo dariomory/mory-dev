@@ -92,6 +92,19 @@ export type Service = {
 	summary: string;
 	shape: string;
 	fit: string;
+	/* Two or three words for the comparison table's "Owns" column. The whole
+	   decision turns on this one distinction — a CTO owns direction, a VP owns
+	   delivery — and it was only implied by the summaries. */
+	owns: string;
+	/* Terse forms for the comparison table. `shape` and `fit` are full sentences,
+	   which is right in the detail block below and far too wide for a four-column
+	   table inside a 448px column. Same facts, table-length. */
+	commitment: string;
+	pick: string;
+	/* What the client is left holding. An engagement described only by its hours
+	   and its fit says what it costs and who it is for, but never what arrives,
+	   which is the question a buyer actually has. */
+	deliverables: string[];
 };
 
 export const SERVICES: Service[] = [
@@ -104,6 +117,15 @@ export const SERVICES: Service[] = [
 			+ 'and the calls that are expensive to get wrong.',
 		shape: 'One to two days a week, three months minimum, remote.',
 		fit: 'Founders carrying the technical decisions alone, or a company between CTOs.',
+		owns: 'Technical direction',
+		commitment: '1–2 days/week · 3-month min',
+		pick: 'Founders alone on the technical calls',
+		deliverables: [
+			'A technical roadmap tied to the next product or funding milestone.',
+			'Architecture decisions written down, with the irreversible ones marked as such.',
+			'Build-versus-buy, vendor and model calls made rather than deferred.',
+			'A hiring plan for the senior roles, and a seat in those interviews.',
+		],
 	},
 	{
 		id: 'fractional-vp-engineering',
@@ -114,6 +136,15 @@ export const SERVICES: Service[] = [
 			+ 'and growing the team that has to keep shipping afterwards.',
 		shape: 'One to two days a week, three months minimum, remote.',
 		fit: 'A team that has outgrown ad-hoc coordination but does not need a full-time VP yet.',
+		owns: 'Delivery and the team',
+		commitment: '1–2 days/week · 3-month min',
+		pick: 'Team outgrew ad-hoc coordination',
+		deliverables: [
+			'A delivery cadence the team holds once the engagement ends.',
+			'Review and decomposition habits that survive a deadline.',
+			'A hiring pipeline and an interview loop that is run, not just designed.',
+			'Levels and expectations written down, so promotion stops being a negotiation.',
+		],
 	},
 	{
 		id: 'advisory-retainer',
@@ -124,6 +155,15 @@ export const SERVICES: Service[] = [
 			+ 'vendor choices, hiring, and a second opinion on the decisions that are hard to undo.',
 		shape: 'A few hours a month, ongoing, remote.',
 		fit: 'Teams with their own leadership who want someone who has done it before to check the work.',
+		owns: 'Judgement, not the team',
+		commitment: 'A few hours a month',
+		pick: 'You have leaders, want them checked',
+		deliverables: [
+			'A written architecture or code review at an agreed cadence.',
+			'A second opinion on the hard-to-undo decisions, before they are made.',
+			'Model, vendor and platform recommendations with the trade-offs stated.',
+			'Interview support for senior and lead hires.',
+		],
 	},
 	{
 		id: 'consulting',
@@ -134,6 +174,15 @@ export const SERVICES: Service[] = [
 			+ 'advising from the outside.',
 		shape: 'Scoped per project, remote, occasional on-site.',
 		fit: 'A specific thing that has to get built, migrated or unblocked.',
+		owns: 'Execution',
+		commitment: 'Scoped per project',
+		pick: 'One thing has to get built',
+		deliverables: [
+			'The thing itself: built, migrated or unblocked.',
+			'Code your team reviewed and can maintain without me.',
+			'Tests and a deployment path for what shipped.',
+			'A handover, so nothing that ships depends on my staying.',
+		],
 	},
 ];
 

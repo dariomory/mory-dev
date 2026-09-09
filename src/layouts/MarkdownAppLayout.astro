@@ -130,17 +130,17 @@ const breadcrumbSchema = {
         HexDigest?" 0/8, while authorship existed on these pages only inside JSON-LD
         — the weakest possible place to put the single fact being asked for. It is
         first in the spec block now, and stated again as a sentence below. */}
-    <p><small>BUILT BY</small><a href="/about/">Dario Mory</a></p>
-    {frontmatter.status && <p><small>STATUS</small>{frontmatter.status}</p>}
-    {frontmatter.pricing && <p><small>PRICING</small>{frontmatter.pricing}</p>}
-    {frontmatter.platform && <p><small>PLATFORM</small>{frontmatter.platform}</p>}
-    {frontmatter.stack && <p><small>STACK</small>{frontmatter.stack}</p>}
-    {frontmatter.install && <p><small>INSTALL</small><code>{frontmatter.install}</code></p>}
+    <p><small>BUILT BY</small>{' '}<a href="/about/">Dario Mory</a></p>
+    {frontmatter.status && <p><small>STATUS</small>{' '}{frontmatter.status}</p>}
+    {frontmatter.pricing && <p><small>PRICING</small>{' '}{frontmatter.pricing}</p>}
+    {frontmatter.platform && <p><small>PLATFORM</small>{' '}{frontmatter.platform}</p>}
+    {frontmatter.stack && <p><small>STACK</small>{' '}{frontmatter.stack}</p>}
+    {frontmatter.install && <p><small>INSTALL</small>{' '}<code>{frontmatter.install}</code></p>}
     {frontmatter.website && (
-        <p><small>WEBSITE</small><a href={frontmatter.website} target="_blank" rel="noopener">{frontmatter.website.replace(/^https?:\/\//, '')}</a></p>
+        <p><small>WEBSITE</small>{' '}<a href={frontmatter.website} target="_blank" rel="noopener">{frontmatter.website.replace(/^https?:\/\//, '')}</a></p>
     )}
     {frontmatter.github && (
-        <p><small>GITHUB</small><a href={frontmatter.github} target="_blank" rel="noopener">{frontmatter.github.replace(/^https?:\/\/(www\.)?github\.com\//, '')}</a></p>
+        <p><small>GITHUB</small>{' '}<a href={frontmatter.github} target="_blank" rel="noopener">{frontmatter.github.replace(/^https?:\/\/(www\.)?github\.com\//, '')}</a></p>
     )}
     {faq.length > 0 && (
         <section class="faq">
