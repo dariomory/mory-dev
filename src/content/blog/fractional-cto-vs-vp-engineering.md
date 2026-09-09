@@ -18,11 +18,11 @@ Here is what I tell founders when they ask, including the cases where the answer
 
 Most comparisons treat this as a seniority question, or a budget question. It is neither. A CTO and a VP of Engineering are two different jobs, and the fractional-versus-full-time question cannot be answered until you know which one you are trying to fill.
 
-A CTO owns technical direction. Architecture, build-versus-buy, which bets are reversible and which are not, and the technical face of the company to investors, key customers and partners. The output is decisions.
+A CTO owns technical direction. Architecture, build-versus-buy, [which bets are reversible](https://mcfunley.com/choose-boring-technology) and which are not, and the technical face of the company to investors, key customers and partners. The output is decisions.
 
-A VP of Engineering owns delivery. Planning, process, hiring, performance, retention — the machine that turns decisions into shipped software, and the people inside it. The output is a team that ships predictably.
+A VP of Engineering owns [delivery](https://dora.dev/guides/dora-metrics-four-keys/). Planning, process, hiring, performance, retention — the machine that turns decisions into shipped software, and the people inside it. The output is a team that ships predictably.
 
-At two hundred people these are two people. At twelve they are usually one person wearing both hats badly, which is exactly where the confusion starts. So the real question is not "fractional or full-time." It is **which of those two jobs is my bottleneck**, and only then, how much of it do I need.
+At two hundred people these are [two people](https://teamtopologies.com/). At twelve they are usually one person wearing both hats badly, which is exactly where the confusion starts. So the real question is not "fractional or full-time." It is **which of those two jobs is my bottleneck**, and only then, how much of it do I need.
 
 ## The bottleneck test
 
@@ -30,7 +30,7 @@ There is a reliable split, and it has little to do with company stage or headcou
 
 **If your bottleneck is decisions, fractional works.** Decisions are low-frequency and high-consequence. Whether to rewrite. What to build the platform on. Which model, at what cost, with what fallback when it is wrong or slow. When to migrate, and what to deliberately leave behind. You need judgement at the moment the decision is live, not availability in the weeks between. Paying a full-time salary for that is paying for capacity you will not consume.
 
-**If your bottleneck is people, hire full-time.** People problems are the opposite shape: high-frequency and cumulative. Hiring. One-to-ones that actually surface things. Performance conversations. Career growth. Noticing quiet disengagement three weeks before the resignation rather than three weeks after. That work runs on presence and accumulated context, and neither of those compresses into two days a week.
+**If your bottleneck is people, hire full-time.** The things that fix it — [how a team actually works together](https://dora.dev/capabilities/generative-organizational-culture/) — accrue daily, not in a weekly session. People problems are the opposite shape: high-frequency and cumulative. Hiring. One-to-ones that actually surface things. Performance conversations. Career growth. Noticing quiet disengagement three weeks before the resignation rather than three weeks after. That work runs on presence and accumulated context, and neither of those compresses into two days a week.
 
 This is the line I hold to, and it costs me work: I turn down fractional engagements where the real problem is that a team needs a manager. Any fractional leader who tells you they can run your people function part-time is selling. The engagement will look fine for a quarter, and then you will find out that nobody was actually holding the team.
 
