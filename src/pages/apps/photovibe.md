@@ -5,6 +5,7 @@ seoTitle: 'Photovibe — a free, open-source Photoshop alternative'
 description: 'A local-first photo editor for Windows with layers, blend modes and selections. No account, no cloud, no subscription. MIT licensed and free to use.'
 tagline: 'Instantly familiar, entirely local.'
 order: 7
+kind: 'a local-first photo editor'
 status: 'Early release — v0.1.0'
 image: { url: '/apps/photovibe.png', alt: 'Photovibe logo' }
 appImage1: { url: '/apps/photovibe-1.webp', alt: 'Photovibe editor' }

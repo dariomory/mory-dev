@@ -1,0 +1,134 @@
+---
+import { linkifyAnswer } from '../utils/identity';
+
+/*
+ * The Q&A list, shared by /about/, /advisory/ and every app page.
+ *
+ * It was the same markup and near-identical CSS in all three, already drifting —
+ * the app pages set a 0.2em gap under the question, the other two 0.25em, and the
+ * heading above it was a different size on each. One component now.
+ *
+ * Disclosure rather than a flat run of paragraphs: /about/ carries ten questions
+ * and /advisory/ nine, which at this measure is a wall of prose a reader has to
+ * scan linearly to find the one answer they came for. Every answer is still in the
+ * HTML — <details> hides it visually, not from a crawler — and each is in the
+ * page's FAQPage graph regardless. The first is open so the affordance is obvious.
+ *
+ * The heading stays with the caller: each page has its own h2 treatment, and a
+ * "Questions" heading that did not match its siblings would look like a mistake.
+ */
+
+interface Props {
+	items: { q: string; a: string }[];
+}
+
+const { items } = Astro.props;
+---
+{items.length > 0 && (
+	<div class="faq-list">
+		{items.map((item, i) => (
+			<details class="faq-item" open={i === 0}>
+				<summary>
+					<span class="faq-q">{item.q}</span>
+					<svg class="faq-chev" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+						<path d="M2.5 4.5 6 8l3.5-3.5" />
+					</svg>
+				</summary>
+				<p set:html={linkifyAnswer(item.a)} />
+			</details>
+		))}
+	</div>
+)}
+<style>
+	.faq-list {
+		margin-top: 0.6em;
+	}
+
+	/* Hairlines only — the facts panel and the terminal on /about/ are already
+	   framed, and a bordered card per question would out-shout both. */
+	.faq-item {
+		border-top: 1px solid rgba(253, 235, 243, 0.08);
+	}
+
+	.faq-item:last-child {
+		border-bottom: 1px solid rgba(253, 235, 243, 0.08);
+	}
+
+	summary {
+		display: flex;
+		align-items: baseline;
+		gap: 0.8em;
+		cursor: pointer;
+		padding: 0.72em 0;
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.96em;
+		line-height: 1.45;
+		color: #fdebf3;
+		text-align: left;
+		transition: color 0.18s ease;
+		/* Both are needed: the pseudo-element covers WebKit, `list-style` the rest. */
+		list-style: none;
+	}
+
+	summary::-webkit-details-marker {
+		display: none;
+	}
+
+	summary:hover {
+		color: #78c2ad;
+	}
+
+	summary:focus-visible {
+		outline: 2px solid rgba(120, 194, 173, 0.6);
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
+
+	.faq-q {
+		flex: 1;
+	}
+
+	.faq-chev {
+		width: 12px;
+		height: 12px;
+		flex-shrink: 0;
+		/* Baseline alignment would hang the glyph off the first line's baseline;
+		   nudging it back up keeps it optically centred on that line. */
+		align-self: baseline;
+		position: relative;
+		top: 0.1em;
+		fill: none;
+		stroke: #78c2ad;
+		stroke-width: 1.6;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		transition: transform 0.2s ease;
+	}
+
+	.faq-item[open] .faq-chev {
+		transform: rotate(180deg);
+	}
+
+	.faq-item p {
+		margin: 0;
+		padding: 0 1.9em 0.95em 0;
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.92em;
+		line-height: 1.6;
+		color: #c9b8d8;
+		/* The page justifies its body text; an answer this short tears holes. */
+		text-align: left;
+		text-indent: 0;
+	}
+
+	.faq-item :global(a) {
+		color: #78c2ad;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		summary,
+		.faq-chev {
+			transition: none;
+		}
+	}
+</style>

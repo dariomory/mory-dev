@@ -21,7 +21,7 @@ Navigating undocumented endpoints.
 
 ## Why Bother with Undocumented APIs?
 
-Spotify provides an official API. It’s well-documented, rate-limited appropriately, and covers most reasonable use cases. So why look beyond it?
+Spotify provides an [official Web API](https://developer.spotify.com/documentation/web-api). It’s well-documented, rate-limited appropriately, and covers most reasonable use cases. So why look beyond it?
 
 The official API intentionally restricts certain functionality. Real-time playback state with sub-second precision, queue manipulation at a granular level, the actual audio stream negotiations — these live in a different layer entirely. Understanding this layer reveals architectural decisions that the official documentation never mentions.
 
@@ -29,53 +29,40 @@ For me, this was an exercise in technical curiosity. The patterns Spotify uses �
 
 ## Tapping the Line
 
-The first practical step is capturing traffic between the official Spotify client and their servers. This requires a proxy setup that can handle TLS interception.
+The first practical step is capturing traffic between the official Spotify client and their servers. This requires a proxy setup that can handle TLS interception, which works by [generating a certificate per host](https://docs.mitmproxy.org/stable/concepts-certificates/) and signing it with a CA the client has been told to trust.
 
-```
-
+```python
 from mitmproxy import http
-
 import json
 
-class SpotifyCapture :
 
-def __init__ ( self ):
+class SpotifyCapture:
+    def __init__(self):
+        self.endpoints = set()
 
-self .endpoints = set()
+    def request(self, flow: http.HTTPFlow) -> None:
+        if "spotify" in flow.request.host:
+            endpoint = f"{flow.request.method} {flow.request.path}"
+            self.endpoints.add(endpoint)
 
-def request ( self ,  flow:  http. HTTPFlow ) ->  None :
+            # Log with timestamp for sequence analysis
+            print(f"[{flow.request.timestamp_start}] {endpoint}")
 
-if  “spotify”  in  flow.request. host:
+            # Capture request body for POST/PUT
+            if flow.request.content:
+                try:
+                    body = json.loads(flow.request.content)
+                    print(f"  Body: {json.dumps(body, indent=2)[:500]}")
+                except ValueError:
+                    print(f"  Binary payload: {len(flow.request.content)} bytes")
 
-endpoint = f”{flow.request.method} {flow.request.path}”
 
-self .endpoints.add(endpoint)
-
-# Log with timestamp for sequence analysis
-
-print(f”[{flow.request.timestamp_start}] {endpoint}”)
-
-# Capture request body for POST/PUT
-
-if  flow.request. content:
-
-try:
-
-body = json.loads(flow.request.content)
-
-print(f”  Body : {json.dumps(body, indent= 2 )[ : 500 ]}”)
-
-except:
-
-print(f”  Binary payload:  {len(flow.request.content)} bytes”)
-
-addons = [ SpotifyCapture ()]
-
+addons = [SpotifyCapture()]
 ```
 
 The binary payload detection matters more than you’d expect. Spotify uses Protocol Buffers extensively for their internal communication, and those payloads look like garbage until you decode them properly.
 
-Getting the desktop client to trust your proxy certificate is straightforward on most systems, but mobile clients require additional steps — often involving rooted devices or specific instrumentation frameworks.
+Getting the desktop client to trust your proxy certificate is straightforward on most systems, but mobile clients require additional steps — often involving rooted devices or specific instrumentation frameworks. That gap is deliberate: since Android 7, apps trust only the system CA store unless they [opt in to user-added certificates](https://developer.android.com/privacy-and-security/security-config), so installing a CA no longer makes an app’s traffic readable.
 
 ## Gray Hat Confessions
 
@@ -87,92 +74,63 @@ Internal systems that never stop shifting.
 
 This creates a fundamental asymmetry. Any documentation you create has a shelf life measured in weeks or months, not years. Any tooling you build requires constant maintenance. The investment calculation changes dramatically when you factor in this ongoing cost.
 
-## Get Dario Mory’s stories in your inbox
-
-Remember me for faster sign in
-
 I adopted a pattern-based approach rather than endpoint-specific mapping
 
-```
+```python
+import re
 
 ENDPOINT_PATTERNS = {
-
-‘entity_lookup’: r’/v1/[a-z]+/[a-zA-Z0– 9 ]{ 22 }’,
-
-‘collection_fetch’: r’/v1/me/[a-z]+’,
-
-‘playback_control’: r’/v1/me/player/[a-z]+’,
-
+    'entity_lookup': r'/v1/[a-z]+/[a-zA-Z0-9]{22}',
+    'collection_fetch': r'/v1/me/[a-z]+',
+    'playback_control': r'/v1/me/player/[a-z]+',
 }
 
-def categorize_endpoint ( path:  str ) ->  str :
 
-for  category, pattern  in  ENDPOINT_PATTERNS.items():
-
-if  re. match (pattern, path):
-
-return  category
-
-return 'unknown'
-
+def categorize_endpoint(path: str) -> str:
+    for category, pattern in ENDPOINT_PATTERNS.items():
+        if re.match(pattern, path):
+            return category
+    return 'unknown'
 ```
 
 This abstraction proved more durable. Even when specific endpoints changed, the patterns remained stable.
 
 ## Protocol Buffers and Schema Discovery
 
-The most interesting technical challenge was reverse engineering the Protocol Buffer schemas Spotify uses for certain internal communications. Unlike JSON, you can’t just read protobuf data — you need the schema to decode it.
+The most interesting technical challenge was reverse engineering the Protocol Buffer schemas Spotify uses for certain internal communications. Unlike JSON, you can’t just read protobuf data — you need the schema to decode it. What survives without one is the [wire format](https://protobuf.dev/programming-guides/encoding/): each field arrives as a varint tag carrying a field number and a wire type, which is why structure is recoverable when names are not.
 
 The approach involves a combination of techniques
 
-```
+```python
+from google.protobuf.internal.decoder import _DecodeVarint32
 
-from  google.protobuf  import  descriptor_pb2
 
-from  google.protobuf.internal.decoder  import  _DecodeVarint32
+def analyze_protobuf(data: bytes):
+    """Attempt to extract field structure from unknown protobuf"""
+    pos = 0
+    fields = []
 
-def analyze_protobuf ( data:  bytes ):
+    while pos < len(data):
+        try:
+            # Read field tag
+            tag, new_pos = _DecodeVarint32(data, pos)
+            field_number = tag >> 3
+            wire_type = tag & 0x7
 
-"""Attempt to extract field structure from unknown protobuf"""
+            fields.append({
+                'field': field_number,
+                'wire_type': wire_type,
+                'position': pos,
+            })
 
-pos =  0
+            pos = new_pos
 
-fields = []
+            # Skip field value based on wire type
+            pos = skip_field(data, pos, wire_type)
+        except Exception:
+            break
 
-while  pos <  len (data):
-
-try :
-
-# Read field tag
-
-tag, new_pos = _DecodeVarint32(data, pos)
-
-field_number = tag >>  3
-
-wire_type = tag &  0x7
-
-fields.append({
-
-'field' : field_number,
-
-'wire_type' : wire_type,
-
-'position' : pos
-
-})
-
-pos = new_pos
-
-# Skip field value based on wire type
-
-pos = skip_field(data, pos, wire_type)
-
-except :
-
-break
-
-return  fields
-
+    return fields
 ```
 
 By analyzing enough messages, you can reconstruct partial schemas. Field numbers remain consistent even when implementations change, which gives you something stable to work with.
@@ -187,7 +145,7 @@ Client fingerprinting is equally pervasive. Beyond authentication tokens, the pl
 
 ## The Ethical Boundaries
 
-Understanding how a system works doesn’t mean you should exploit that understanding. Spotify’s terms of service prohibit certain uses of their platform. The undocumented endpoints exist for their internal use, not as a public API.
+Understanding how a system works doesn’t mean you should exploit that understanding. Spotify’s [developer terms](https://developer.spotify.com/terms) prohibit certain uses of their platform. The undocumented endpoints exist for their internal use, not as a public API.
 
 The code examples in this article are illustrative patterns, not production-ready implementations for accessing their services.
 

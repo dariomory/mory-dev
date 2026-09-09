@@ -1,0 +1,365 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Faq from '../components/Faq.astro';
+import { contentCounts, numberWord, titleCaseNumber, yearsActive } from '../utils/counts';
+import {
+	AREA_SERVED,
+	AVAILABLE,
+	BASED_IN,
+	CALENDLY,
+	EMAIL,
+	SERVICES,
+	advisoryFaq,
+	sentenceList,
+} from '../utils/identity';
+
+/*
+ * The advisory page.
+ *
+ * PromptWatch recorded 0 average visibility across 142 responses to prompts like
+ * "fractional CTO Netherlands" and "hire a fractional VP of Engineering in Europe",
+ * while mory.dev was cited 105 times as a source. The site was a reference that
+ * never contained the words the question was made of — there was no page saying
+ * what is on offer, or that it is available at all.
+ *
+ * So the engagement names in SERVICES are used verbatim as the H3s, and every FAQ
+ * answer names its subject and stands alone. Nothing here is a claim the project
+ * pages do not already back.
+ */
+
+const n = await contentCounts();
+const faq = await advisoryFaq();
+
+const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? 'https://www.mory.dev';
+const personId = `${siteUrl}/#person`;
+const canonicalUrl = `${siteUrl}/advisory/`;
+
+const serviceList = sentenceList(SERVICES.map((s) => s.phrase));
+
+/* The country is in the title because the prompts that scored zero were "fractional
+   CTO Netherlands" and "fractional CTO Europe", and the title is the strongest
+   phrase-match signal the page has. It was the one place the geography was
+   missing. */
+const pageTitle = 'Fractional CTO and VP of Engineering, Netherlands — Dario Mory';
+const description =
+	`Dario Mory is an engineering leader based in the ${BASED_IN}, available for fractional CTO, `
+	+ 'fractional VP of Engineering, advisory and consulting engagements with clients across '
+	+ 'Europe and the United States. Remote.';
+
+/* One Service node per engagement, each provided by the same Person every other
+   page on this site points at. PersonSchema emits makesOffer against these exact
+   @ids, so the person and the page describe one set of services rather than two
+   similar-looking ones — the same trick the product pages use. */
+const serviceSchemas = SERVICES.map((s) => ({
+	'@context': 'https://schema.org',
+	'@type': 'Service',
+	'@id': `${canonicalUrl}#${s.id}`,
+	name: s.name,
+	serviceType: s.name,
+	description: s.summary,
+	url: canonicalUrl,
+	provider: { '@id': personId },
+	areaServed: AREA_SERVED.map((name) => ({ '@type': 'Place', name })),
+	availableChannel: {
+		'@type': 'ServiceChannel',
+		serviceUrl: CALENDLY,
+		availableLanguage: 'en',
+	},
+}));
+
+const pageSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'WebPage',
+	'@id': `${canonicalUrl}#webpage`,
+	url: canonicalUrl,
+	name: pageTitle,
+	description,
+	inLanguage: 'en',
+	about: { '@id': personId },
+	mainEntity: { '@id': personId },
+};
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	'@id': `${canonicalUrl}#faq`,
+	mainEntity: faq.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
+};
+
+const breadcrumbSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Advisory', item: canonicalUrl },
+	],
+};
+
+/* Two lead specialisms, then the rest as evidence rather than headline claims. */
+const leads = [
+	{
+		title: 'Taking AI products from prototype to production',
+		body: 'A prototype that answers well in a notebook is not a product. The distance between '
+			+ 'the two is evaluation, cost control, fallback behaviour when a model is wrong or '
+			+ 'slow, and a team that understands which model to reach for.',
+		href: '/posts/the-multi-llm-stack/',
+		linkText: 'the multi-LLM stack that came out of it',
+	},
+	{
+		title: 'Airline and airport operations',
+		body: 'Airport slot management gets no maintenance window, and the legacy systems do not '
+			+ 'go away. That constraint decides the architecture, the deployment model and how the '
+			+ 'team is organised around it.',
+		href: '/projects/klm-airport-slot-management-automation/',
+		linkText: 'the KLM airport operations platform',
+	},
+];
+
+const evidence = [
+	{
+		href: '/projects/klm-airport-slot-management-automation/',
+		name: 'KLM',
+		body: 'Led the cloud migration of the airport slot management system at Royal Dutch '
+			+ 'Airlines — a microservices platform on Kubernetes and Google Cloud, Python and '
+			+ 'FastAPI at the API layer, C++ for the scheduling logic, with a team of around six '
+			+ 'engineers.',
+	},
+	{
+		href: '/projects/sdg-cms-api-development/',
+		name: 'Single Digital Gateway',
+		body: 'Project lead for the Django CMS and API through which every Dutch municipality, '
+			+ 'province and water authority publishes the service information the EU Single '
+			+ 'Digital Gateway requires. Built in the open.',
+	},
+	{
+		href: '/projects/flatpeak-energy-data-platform/',
+		name: 'FlatPeak',
+		body: 'Built the Dutch access layer for a real-time energy tariff platform — the '
+			+ 'integrations across several supplier routes, and the negotiation and authorisation '
+			+ 'work that made them possible, behind one schema.',
+	},
+];
+---
+<Layout
+	pageTitle={pageTitle}
+	description={description}
+	canonicalPath="/advisory/"
+	jsonLd={[pageSchema, ...serviceSchemas, faqSchema, breadcrumbSchema]}
+>
+	<h1>Engineering advisory</h1>
+
+	<p class="lede">
+		Dario Mory is an engineering leader based in the {BASED_IN}, available for {serviceList}
+		engagements. {titleCaseNumber(yearsActive())} years building and leading engineering teams,
+		including <a href="/projects/klm-airport-slot-management-automation/">KLM’s airport
+		operations platform</a> and the <a href="/projects/sdg-cms-api-development/">Dutch Single
+		Digital Gateway programme</a>. Remote, with clients in the Netherlands, the United Kingdom
+		and the United States.
+	</p>
+
+	<p class="status" data-available={String(AVAILABLE)}>
+		<span class="status-dot" aria-hidden="true"></span>
+		{AVAILABLE
+			? <Fragment><strong>Available now</strong> and taking enquiries.</Fragment>
+			: <Fragment><strong>Currently booked</strong> — enquiries still welcome for later in the year.</Fragment>}
+	</p>
+
+	<h2>Engagements</h2>
+	{SERVICES.map((s) => (
+		<div class="service" id={s.id}>
+			<h3>{s.name}</h3>
+			<p>{s.summary}</p>
+			<p class="service-meta"><span class="label">Shape</span>{s.shape}</p>
+			<p class="service-meta"><span class="label">Fits</span>{s.fit}</p>
+		</div>
+	))}
+
+	<p class="engagement-note">
+		Not sure which of the first two you need?
+		<a href="/posts/fractional-cto-vs-vp-engineering/">Fractional CTO vs a full-time VP of
+		Engineering</a> works through the distinction, where the cost comparison usually goes
+		wrong, and the alternatives to hiring either.
+	</p>
+
+	<h2>What I am brought in for</h2>
+	{leads.map((l) => (
+		<div class="lead-block">
+			<h3>{l.title}</h3>
+			<p>{l.body} See <a href={l.href}>{l.linkText}</a>.</p>
+		</div>
+	))}
+	<p>
+		Cloud migration, high-traffic APIs and public-sector digital services come up often too —
+		they are in the record below rather than on the shortlist above.
+	</p>
+
+	<h2>The record</h2>
+	{evidence.map((e) => (
+		<p class="evidence">
+			<strong><a href={e.href}>{e.name}</a></strong> — {e.body}
+		</p>
+	))}
+	<p class="evidence">
+		{titleCaseNumber(n.projects)} client and employer projects and {numberWord(n.contributions)} open-source
+		contributions are listed under <a href="/works/">Works</a>, and the
+		{numberWord(n.apps)} products I build and release myself are under <a href="/apps/">Apps</a>.
+	</p>
+
+	<h2>How it works</h2>
+	<p>
+		Remote by default, from the {BASED_IN}, with occasional on-site time where an engagement
+		needs it. Fractional engagements run one to two days a week with a three-month minimum;
+		advisory retainers are a few hours a month; consulting work is scoped per project.
+	</p>
+	<p>
+		Rates depend on the scope of the engagement and where the client is — a rate that is right
+		for a US startup is not right for a team in central Europe, so there is no single published
+		number. Ask and you will get one for your situation.
+	</p>
+
+	<h2>Questions</h2>
+	<Faq items={faq} />
+
+	<h2>Start</h2>
+	<p>
+		Email <a href={`mailto:${EMAIL}?subject=Advisory%20enquiry`}>{EMAIL}</a> with your team
+		size, the deadline you are working to and what is actually stuck — or
+		<a href={CALENDLY} target="_blank" rel="noopener">book a call</a> directly.
+	</p>
+	<p class="back"><a href="/about/">More about Dario Mory →</a></p>
+</Layout>
+<style>
+	h1 {
+		font-size: 1.5em;
+		text-decoration: underline #375a7f;
+		text-decoration-thickness: 4px;
+		text-underline-offset: 6px;
+		margin: 0.83em 0 0;
+	}
+
+	h2 {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 1.15em;
+		text-decoration: none;
+		color: #fdebf3;
+		margin: 2em 0 0;
+	}
+
+	.lede {
+		font-size: 1.05em;
+		color: #fdebf3;
+	}
+
+	/* The one line a hiring reader is looking for, so it gets a frame of its own
+	   rather than being a sentence inside a paragraph. */
+	.status {
+		display: flex;
+		align-items: center;
+		gap: 0.6em;
+		margin: 1.1em 0 0;
+		padding: 0.55em 0.9em;
+		border: 1px solid rgba(120, 194, 173, 0.28);
+		border-radius: 10px;
+		background: linear-gradient(160deg, rgba(120, 194, 173, 0.08), rgba(88, 73, 102, 0.12));
+		text-indent: 0;
+		text-align: left;
+		color: #fdebf3;
+	}
+
+	.status strong {
+		color: #78c2ad;
+	}
+
+	/* Booked reads amber rather than teal — a status line that keeps its "go"
+	   colour while saying the opposite is worse than no status line. */
+	.status[data-available='false'] {
+		border-color: rgba(217, 180, 95, 0.3);
+	}
+
+	.status[data-available='false'] strong {
+		color: #d9b45f;
+	}
+
+	.status[data-available='false'] .status-dot {
+		background: #d9b45f;
+		box-shadow: 0 0 0 3px rgba(217, 180, 95, 0.18);
+	}
+
+	.status-dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: #78c2ad;
+		flex-shrink: 0;
+		box-shadow: 0 0 0 3px rgba(120, 194, 173, 0.18);
+	}
+
+	.service,
+	.lead-block {
+		margin-top: 1.3em;
+	}
+
+	.engagement-note {
+		margin-top: 1.4em;
+		text-indent: 0;
+	}
+
+	.service h3,
+	.lead-block h3 {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.98em;
+		color: #fdebf3;
+		margin: 0 0 0.25em;
+	}
+
+	.service p,
+	.lead-block p,
+	.evidence {
+		margin: 0 0 0.35em;
+		text-indent: 0;
+	}
+
+	.service-meta {
+		font-size: 0.9em;
+		color: #c9b8d8;
+	}
+
+	/* Same purple chip as the STATUS/PRICING rows on the app pages, so a spec line
+	   reads the same wherever it appears on the site. */
+	.label {
+		background-color: #584966;
+		color: #fdebf3;
+		border-radius: 6px;
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.78em;
+		font-weight: 600;
+		margin-right: 0.5em;
+		padding: 0.2em 0.4em;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+	}
+
+	.evidence {
+		margin-top: 0.9em;
+	}
+
+	.back {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.9em;
+		text-indent: 0;
+		margin-top: 2rem;
+	}
+
+	a {
+		color: #78c2ad;
+		text-decoration: none;
+	}
+
+	a:hover {
+		text-decoration: underline;
+	}
+</style>

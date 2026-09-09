@@ -5,6 +5,8 @@ seoTitle: 'TrendFlow — live Google Trends research for AI and code'
 description: 'Google Trends data over MCP and REST. Compare search terms, find breakout queries and see what is trending now, from ChatGPT, Claude, Cursor or your code.'
 tagline: 'Live Google Trends research for AI.'
 order: 4
+kind: 'Google Trends data over MCP and REST'
+commercial: true
 status: 'Shipped — commercial'
 image: { url: '/apps/trendflow.png', alt: 'TrendFlow logo' }
 appImage1: { url: '/apps/trendflow-1.webp', alt: 'TrendFlow — live Google Trends research for AI' }

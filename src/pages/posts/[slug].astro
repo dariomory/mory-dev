@@ -111,19 +111,139 @@ const breadcrumbSchema = {
 		margin: 0.5em 0 0;
 	}
 
+	/* A hairline picks up where the words stop and runs to the measure's edge,
+	   fading as it goes. It gives every section a horizon without the weight of
+	   the 4px rule the page-level h1 and h2 carry — those announce a page, these
+	   only divide one. */
 	.post-body :global(h2) {
+		position: relative;
 		font-family: 'Josefin Sans', sans-serif;
 		font-size: 1.2em;
+		letter-spacing: 0.005em;
 		color: #fdebf3;
 		text-decoration: none;
-		margin: 1.8em 0 0;
+		text-align: left;
+		margin: 1.9em 0 0;
+		padding-bottom: 0.42em;
 	}
 
+	/* Underlaid rather than trailing the words on the same line: a flex row with
+	   the rule as a sibling item collapses to a floating dash the moment a heading
+	   wraps to two lines, which several of these do at this measure. Positioned
+	   under the whole heading it reads the same at any length. */
+	.post-body :global(h2)::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 1px;
+		background: linear-gradient(
+			to right,
+			rgba(120, 194, 173, 0.42),
+			rgba(120, 194, 173, 0.06) 62%,
+			rgba(120, 194, 173, 0)
+		);
+	}
+
+	/* One step quieter: a marker in the left margin rather than a rule across the
+	   column, so an h3 reads as inside its h2 rather than beside it. */
 	.post-body :global(h3) {
+		position: relative;
 		font-family: 'Josefin Sans', sans-serif;
 		font-size: 1.05em;
 		color: #fdebf3;
-		margin: 1.5em 0 0;
+		text-align: left;
+		margin: 1.6em 0 0;
+		padding-left: 1.05em;
+	}
+
+	/* Indented into the heading's own box rather than hung in the page margin —
+	   the body is a centred 448px column, so a negative offset puts the marker
+	   outside the column and clips it on a narrow viewport. */
+	.post-body :global(h3)::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0.5em;
+		width: 5px;
+		height: 6px;
+		background: #78c2ad;
+		opacity: 0.75;
+		clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+	}
+
+	/* Lists were falling back to the browser serif: global.css declares the body
+	   font on `p` alone and nothing above `li` sets one. They also inherited the
+	   page's justified text, which tears holes in a short list item at this
+	   measure. Both fixed here, where every list on the site currently lives. */
+	.post-body :global(li) {
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.95em;
+		line-height: 1.6;
+		text-align: left;
+		hyphens: auto;
+	}
+
+	.post-body :global(li strong) {
+		color: #fdebf3;
+	}
+
+	.post-body :global(ul),
+	.post-body :global(ol) {
+		list-style: none;
+		margin: 1.05em 0;
+		padding: 0;
+	}
+
+	.post-body :global(li + li) {
+		margin-top: 0.55em;
+	}
+
+	.post-body :global(ul > li) {
+		position: relative;
+		padding-left: 1.4em;
+	}
+
+	/* The same hexagon as the nav mark and the apps panel, at bullet scale — the
+	   site already has a shape, so a list should not introduce a second one. */
+	.post-body :global(ul > li)::before {
+		content: "";
+		position: absolute;
+		left: 0.15em;
+		top: 0.6em;
+		width: 7px;
+		height: 8px;
+		background: #78c2ad;
+		opacity: 0.85;
+		clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+	}
+
+	.post-body :global(ol) {
+		counter-reset: post-item;
+	}
+
+	.post-body :global(ol > li) {
+		position: relative;
+		counter-increment: post-item;
+		padding-left: 2em;
+	}
+
+	/* Numerals set in the margin, teal and tabular, so a list of steps reads as a
+	   sequence rather than as paragraphs that happen to start with digits. */
+	.post-body :global(ol > li)::before {
+		content: counter(post-item);
+		position: absolute;
+		left: 0;
+		top: 0.06em;
+		width: 1.4em;
+		text-align: right;
+		font-family: 'Josefin Sans', sans-serif;
+		font-size: 0.9em;
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+		letter-spacing: 0.02em;
+		color: #78c2ad;
 	}
 
 	.post-body :global(pre) {

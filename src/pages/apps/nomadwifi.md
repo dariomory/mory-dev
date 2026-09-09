@@ -5,6 +5,7 @@ seoTitle: 'NomadWiFi — Wi-Fi roaming and 5 GHz optimizer for Windows'
 description: 'Fixes sticky access points on Windows. Scores every AP in range, switches in about a second when the link drops, and pauses your VPN around the roam.'
 tagline: 'Your laptop is stuck on the worst access point in the building.'
 order: 6
+kind: 'a Wi-Fi roaming optimiser for Windows'
 status: 'Shipped — v1.2.0'
 image: { url: '/apps/nomadwifi.png', alt: 'NomadWiFi logo' }
 appImage1: { url: '/apps/nomadwifi-1.webp', alt: 'NomadWiFi desktop app' }

@@ -27,11 +27,17 @@ const itemListSchema = {
         position: i + 1,
         item: {
             '@type': 'SoftwareApplication',
+            // Matches the @id emitted by the product page and by /about/.
+            '@id': `${new URL(`${app.url}/`, siteUrl + '/').href}#software`,
             name: app.frontmatter.title,
             description: app.frontmatter.description,
-            url: new URL(`${app.url}/`, siteUrl + '/').href,
+            url: app.frontmatter.website ?? new URL(`${app.url}/`, siteUrl + '/').href,
+            mainEntityOfPage: new URL(`${app.url}/`, siteUrl + '/').href,
             ...(app.frontmatter.appCategory && {
                 applicationCategory: app.frontmatter.appCategory,
+            }),
+            ...(app.frontmatter.operatingSystem && {
+                operatingSystem: app.frontmatter.operatingSystem,
             }),
             author: { '@id': `${siteUrl}/#person` },
         },
@@ -56,8 +62,8 @@ const breadcrumbSchema = {
     <AppsHero apps={apps} />
     <h1>Apps</h1>
     <p class="intro">
-        Software I build and release myself, under mory.dev — as opposed to the client work and
-        open-source contributions over in <a href="/works/">Works</a>. Marketplace intelligence,
+        Software built and released by Dario Mory under mory.dev — as opposed to the client work
+        and open-source contributions over in <a href="/works/">Works</a>. Marketplace intelligence,
         developer tools, a photo editor, a browser extension. Most are free and open source; a
         couple are commercial.
     </p>

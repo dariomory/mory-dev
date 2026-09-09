@@ -1,4 +1,6 @@
 ---
+import { AVAILABILITY_LABEL, AVAILABLE } from '../utils/identity';
+
 const path = Astro.url.pathname;
 
 // Deep pages keep their section lit: a project or contribution still lives under Works.
@@ -16,6 +18,21 @@ const isCurrent = (match: string[]) =>
 <div class="nav-bar">
     <div class="title-link">
         <a href="/" aria-current={path === '/' ? 'page' : undefined}>Dario Mory</a>
+        {/* Advisory hangs under the brand rather than joining the link row. Four
+            labels is what this nav carries before it looks stuffed, and the row is
+            a set of archives — things made — which an offer is not a member of. It
+            is a status about the person, so it belongs against the person's name,
+            in the column that was otherwise empty. AVAILABLE drives the wording and
+            the dot, so a booked calendar is one flag away rather than five edits. */}
+        <a
+            class="nav-status"
+            href="/advisory/"
+            data-available={String(AVAILABLE)}
+            aria-current={isCurrent(['/advisory']) ? 'page' : undefined}
+        >
+            <span class="status-dot" aria-hidden="true"></span>
+            {AVAILABILITY_LABEL}
+        </a>
     </div>
     <div class="nav-links">
         {links.map((link) => (
@@ -53,6 +70,53 @@ const isCurrent = (match: string[]) =>
     </div>
 </div>
 <style>
+    /* The brand becomes a two-line block: name, then status under it. A column
+       rather than a <br> so the mobile rule below only has to change the axis. */
+    .title-link {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        line-height: 1.2;
+    }
+
+    /* Scoped selectors are written as `.title-link .nav-status` so they outrank the
+       `.title-link a` rules in global.css, which otherwise hand this link Pacifico
+       at 1.1rem and the brand's teal underline on hover. */
+    .title-link .nav-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45em;
+        margin-top: 0.1rem;
+        font-family: 'Josefin Sans', sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+        color: #c9b8d8;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .title-link .nav-status:hover,
+    .title-link .nav-status[aria-current='page'] {
+        color: #78c2ad;
+        text-decoration: none;
+    }
+
+    /* Same dot as the status line on /advisory/, so the marker and the page it
+       leads to read as one statement. */
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #78c2ad;
+        flex-shrink: 0;
+        box-shadow: 0 0 0 2.5px rgba(120, 194, 173, 0.16);
+    }
+
+    .nav-status[data-available='false'] .status-dot {
+        background: #d9b45f;
+        box-shadow: 0 0 0 2.5px rgba(217, 180, 95, 0.16);
+    }
+
     /* A utility rather than a fifth section: smaller than the labels, set off by a
        hairline so its position at the end reads as deliberate instead of stranded. */
     .nav-about {
@@ -94,6 +158,11 @@ const isCurrent = (match: string[]) =>
     }
 
     @media only screen and (max-width: 600px) {
+        /* The brand is centred here, so the status centres under it too. */
+        .title-link {
+            align-items: center;
+        }
+
         .nav-about {
             min-height: 44px;
             padding: 0 0.5rem 0 0.7rem;

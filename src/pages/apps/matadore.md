@@ -5,6 +5,7 @@ seoTitle: 'matadore — attack-surface mapping toolkit (pre-alpha)'
 description: 'An early, design-stage Python toolkit for adversarial attack-surface reasoning. Models, planner and LLM client exist; scanning and reporting do not yet.'
 tagline: 'Security scanners give you a list. The aim here is a story.'
 order: 9
+kind: 'a pre-alpha attack-surface toolkit'
 status: 'Pre-alpha — not yet functional'
 image: { url: '/apps/matadore.png', alt: 'matadore logo' }
 appImage1: { url: '/apps/matadore-1.webp', alt: 'matadore intended high-level architecture' }

@@ -19,11 +19,11 @@ A proxy server acts as an intermediary between a client seeking a resource and t
 
 ## Why is a proxy useful?
 
-Proxies are invaluable for enhancing privacy, security, and control over internet traffic. By masking your IP address, proxies prevent target servers from discerning your real location, which is essential for bypassing geo-restrictions and accessing global content. In corporate environments, proxies enforce policy compliance and content filtering, while also monitoring and logging internet usage to ensure safe and efficient network operations. Additionally, for tasks like web scraping and data collection, proxies are indispensable as they help circumvent anti-scraping measures, allowing for uninterrupted data gathering.
+Proxies are invaluable for enhancing privacy, security, and control over internet traffic. By masking your IP address, proxies prevent target servers from discerning your real location, which is essential for bypassing geo-restrictions and accessing global content. In corporate environments, proxies enforce policy compliance and content filtering, while also monitoring and logging internet usage to ensure safe and efficient network operations — the HTTP specification calls this kind of hop a [forward proxy](https://www.rfc-editor.org/rfc/rfc9110.html#name-intermediaries), a message-forwarding agent chosen by the client rather than by the origin server. Additionally, for tasks like web scraping and data collection, proxies are indispensable as they help circumvent anti-scraping measures, allowing for uninterrupted data gathering. The masking is a choice the proxy makes, though, not a guarantee: [RFC 7239](https://www.rfc-editor.org/rfc/rfc7239.html) defines a `Forwarded` header for exactly the purpose of passing the original client address along, and plenty of proxies still send the older `X-Forwarded-For`.
 
 ## How does it compare with a VPN?
 
-While both proxies and VPNs (Virtual Private Networks) serve to mask your IP address and protect your identity, there are key differences. A VPN encrypts all your internet traffic, providing a higher level of security, especially over insecure networks like public Wi-Fi. VPNs are more suited for users seeking privacy and security as they shield all online activities, not just those directed through a particular server as proxies do. On the other hand, proxies are generally faster and more flexible, specifically tailored to bypassing geo-restrictions and handling specific tasks like web scraping without the overhead of encryption. Thus, the choice between a proxy and a VPN often depends on your specific needs for security, privacy, and functionality.
+While both proxies and VPNs (Virtual Private Networks) serve to mask your IP address and protect your identity, there are key differences. A VPN encrypts all your internet traffic, providing a higher level of security, especially over insecure networks like public Wi-Fi. VPNs are more suited for users seeking privacy and security as they shield all online activities, not just those directed through a particular server as proxies do. On the other hand, proxies are generally faster and more flexible, specifically tailored to bypassing geo-restrictions and handling specific tasks like web scraping without the overhead of encryption. The mechanics differ too: a proxy carrying HTTPS normally just tunnels it, with the client issuing a [`CONNECT`](https://www.rfc-editor.org/rfc/rfc9110.html#name-connect) request and the proxy relaying bytes it cannot read, so it learns the destination host but not the payload. Thus, the choice between a proxy and a VPN often depends on your specific needs for security, privacy, and functionality.
 
 ## Categorizing Proxies by Origin: Choose the Right Tool for the Job
 
@@ -33,11 +33,11 @@ While both proxies and VPNs (Virtual Private Networks) serve to mask your IP add
 
 **Residential Proxies:** Residential Proxies use real internet connections, making them hard to detect and perfect for bypassing geo-restrictions and anti-bot measures. They excel in activities that need high anonymity, like market research or ad verification.
 
-**Mobile Proxies:** Mobile Proxies leverage IPs from mobile devices, utilizing CGNAT technology to share IPs across multiple devices. This sharing makes them tough to block, ideal for emulating mobile user actions and testing across different locales.
+**Mobile Proxies:** Mobile Proxies leverage IPs from mobile devices, utilizing [CGNAT](https://www.rfc-editor.org/rfc/rfc6598.html) technology to share IPs across multiple devices. This sharing makes them tough to block, ideal for emulating mobile user actions and testing across different locales.
 
 ## Using a Proxy with Python
 
-We can illustrate the simple usage of a proxy on a high-level utilizing the requests library, a widely used module for executing HTTP requests.
+We can illustrate the simple usage of a proxy on a high-level utilizing the [requests library](https://requests.readthedocs.io/en/latest/user/advanced/#proxies), a widely used module for executing HTTP requests.
 
 ```python
 import requests

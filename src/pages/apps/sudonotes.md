@@ -5,6 +5,7 @@ seoTitle: 'sudonotes — a local-first notebook for AI prompts and ideas'
 description: 'A local-first Markdown notebook for the AI prompts you keep rewriting and the ideas behind them. Plain files in a folder you own. Free and MIT licensed.'
 tagline: 'Organize your prompts and ideas.'
 order: 3
+kind: 'a local-first notebook for AI prompts'
 status: 'Shipped — v0.4.0, early'
 image: { url: '/apps/sudonotes.png', alt: 'sudonotes logo' }
 appImage1: { url: '/apps/sudonotes-1.webp', alt: 'sudonotes editor' }

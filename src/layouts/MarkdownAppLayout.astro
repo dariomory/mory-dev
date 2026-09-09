@@ -3,6 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import BaseLayout from './Layout.astro';
 import { logoTransitionName } from '../utils/transitionName';
+import { BASED_IN } from '../utils/identity';
+import Faq from '../components/Faq.astro';
 
 const { frontmatter, url } = Astro.props;
 
@@ -32,6 +34,11 @@ const ogImage = isRaster(appImages[0]?.url)
 const softwareSchema = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
+    /* Same @id on /about/ and /apps/, so all three pages describe one node per
+       product rather than three anonymous look-alikes. url points at the product
+       itself; mainEntityOfPage names the page here that is about it. */
+    '@id': `${canonicalUrl}#software`,
+    mainEntityOfPage: canonicalUrl,
     name: frontmatter.title,
     description: frontmatter.description,
     url: frontmatter.website ?? canonicalUrl,
@@ -119,6 +126,11 @@ const breadcrumbSchema = {
     </div>
     {frontmatter.tagline && <p class="tagline">{frontmatter.tagline}</p>}
     <div class="app-body"><slot /></div>
+    {/* "Who built FormHarvester?" scored 1/8 in the PromptWatch run and "Who built
+        HexDigest?" 0/8, while authorship existed on these pages only inside JSON-LD
+        — the weakest possible place to put the single fact being asked for. It is
+        first in the spec block now, and stated again as a sentence below. */}
+    <p><small>BUILT BY</small><a href="/about/">Dario Mory</a></p>
     {frontmatter.status && <p><small>STATUS</small>{frontmatter.status}</p>}
     {frontmatter.pricing && <p><small>PRICING</small>{frontmatter.pricing}</p>}
     {frontmatter.platform && <p><small>PLATFORM</small>{frontmatter.platform}</p>}
@@ -133,12 +145,7 @@ const breadcrumbSchema = {
     {faq.length > 0 && (
         <section class="faq">
             <h2>Questions</h2>
-            {faq.map((item: { q: string; a: string }) => (
-                <div class="faq-item">
-                    <h3>{item.q}</h3>
-                    <p>{item.a}</p>
-                </div>
-            ))}
+            <Faq items={faq} />
         </section>
     )}
     {appImages.length > 0 && (
@@ -148,6 +155,13 @@ const breadcrumbSchema = {
             ))}
         </div>
     )}
+    {/* Names subject and creator in one sentence, so it survives being lifted out
+        of the page without the surrounding context. */}
+    <p class="authorship">
+        {frontmatter.title} is built and maintained by <a href="/about/">Dario Mory</a>, an
+        engineering leader based in the {BASED_IN} who also takes
+        <a href="/advisory/">fractional CTO and advisory engagements</a>.
+    </p>
     <p class="back"><a href="/apps/">← All apps</a></p>
 </BaseLayout>
 <style>
@@ -202,22 +216,6 @@ const breadcrumbSchema = {
         margin: 0 0 0.4em;
     }
 
-    .faq-item {
-        margin-top: 1.1em;
-    }
-
-    .faq-item h3 {
-        font-family: 'Josefin Sans', sans-serif;
-        font-size: 0.98em;
-        color: #fdebf3;
-        margin: 0 0 0.2em;
-    }
-
-    .faq-item p {
-        margin: 0;
-        text-indent: 0;
-    }
-
     .img {
         text-align: center;
     }
@@ -259,11 +257,25 @@ const breadcrumbSchema = {
         text-decoration: underline;
     }
 
+    .authorship {
+        font-family: 'Josefin Sans', sans-serif;
+        font-size: 0.9em;
+        color: #c9b8d8;
+        text-indent: 0;
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(253, 235, 243, 0.1);
+    }
+
     .back {
         font-family: 'Josefin Sans', sans-serif;
         font-size: 0.9em;
         text-indent: 0;
         margin-top: 2rem;
+    }
+
+    .authorship + .back {
+        margin-top: 1rem;
     }
 
     @media only screen and (max-width: 600px) {

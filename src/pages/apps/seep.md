@@ -5,6 +5,7 @@ seoTitle: 'Seep — learn 28 languages while you browse'
 description: 'A Chrome extension that quietly translates words inline as you read, so you absorb a language while browsing normally. 28 languages, free, no account needed.'
 tagline: 'Learn languages while you browse.'
 order: 5
+kind: 'a browser extension that teaches a language while you read'
 status: 'Shipped — v2.0.0 on the Chrome Web Store'
 image: { url: '/apps/seep.png', alt: 'Seep logo' }
 appImage1: { url: '/apps/seep-1.webp', alt: 'Seep translating words inline on a webpage, with the language and difficulty picker open' }

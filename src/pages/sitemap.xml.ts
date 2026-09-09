@@ -47,6 +47,7 @@ export async function GET(context: { site: URL }) {
 	const urls = [
 		urlEntry(toUrl(site, '/')),
 		urlEntry(toUrl(site, '/about/')),
+		urlEntry(toUrl(site, '/advisory/')),
 		urlEntry(toUrl(site, '/apps/')),
 		urlEntry(toUrl(site, '/works/')),
 		urlEntry(toUrl(site, '/books/')),

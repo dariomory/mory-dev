@@ -5,6 +5,7 @@ seoTitle: 'FormHarvester — web discovery and contact form automation'
 description: 'Open-source form intelligence engine. Searches the web, extracts public contact signals, detects site technologies and fills contact forms in a real browser.'
 tagline: 'Find business websites, read their contact pages, and work their forms.'
 order: 2
+kind: 'a form intelligence engine'
 status: 'Shipped — v3.0.0'
 image: { url: '/apps/formharvester.png', alt: 'FormHarvester logo' }
 appImage1: { url: '/apps/formharvester-1.webp', alt: 'FormHarvester desktop app' }

@@ -5,6 +5,8 @@ seoTitle: 'HexDigest — daily marketplace intelligence datasets'
 description: 'Daily price, rating and listing data from Gumroad, the Chrome Web Store and the Shopify App Store. Free preview, full datasets as a one-time purchase.'
 tagline: 'Every listing, priced and tracked.'
 order: 1
+kind: 'daily marketplace intelligence datasets'
+commercial: true
 status: 'In production — trackers refresh daily'
 image: { url: '/apps/hexdigest.svg', alt: 'HexDigest logo' }
 appImage1: { url: '/apps/hexdigest-1.webp', alt: 'HexDigest — multi-platform market intelligence' }

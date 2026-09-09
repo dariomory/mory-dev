@@ -28,8 +28,8 @@ about public services findable, current, and available in a second language, so 
 or business from one member state can work out how to do something in another — register a
 company, apply for a licence, enrol a child in school.
 
-In the Netherlands that obligation lands on hundreds of individual bodies. Every municipality,
-province and water authority holds its own version of the same product descriptions, in its own
+In the Netherlands that obligation lands on every municipality, province and water authority in
+the country. Each of them holds its own version of the same product descriptions, in its own
 words, on its own schedule. Meeting the regulation nationally meant getting all of them
 producing information uniform enough to be aggregated and reused, without asking each one to
 become a publishing operation.

@@ -5,6 +5,7 @@ seoTitle: 'Shopify for GitHub — commerce context in GitHub issues'
 description: 'A GitHub App that keeps one comment per issue carrying verified product, theme and order references from the connected store. Currently in beta.'
 tagline: 'Commerce context for GitHub issues.'
 order: 8
+kind: 'a GitHub App carrying commerce context into issues'
 status: 'Beta — awaiting app review'
 image: { url: '/apps/shopify-for-github.png', alt: 'Shopify for GitHub logo' }
 appImage1: { url: '/apps/shopify-for-github-1.webp', alt: 'The Shopify for GitHub landing page' }
