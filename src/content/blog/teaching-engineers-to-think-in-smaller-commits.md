@@ -43,10 +43,6 @@ Changing how you view commits alters nearly every aspect of how you develop. Ren
 
 Providing engineers with new mindsets is insufficient. Engineers require tangible tools/methodologies for decomposing their work.
 
-## Get Dario Mory’s stories in your inbox
-
-Remember me for faster sign in
-
 **Think backwards** . Prior to developing any code, define what the final pull request should look like. Next, find the smallest subset of code that allows the feature/pull request to be developed independently and use this subset as a starting point.
 
 Do not attempt to refactor and add behavioral features in the same commit. Refactor the necessary areas of code prior to adding new features. By implementing this singular principle, you eliminate approximately half of all oversized commits.
@@ -57,13 +53,13 @@ Commit before falling down the rabbit hole. As soon as you believe you should al
 
 ## Measuring progress
 
-What you cannot measure, you cannot improve. Measure the average size of code committed by each developer over time. Average lines changed per commit is simple, yet directionally correct. Average files affected per commit provides additional clarity.
+What you cannot measure, you cannot improve. Measure the average size of code committed by each developer over time. Average lines changed per commit is simple, yet directionally correct. Average files affected per commit provides additional clarity. Batch size sits behind the delivery measures in [DORA's software delivery performance metrics](https://dora.dev/guides/dora-metrics-four-keys/) too, which is a useful cross-check when commit size starts to look like a vanity number.
 
-However, reviewing and measuring the amount of time required to review changes will provide far greater insight. Smaller commits are typically reviewed much faster. When developers realize that their small changes are being merged in hours, while larger changes remain outstanding for days, natural alignment occurs.
+However, reviewing and measuring the amount of time required to review changes will provide far greater insight. Smaller commits are typically reviewed much faster, and [Google's engineering practices guide](https://google.github.io/eng-practices/review/developer/small-cls.html) makes the mechanism explicit: a reviewer can find five minutes several times over for a small change, but has to schedule a block of time for a large one. Google's own [study of code review across the company](https://research.google/pubs/modern-code-review-a-case-study-at-google/) found the same pull toward small, frequent changes at scale. When developers realize that their small changes are being merged in hours, while larger changes remain outstanding for days, natural alignment occurs.
 
 ## Debugging
 
-With smaller commits, in cases where a change causes a failure, you can quickly identify the specific change that caused the issue. With a 47 file commit, bisect simply indicates that the problem occurred somewhere within that group of files.
+With smaller commits, in cases where a change causes a failure, you can quickly identify the specific change that caused the issue. [`git bisect`](https://git-scm.com/docs/git-bisect) does a binary search through history to find the commit that introduced a bug, so its precision is bounded by how large your commits are. With a 47 file commit, bisect simply indicates that the problem occurred somewhere within that group of files.
 
 In addition, working with smaller commits improves your ability to debug issues yourself. By isolating the exact change(s) that cause unexpected behavior, you gain a better understanding of how the system works. The discipline imposed by committing small units of code enhances your thinking regarding dependency relationships and potential side effects.
 
@@ -74,10 +70,6 @@ The initial excitement dissipates. Deadlines place pressure. Old ways of working
 Supportive environments help sustain practices. Do not penalize engineers for occasional relapses. No-one maintains perfect commit hygiene when deadlines loom. The objective is to establish small commits as the default approach, not as an inviolable rule.
 
 > Recognition encourages repetition.
-
->
-
->
 
 Success is demonstrated when engineers revert to using small commits after a high-pressure development period.
 
