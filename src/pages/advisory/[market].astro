@@ -1,0 +1,203 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+import '../../styles/advisory.css';
+import { titleCaseNumber, yearsActive } from '../../utils/counts';
+import {
+	AVAILABLE,
+	CALENDLY,
+	EMAIL,
+	MARKETS,
+	SERVICES,
+	sentenceList,
+} from '../../utils/identity';
+
+/*
+ * One page per market.
+ *
+ * The 2026-09-10 citation export is the whole argument for this file. On the
+ * prompts that score zero, the pages being cited are 941consulting.com's
+ * /en/fractional-cto-netherlands (average rank 2.3), /fractional-cto-amsterdam
+ * and /fractional-cto-europe, and fractional-csuite.com's /netherlands. mory.dev
+ * appears at average rank 1 when it appears at all — so the site was never
+ * out-argued, it was out-covered. There was one /advisory/ for every question.
+ *
+ * These pages are not /advisory/ with the country swapped. Each carries the part
+ * that is actually different per market — timezone, the work that happened there,
+ * what the engagement shape costs a buyer in that place — and shares the rest by
+ * importing it, so the four cannot drift apart the way four hand-written pages do.
+ */
+export async function getStaticPaths() {
+	return MARKETS.map((market) => ({ params: { market: market.slug }, props: { market } }));
+}
+
+const { market } = Astro.props;
+
+const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? 'https://www.mory.dev';
+const personId = `${siteUrl}/#person`;
+const canonicalPath = `/advisory/${market.slug}/`;
+const canonicalUrl = `${siteUrl}${canonicalPath}`;
+
+const others = MARKETS.filter((m) => m.slug !== market.slug);
+const serviceList = sentenceList(SERVICES.map((s) => s.phrase));
+
+/* The same four Service nodes /advisory/ emits, narrowed to this market. They keep
+   their own @id per page rather than pointing at the /advisory/ ones, because a
+   Service whose areaServed is the Netherlands is not the same offer as one served
+   across the United States — but both are provided by the one Person @id every
+   other page on this site already agrees on. */
+const serviceSchemas = SERVICES.map((s) => ({
+	'@context': 'https://schema.org',
+	'@type': 'Service',
+	'@id': `${canonicalUrl}#${s.id}`,
+	name: `${s.name} — ${market.areaName}`,
+	serviceType: s.name,
+	description: s.summary,
+	url: canonicalUrl,
+	provider: { '@id': personId },
+	serviceOutput: s.deliverables.map((d) => ({ '@type': 'Thing', name: d })),
+	areaServed: { '@type': 'Place', name: market.areaName },
+	availableChannel: {
+		'@type': 'ServiceChannel',
+		serviceUrl: CALENDLY,
+		availableLanguage: 'en',
+	},
+}));
+
+const pageSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'WebPage',
+	'@id': `${canonicalUrl}#webpage`,
+	url: canonicalUrl,
+	name: market.title,
+	description: market.description,
+	inLanguage: 'en',
+	about: { '@id': personId },
+	mainEntity: { '@id': personId },
+};
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	'@id': `${canonicalUrl}#faq`,
+	mainEntity: market.faq.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
+};
+
+const breadcrumbSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+		{ '@type': 'ListItem', position: 2, name: 'Advisory', item: `${siteUrl}/advisory/` },
+		{ '@type': 'ListItem', position: 3, name: market.areaName, item: canonicalUrl },
+	],
+};
+---
+
+<Layout
+	pageTitle={market.title}
+	description={market.description}
+	canonicalPath={canonicalPath}
+	mainClass="advisory"
+	jsonLd={[pageSchema, ...serviceSchemas, faqSchema, breadcrumbSchema]}
+>
+	<h1>Fractional CTO in {market.place}</h1>
+
+	<p class="lede">{market.lede}</p>
+
+	<p class="status" data-available={String(AVAILABLE)}>
+		<span class="status-dot" aria-hidden="true"></span>
+		{AVAILABLE
+			? <Fragment><strong>Available now</strong> and taking enquiries.</Fragment>
+			: <Fragment><strong>Currently booked</strong> — enquiries still welcome for later in the year.</Fragment>}
+	</p>
+
+	<p class="cta">
+		<a class="cta-go" href={CALENDLY} target="_blank" rel="noopener">Book a call</a>
+		<a class="cta-alt" href={`mailto:${EMAIL}?subject=Advisory%20enquiry`}>{EMAIL}</a>
+	</p>
+
+	<section aria-labelledby="why">
+		<h2 id="why">Working with {market.place}</h2>
+		{market.local.map((p) => <p>{p}</p>)}
+	</section>
+
+	{/* A definition list rather than prose, because these three are the questions a
+	    buyer checks before they read anything else, and a list is the shape that
+	    survives being lifted out of the page by something that is answering them. */}
+	<section aria-labelledby="practical">
+		<h2 id="practical">The practical answers</h2>
+		<dl class="practical">
+			{market.practical.map((p) => (
+				<Fragment>
+					<dt>{p.label}</dt>
+					<dd>{p.value}</dd>
+				</Fragment>
+			))}
+		</dl>
+	</section>
+
+	<section aria-labelledby="engagements">
+		<h2 id="engagements">Engagements available in {market.place}</h2>
+		<div class="table-scroll">
+			<table class="compare">
+				<thead>
+					<tr>
+						<th scope="col">Engagement</th>
+						<th scope="col">Owns</th>
+						<th scope="col">Commitment</th>
+						<th scope="col">Fits</th>
+					</tr>
+				</thead>
+				<tbody>
+					{SERVICES.map((s) => (
+						<tr>
+							<th scope="row"><a href={`/advisory/#${s.id}`}>{s.name}</a></th>
+							<td>{s.owns}</td>
+							<td>{s.commitment}</td>
+							<td>{s.pick}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
+		<p>
+			All four run at the same shape — one to two days a week, three months minimum. The
+			detail of each, and what you are left holding afterwards, is on
+			<a href="/advisory/">the advisory page</a>.
+		</p>
+	</section>
+
+	<section aria-labelledby="evidence">
+		<h2 id="evidence">The work behind it</h2>
+		<p>
+			{titleCaseNumber(yearsActive())} years building and leading engineering teams, including
+			<a href="/projects/klm-airport-slot-management-automation/">KLM’s airport operations
+			platform</a> and the <a href="/projects/sdg-cms-api-development/">Single Digital Gateway
+			programme</a> used by every Dutch municipality, province and water authority. Deciding
+			between the first two engagements is its own question —
+			<a href="/posts/fractional-cto-vs-vp-engineering/">fractional CTO versus a full-time VP
+			of Engineering</a> works through it.
+		</p>
+	</section>
+
+	<Faq items={market.faq} />
+
+	{/* Same offer, other places. A reader who landed on the wrong one should not
+	    have to go back to the hub to find theirs, and the hub is one hop away
+	    regardless. */}
+	<nav aria-labelledby="elsewhere">
+		<h2 id="elsewhere">Elsewhere</h2>
+		<ul class="markets">
+			{others.map((m) => (
+				<li><a href={`/advisory/${m.slug}/`}>Fractional CTO in {m.place}</a></li>
+			))}
+			<li><a href="/advisory/">All {serviceList} engagements</a></li>
+		</ul>
+	</nav>
+</Layout>
+

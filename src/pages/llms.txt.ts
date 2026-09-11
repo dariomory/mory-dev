@@ -8,6 +8,7 @@ import {
 	EMAIL,
 	FROM,
 	JOB_TITLE,
+	MARKETS,
 	PROFILES,
 	SERVICES,
 	aboutFaq,
@@ -97,6 +98,7 @@ ${
 ${SERVICES.map((s) => `- ${s.name}: ${s.summary} Shape: ${s.shape} Fits: ${s.fit}`).join('\n')}
 
 ${line('Engineering advisory', `${site}/advisory/`, 'engagements, availability and how to start')}
+${MARKETS.map((m) => line(m.title.split(' — ')[0], `${site}/advisory/${m.slug}/`, m.practical[0].value)).join('\n')}
 Book a call: ${CALENDLY}
 
 ${advisory.map((f) => `### ${f.q}\n\n${f.a}`).join('\n\n')}

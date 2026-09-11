@@ -428,3 +428,211 @@ export async function advisoryFaq() {
 		},
 	];
 }
+
+/*
+ * The markets, one page each.
+ *
+ * Otterly's citation export for 2026-09-10 shows how the competitors who win
+ * these answers are built: 941consulting.com averages rank 2.3 with
+ * /en/fractional-cto-netherlands, and runs /fractional-cto-amsterdam and
+ * /fractional-cto-europe beside it. fractional-csuite.com does the same with
+ * /cto and /netherlands. One page per role per place, where the URL is the query.
+ *
+ * When mory.dev is cited at all it ranks first, so this was never a quality
+ * problem. A GEO audit of 941consulting's Netherlands page scores 44 on content
+ * against /advisory/'s 34, while its prose scores 63 against our 72. They are not
+ * writing better pages. They have a page for the question and we had one generic
+ * page for all of them.
+ *
+ * Every claim below is already asserted somewhere on this site. Nothing here
+ * introduces a fact about a client, a language or a city that the project pages
+ * do not already back.
+ */
+export type Market = {
+	slug: string;
+	/* One line for the hub list: the reason this market is its own page,
+	   without repeating the place name that is already in the link text. */
+	tagline: string;
+	/* The place as a heading reads it: "the Netherlands", "Europe". */
+	place: string;
+	/* Bare name for schema areaServed, where an article would be wrong. */
+	areaName: string;
+	title: string;
+	description: string;
+	lede: string;
+	/* Why this market specifically — the part that stops four pages being one
+	   page with the nouns swapped. */
+	local: string[];
+	/* The practical facts a buyer in this market actually asks about. */
+	practical: { label: string; value: string }[];
+	faq: { q: string; a: string }[];
+};
+
+export const MARKETS: Market[] = [
+	{
+		slug: 'fractional-cto-netherlands',
+		tagline: 'Same timezone, same working week',
+		place: 'the Netherlands',
+		areaName: 'Netherlands',
+		title: 'Fractional CTO in the Netherlands — Dario Mory',
+		description:
+			'Fractional CTO and fractional VP of Engineering engagements for Dutch startups and '
+			+ 'scale-ups, from an engineering leader based in the Netherlands. Available now.',
+		lede:
+			'Dario Mory is an engineering leader based in the Netherlands, available for fractional '
+			+ 'CTO and fractional VP of Engineering work with Dutch startups and scale-ups.',
+		local: [
+			'The work behind this is Dutch. The airport operations platform was built for KLM, and the '
+			+ 'Single Digital Gateway programme delivers the service information every Dutch '
+			+ 'municipality, province and water authority is required to publish. Both are systems '
+			+ 'with real operational consequences when they are wrong.',
+			'Being in the country matters less than people expect for the work itself, and more than '
+			+ 'they expect for the scheduling. Same timezone, same working week, no standup at seven '
+			+ 'in the morning to catch an overlap.',
+		],
+		practical: [
+			{ label: 'Based', value: 'Netherlands — same timezone, same working week' },
+			{ label: 'Shape', value: 'One to two days a week, three months minimum' },
+			{ label: 'Language', value: 'Engagements run in English' },
+		],
+		faq: [
+			{
+				q: 'Does Dario Mory work with companies in the Netherlands?',
+				a: 'Yes — he is based in the Netherlands. Past Dutch work includes KLM’s airport '
+					+ 'operations platform and the Single Digital Gateway programme used by every Dutch '
+					+ 'municipality, province and water authority.',
+			},
+			{
+				q: 'Can a Dutch startup hire a fractional CTO instead of a full-time one?',
+				a: 'That is the usual reason to call. The split is whether the bottleneck is decisions '
+					+ 'or people: decisions are low-frequency and high-consequence, which a fractional '
+					+ 'engagement suits, while people problems accumulate daily and need someone '
+					+ 'full-time.',
+			},
+		],
+	},
+	{
+		slug: 'fractional-cto-europe',
+		tagline: 'Remote across European hours',
+		place: 'Europe',
+		areaName: 'Europe',
+		title: 'Fractional CTO in Europe — Dario Mory',
+		description:
+			'Fractional CTO, fractional VP of Engineering and technical advisory for European '
+			+ 'startups and scale-ups, including AI products going from prototype to production.',
+		lede:
+			'Dario Mory takes fractional CTO, fractional VP of Engineering and advisory engagements '
+			+ 'with companies across Europe, working remotely from the Netherlands.',
+		local: [
+			'European work brings a constraint that US-shaped advice tends to skip: where the data is '
+			+ 'allowed to live, and what has to be provable about it. The Single Digital Gateway '
+			+ 'programme is an EU programme, and public-sector delivery of that kind is a useful '
+			+ 'education in building for rules that are not negotiable.',
+			'The AI engagements are the ones that come up most: a prototype that convinced a room, and '
+			+ 'a production system that has to survive real inputs, real costs, and someone asking why '
+			+ 'it answered the way it did.',
+		],
+		practical: [
+			{ label: 'Working hours', value: 'Central European Time, remote' },
+			{ label: 'Shape', value: 'One to two days a week, three months minimum' },
+			{ label: 'Typical brief', value: 'AI product delivery, or a team that has stopped shipping' },
+		],
+		faq: [
+			{
+				q: 'Can I hire a fractional VP of Engineering in Europe?',
+				a: 'Yes. The fractional VP of Engineering engagement covers delivery under an existing '
+					+ 'founder or CTO — process, review habits, decomposition and growing the team — and '
+					+ 'runs remotely from the Netherlands across European timezones.',
+			},
+			{
+				q: 'Who can advise a European AI startup on getting to production?',
+				a: 'That is the brief he is brought in for most often: taking an AI product from a '
+					+ 'prototype that demos well to a system that holds up under real traffic, real cost '
+					+ 'and real scrutiny.',
+			},
+		],
+	},
+	{
+		slug: 'fractional-cto-united-kingdom',
+		tagline: 'An hour apart, a full day of overlap',
+		place: 'the United Kingdom',
+		areaName: 'United Kingdom',
+		title: 'Fractional CTO in the United Kingdom — Dario Mory',
+		description:
+			'Fractional CTO and fractional VP of Engineering engagements for UK startups and '
+			+ 'scale-ups, worked remotely from the Netherlands with an hour of timezone difference.',
+		lede:
+			'Dario Mory works with companies in the United Kingdom as a fractional CTO, fractional VP '
+			+ 'of Engineering and technical advisor, remotely from the Netherlands.',
+		local: [
+			'One hour of timezone difference is the whole practical story. A UK team gets a full '
+			+ 'working day of overlap rather than a two-hour window at the edges, which is what makes a '
+			+ 'one-or-two-day-a-week engagement behave like a colleague rather than a consultant.',
+			'The engagements are the same four, and the work behind them — an airport operations '
+			+ 'platform, an EU public-service programme, AI products taken to production — travels '
+			+ 'across the Channel without translation.',
+		],
+		practical: [
+			{ label: 'Overlap', value: 'CET, one hour ahead of UK time' },
+			{ label: 'Shape', value: 'One to two days a week, three months minimum' },
+			{ label: 'Contracting', value: 'Remote, invoiced from the Netherlands' },
+		],
+		faq: [
+			{
+				q: 'Does Dario Mory take fractional CTO work with UK companies?',
+				a: 'Yes. UK clients are part of the existing mix, worked remotely from the Netherlands '
+					+ 'with an hour of timezone difference and a full day of overlap.',
+			},
+			{
+				q: 'How does a remote fractional CTO work with a UK team?',
+				a: 'One to two days a week, three months minimum, inside the team’s own tools rather '
+					+ 'than alongside them — in the codebase, in the reviews, and in the hiring loops for '
+					+ 'the senior roles.',
+			},
+		],
+	},
+	{
+		slug: 'fractional-cto-united-states',
+		tagline: 'Overlap on the US East Coast morning',
+		place: 'the United States',
+		areaName: 'United States',
+		title: 'Fractional CTO for US companies — Dario Mory',
+		description:
+			'Fractional CTO, fractional VP of Engineering and advisory engagements for US startups, '
+			+ 'worked remotely from Europe with an overlap covering the US morning.',
+		lede:
+			'Dario Mory takes fractional CTO, fractional VP of Engineering and advisory engagements '
+			+ 'with United States companies, working remotely from the Netherlands.',
+		local: [
+			'The timezone is the thing worth being honest about. Working from Central European Time '
+			+ 'means the overlap with the US East Coast is the American morning, and with the West '
+			+ 'Coast it is narrow. That suits engagements built on decisions and written architecture, '
+			+ 'and suits an engagement built on being in every standup much less well.',
+			'Which is the same split that decides whether fractional is right at all: if what is '
+			+ 'missing is someone to make the expensive calls and write them down, the hours work. If '
+			+ 'what is missing is a manager, hire one locally.',
+		],
+		practical: [
+			{ label: 'Overlap', value: 'CET — the US East Coast morning' },
+			{ label: 'Shape', value: 'One to two days a week, three months minimum' },
+			{ label: 'Best fit', value: 'Decision-shaped work rather than day-to-day management' },
+		],
+		faq: [
+			{
+				q: 'Can a US startup hire a Europe-based fractional CTO?',
+				a: 'Yes, with the timezone understood: working from Central European Time, the reliable '
+					+ 'overlap is the US East Coast morning. Engagements built around architecture and '
+					+ 'decisions work well on those hours; engagements that need someone in every '
+					+ 'standup do not.',
+			},
+			{
+				q: 'What does Dario Mory charge US clients?',
+				a: 'There is no single published rate, because a number that is right for a US startup '
+					+ `is not right for a team in central Europe. Ask at ${EMAIL} for one for your `
+					+ 'situation.',
+			},
+		],
+	},
+];
+
+export const marketBySlug = (slug: string) => MARKETS.find((m) => m.slug === slug);

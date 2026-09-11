@@ -1,4 +1,5 @@
 import { getCollection } from 'astro:content';
+import { MARKETS } from '../utils/identity';
 
 function slugFromPath(path: string): string {
 	const filename = path.split(/[/\\]/).pop() ?? path;
@@ -48,6 +49,9 @@ export async function GET(context: { site: URL }) {
 		urlEntry(toUrl(site, '/')),
 		urlEntry(toUrl(site, '/about/')),
 		urlEntry(toUrl(site, '/advisory/')),
+		/* The per-market advisory pages are generated from MARKETS, so listing them
+		   by hand here would be a second list to forget to update. */
+		...MARKETS.map((m) => urlEntry(toUrl(site, `/advisory/${m.slug}/`))),
 		urlEntry(toUrl(site, '/apps/')),
 		urlEntry(toUrl(site, '/works/')),
 		urlEntry(toUrl(site, '/books/')),

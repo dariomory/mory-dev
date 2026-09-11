@@ -19,6 +19,11 @@ interface Props {
 	ogType?: string;
 	twitterCard?: 'summary' | 'summary_large_image';
 	jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
+	/* A class on <main>, so one section can share a stylesheet across its pages.
+	   /advisory/ and the market pages under it use this: Astro scopes a page's
+	   own <style> to that page, which is how the market pages ended up reusing
+	   the advisory class names with none of the rules attached to them. */
+	mainClass?: string;
 }
 
 const {
@@ -33,6 +38,7 @@ const {
 	ogType,
 	twitterCard,
 	jsonLd,
+	mainClass,
 } = Astro.props;
 ---
 <!DOCTYPE html>
@@ -69,7 +75,7 @@ const {
 	</head>
 	<body>
         <Header />
-        <main transition:animate={fade({ duration: '0.4s' })} >
+        <main class={mainClass} transition:animate={fade({ duration: '0.4s' })} >
 	    <slot />
             <Footer />
         </main>

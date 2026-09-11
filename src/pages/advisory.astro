@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Faq from '../components/Faq.astro';
+import '../styles/advisory.css';
 import { contentCounts, numberWord, titleCaseNumber, yearsActive } from '../utils/counts';
 import {
 	AREA_SERVED,
@@ -8,6 +9,7 @@ import {
 	BASED_IN,
 	CALENDLY,
 	EMAIL,
+	MARKETS,
 	SERVICES,
 	advisoryFaq,
 	sentenceList,
@@ -151,6 +153,7 @@ const evidence = [
 	pageTitle={pageTitle}
 	description={description}
 	canonicalPath="/advisory/"
+	mainClass="advisory"
 	jsonLd={[pageSchema, ...serviceSchemas, faqSchema, breadcrumbSchema]}
 >
 	<h1>Engineering advisory</h1>
@@ -264,6 +267,20 @@ const evidence = [
 		number. Ask and you will get one for your situation.
 	</p>
 
+	{/* The per-market pages. The citation export for 2026-09-10 showed the pages
+	    winning these answers are one-per-place — 941consulting.com runs a separate
+	    Netherlands, Amsterdam and Europe page — while this site had one page for
+	    every question. These are that coverage, and this is the hub they hang off. */}
+	<h2>By market</h2>
+	<ul class="markets">
+		{MARKETS.map((m) => (
+			<li>
+				<a href={`/advisory/${m.slug}/`}>Fractional CTO in {m.place}</a>
+				<span class="why">{m.tagline}</span>
+			</li>
+		))}
+	</ul>
+
 	<h2>Questions</h2>
 	<Faq items={faq} />
 
@@ -275,270 +292,3 @@ const evidence = [
 	</p>
 	<p class="back"><a href="/about/">More about Dario Mory →</a></p>
 </Layout>
-<style>
-	h1 {
-		font-size: 1.5em;
-		text-decoration: underline #375a7f;
-		text-decoration-thickness: 4px;
-		text-underline-offset: 6px;
-		margin: 0.83em 0 0;
-	}
-
-	h2 {
-		font-family: 'Josefin Sans', sans-serif;
-		font-size: 1.15em;
-		text-decoration: none;
-		color: #fdebf3;
-		margin: 2em 0 0;
-	}
-
-	.lede {
-		font-size: 1.05em;
-		color: #fdebf3;
-	}
-
-	/* The one line a hiring reader is looking for, so it gets a frame of its own
-	   rather than being a sentence inside a paragraph. */
-	.status {
-		display: flex;
-		align-items: center;
-		gap: 0.6em;
-		margin: 1.1em 0 0;
-		padding: 0.55em 0.9em;
-		border: 1px solid rgba(120, 194, 173, 0.28);
-		border-radius: 10px;
-		background: linear-gradient(160deg, rgba(120, 194, 173, 0.08), rgba(88, 73, 102, 0.12));
-		text-indent: 0;
-		text-align: left;
-		color: #fdebf3;
-	}
-
-	.status strong {
-		color: #78c2ad;
-	}
-
-	/* Booked reads amber rather than teal — a status line that keeps its "go"
-	   colour while saying the opposite is worse than no status line. */
-	.status[data-available='false'] {
-		border-color: rgba(217, 180, 95, 0.3);
-	}
-
-	.status[data-available='false'] strong {
-		color: #d9b45f;
-	}
-
-	.status[data-available='false'] .status-dot {
-		background: #d9b45f;
-		box-shadow: 0 0 0 3px rgba(217, 180, 95, 0.18);
-	}
-
-	.status-dot {
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-		background: #78c2ad;
-		flex-shrink: 0;
-		box-shadow: 0 0 0 3px rgba(120, 194, 173, 0.18);
-	}
-
-	.service,
-	.lead-block {
-		margin-top: 1.3em;
-	}
-
-	.engagement-note {
-		margin-top: 1.4em;
-		text-indent: 0;
-	}
-
-	.service h3,
-	.lead-block h3 {
-		font-family: 'Josefin Sans', sans-serif;
-		font-size: 0.98em;
-		color: #fdebf3;
-		margin: 0 0 0.25em;
-	}
-
-	.service p,
-	.lead-block p,
-	.evidence {
-		margin: 0 0 0.35em;
-		text-indent: 0;
-	}
-
-	.service-meta {
-		font-size: 0.9em;
-		color: #c9b8d8;
-	}
-
-	/* Hexagon bullets, same as the post lists and the work phases on /about/. */
-	.deliverables {
-		list-style: none;
-		margin: 0.15em 0 0;
-		padding: 0;
-	}
-
-	.deliverables li {
-		position: relative;
-		padding-left: 1.35em;
-		font-family: 'Josefin Sans', sans-serif;
-		font-size: 0.9em;
-		line-height: 1.5;
-		color: #c9b8d8;
-		text-align: left;
-	}
-
-	.deliverables li + li {
-		margin-top: 0.3em;
-	}
-
-	.deliverables li::before {
-		content: "";
-		position: absolute;
-		left: 0.15em;
-		top: 0.52em;
-		width: 6px;
-		height: 7px;
-		background: #78c2ad;
-		opacity: 0.8;
-		clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-	}
-
-	/* Two actions, the primary one filled. Dark text on the accent rather than
-	   teal-on-dark: at this size a filled button is the only thing on the page
-	   that should read as a control. */
-	.cta {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.6em;
-		margin: 1em 0 0;
-		text-indent: 0;
-	}
-
-	.cta a {
-		font-family: 'Josefin Sans', sans-serif;
-		font-size: 0.9em;
-		letter-spacing: 0.02em;
-		padding: 0.5em 1em;
-		border-radius: 8px;
-		text-decoration: none;
-		transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
-	}
-
-	.cta-go {
-		background: #78c2ad;
-		color: #14171c;
-		font-weight: 600;
-	}
-
-	.cta-go:hover {
-		background: #8fd3bf;
-		text-decoration: none;
-	}
-
-	.cta-alt {
-		border: 1px solid rgba(120, 194, 173, 0.4);
-		color: #78c2ad;
-	}
-
-	.cta-alt:hover {
-		border-color: #78c2ad;
-		background: rgba(120, 194, 173, 0.08);
-		text-decoration: none;
-	}
-
-	/* No min-width, so it fits the column instead of scrolling: the cells are the
-	   terse forms from SERVICES rather than the full sentences the blocks below
-	   use. overflow-x stays as a backstop for a long word, not as the normal case. */
-	.table-scroll {
-		margin: 1em 0 0.4em;
-		overflow-x: auto;
-		border: 1px solid rgba(120, 194, 173, 0.2);
-		border-radius: 10px;
-	}
-
-	.compare {
-		width: 100%;
-		border-collapse: collapse;
-		font-family: 'Josefin Sans', sans-serif;
-		font-size: 0.78em;
-		line-height: 1.4;
-		text-align: left;
-	}
-
-	.compare th,
-	.compare td {
-		padding: 0.5em 0.55em;
-		vertical-align: top;
-		text-align: left;
-		hyphens: auto;
-	}
-
-	.compare thead th {
-		font-size: 0.82em;
-		font-weight: 600;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: #c9b8d8;
-		background: rgba(88, 73, 102, 0.3);
-	}
-
-
-	.compare tbody tr + tr th,
-	.compare tbody tr + tr td {
-		border-top: 1px solid rgba(253, 235, 243, 0.08);
-	}
-
-	/* Not nowrap: "Fractional VP of Engineering" on one line is what forced the
-	   whole table wider than the column in the first place. */
-	.compare tbody th {
-		font-weight: 600;
-		color: #fdebf3;
-	}
-
-	.compare tbody td {
-		color: #c9b8d8;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.cta a {
-			transition: none;
-		}
-	}
-
-	/* Same purple chip as the STATUS/PRICING rows on the app pages, so a spec line
-	   reads the same wherever it appears on the site. */
-	.label {
-		background-color: #584966;
-		color: #fdebf3;
-		border-radius: 6px;
-		font-family: 'Josefin Sans', sans-serif;
-		font-size: 0.78em;
-		font-weight: 600;
-		margin-right: 0.5em;
-		padding: 0.2em 0.4em;
-		text-transform: uppercase;
-		letter-spacing: 0.04em;
-	}
-
-	.evidence {
-		margin-top: 0.9em;
-	}
-
-	.back {
-		font-family: 'Josefin Sans', sans-serif;
-		font-size: 0.9em;
-		text-indent: 0;
-		margin-top: 2rem;
-	}
-
-	a {
-		color: #78c2ad;
-		text-decoration: none;
-	}
-
-	a:hover {
-		text-decoration: underline;
-	}
-</style>

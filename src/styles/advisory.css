@@ -1,0 +1,343 @@
+/*
+ * Shared advisory styling.
+ *
+ * /advisory/ and the per-market pages under /advisory/<market>/ present the same
+ * furniture: the availability line, the two calls to action, the engagement
+ * comparison table and the hexagon-bullet lists. Astro scopes a component's
+ * <style> to that component, so the market pages reusing these class names
+ * rendered unstyled — a serif, unboxed status line and a bare table.
+ *
+ * These rules live here rather than in either page so both get them, and so the
+ * next page in this section does not start the same way. Only `p` and
+ * `.nav-links` pick up Josefin Sans from global.css, which is why every block
+ * below names the family itself.
+ */
+
+.advisory h1 {
+	font-size: 1.5em;
+	text-decoration: underline #375a7f;
+	text-decoration-thickness: 4px;
+	text-underline-offset: 6px;
+	margin: 0.83em 0 0;
+}
+
+.advisory h2 {
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: 1.15em;
+	text-decoration: none;
+	color: #fdebf3;
+	margin: 2em 0 0;
+}
+
+.advisory .lede {
+	font-size: 1.05em;
+	color: #fdebf3;
+}
+
+/* The one line a hiring reader is looking for, so it gets a frame of its own
+   rather than being a sentence inside a paragraph. */
+.advisory .status {
+	display: flex;
+	align-items: center;
+	gap: 0.6em;
+	margin: 1.1em 0 0;
+	padding: 0.55em 0.9em;
+	border: 1px solid rgba(120, 194, 173, 0.28);
+	border-radius: 10px;
+	background: linear-gradient(160deg, rgba(120, 194, 173, 0.08), rgba(88, 73, 102, 0.12));
+	text-indent: 0;
+	text-align: left;
+	color: #fdebf3;
+}
+
+.advisory .status strong {
+	color: #78c2ad;
+}
+
+/* Booked reads amber rather than teal — a status line that keeps its "go"
+   colour while saying the opposite is worse than no status line. */
+.advisory .status[data-available='false'] {
+	border-color: rgba(217, 180, 95, 0.3);
+}
+
+.advisory .status[data-available='false'] strong {
+	color: #d9b45f;
+}
+
+.advisory .status[data-available='false'] .status-dot {
+	background: #d9b45f;
+	box-shadow: 0 0 0 3px rgba(217, 180, 95, 0.18);
+}
+
+.advisory .status-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #78c2ad;
+	flex-shrink: 0;
+	box-shadow: 0 0 0 3px rgba(120, 194, 173, 0.18);
+}
+
+/* Two actions, the primary one filled. Dark text on the accent rather than
+   teal-on-dark: at this size a filled button is the only thing on the page
+   that should read as a control. */
+.advisory .cta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.6em;
+	margin: 1em 0 0;
+	text-indent: 0;
+}
+
+.advisory .cta a {
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: 0.9em;
+	letter-spacing: 0.02em;
+	padding: 0.5em 1em;
+	border-radius: 8px;
+	text-decoration: none;
+	transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.advisory .cta-go {
+	background: #78c2ad;
+	color: #14171c;
+	font-weight: 600;
+}
+
+.advisory .cta-go:hover {
+	background: #8fd3bf;
+	text-decoration: none;
+}
+
+.advisory .cta-alt {
+	border: 1px solid rgba(120, 194, 173, 0.4);
+	color: #78c2ad;
+}
+
+.advisory .cta-alt:hover {
+	border-color: #78c2ad;
+	background: rgba(120, 194, 173, 0.08);
+	text-decoration: none;
+}
+
+/* No min-width, so it fits the column instead of scrolling: the cells are the
+   terse forms from SERVICES rather than the full sentences the blocks below
+   use. overflow-x stays as a backstop for a long word, not as the normal case. */
+.advisory .table-scroll {
+	margin: 1em 0 0.4em;
+	overflow-x: auto;
+	border: 1px solid rgba(120, 194, 173, 0.2);
+	border-radius: 10px;
+}
+
+.advisory .compare {
+	width: 100%;
+	border-collapse: collapse;
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: 0.78em;
+	line-height: 1.4;
+	text-align: left;
+}
+
+.advisory .compare th,
+.advisory .compare td {
+	padding: 0.5em 0.55em;
+	vertical-align: top;
+	text-align: left;
+	hyphens: auto;
+}
+
+.advisory .compare thead th {
+	font-size: 0.82em;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: #c9b8d8;
+	background: rgba(88, 73, 102, 0.3);
+}
+
+.advisory .compare tbody tr + tr th,
+.advisory .compare tbody tr + tr td {
+	border-top: 1px solid rgba(253, 235, 243, 0.08);
+}
+
+/* Not nowrap: "Fractional VP of Engineering" on one line is what forced the
+   whole table wider than the column in the first place. */
+.advisory .compare tbody th {
+	font-weight: 600;
+	color: #fdebf3;
+}
+
+.advisory .compare tbody td {
+	color: #c9b8d8;
+}
+
+/* Hexagon bullets, same as the post lists and the work phases on /about/. */
+.advisory .deliverables,
+.advisory .markets {
+	list-style: none;
+	margin: 0.15em 0 0;
+	padding: 0;
+}
+
+.advisory .deliverables li,
+.advisory .markets li {
+	position: relative;
+	padding-left: 1.35em;
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: 0.9em;
+	line-height: 1.5;
+	color: #c9b8d8;
+	text-align: left;
+}
+
+.advisory .deliverables li + li,
+.advisory .markets li + li {
+	margin-top: 0.3em;
+}
+
+.advisory .deliverables li::before,
+.advisory .markets li::before {
+	content: "";
+	position: absolute;
+	left: 0.15em;
+	top: 0.52em;
+	width: 6px;
+	height: 7px;
+	background: #78c2ad;
+	opacity: 0.8;
+	clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+
+/* The market list carries a name and a one-line reason. The reason is dimmer and
+   on its own line from the phone width up, because the two run together into one
+   long dash-joined string otherwise — which is exactly how it read before. */
+.advisory .markets li {
+	margin-top: 0.55em;
+}
+
+.advisory .markets a {
+	font-weight: 600;
+	color: #fdebf3;
+}
+
+.advisory .markets a:hover {
+	color: #78c2ad;
+}
+
+.advisory .markets .why {
+	display: block;
+	color: #c9b8d8;
+	opacity: 0.85;
+}
+
+/* The three answers a buyer checks first. A definition list rather than prose,
+   and a two-column grid rather than the browser's indented default, which puts
+   the value a full line below a two-word term. */
+.advisory .practical {
+	display: grid;
+	grid-template-columns: max-content 1fr;
+	gap: 0.4em 1.1em;
+	margin: 0.9em 0 0;
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: 0.9em;
+	line-height: 1.5;
+}
+
+.advisory .practical dt {
+	font-weight: 600;
+	color: #fdebf3;
+}
+
+.advisory .practical dd {
+	margin: 0;
+	color: #c9b8d8;
+}
+
+/* Same purple chip as the STATUS/PRICING rows on the app pages, so a spec line
+   reads the same wherever it appears on the site. */
+.advisory .label {
+	background-color: #584966;
+	color: #fdebf3;
+	border-radius: 6px;
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: 0.78em;
+	font-weight: 600;
+	margin-right: 0.5em;
+	padding: 0.2em 0.4em;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.advisory a {
+	color: #78c2ad;
+	text-decoration: none;
+}
+
+.advisory a:hover {
+	text-decoration: underline;
+}
+
+@media (max-width: 30rem) {
+	.advisory .practical {
+		grid-template-columns: 1fr;
+		gap: 0.1em 0;
+	}
+
+	.advisory .practical dd {
+		margin-bottom: 0.7em;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.advisory .cta a {
+		transition: none;
+	}
+}
+
+/* Below here: the hub page's own blocks. They live in this file rather than in
+   advisory.astro so the section has one stylesheet instead of one plus a scoped
+   copy, which is the split that let the market pages render unstyled. */
+
+.advisory .service,
+.advisory .lead-block {
+	margin-top: 1.3em;
+}
+
+.advisory .engagement-note {
+	margin-top: 1.4em;
+	text-indent: 0;
+}
+
+.advisory .service h3,
+.advisory .lead-block h3 {
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: 0.98em;
+	color: #fdebf3;
+	margin: 0 0 0.25em;
+}
+
+.advisory .service p,
+.advisory .lead-block p,
+.advisory .evidence {
+	margin: 0 0 0.35em;
+	text-indent: 0;
+}
+
+.advisory .service-meta {
+	font-size: 0.9em;
+	color: #c9b8d8;
+}
+
+.advisory .evidence {
+	margin-top: 0.9em;
+}
+
+.advisory .back {
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: 0.9em;
+	text-indent: 0;
+	margin-top: 2rem;
+}
