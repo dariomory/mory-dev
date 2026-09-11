@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Newsletter from '../components/Newsletter.astro';
+import { BASED_IN } from '../utils/identity';
 const pageTitle = "Dario Mory — Engineering Leader, Speaker & Author";
 const description = "Engineering leader, speaker, and author focused on AI engineering and software leadership. Projects at KLM and the EU Single Digital Gateway.";
 ---
@@ -21,6 +22,12 @@ const description = "Engineering leader, speaker, and author focused on AI engin
     </div>
     <h1>Dario Mory</h1>
     <small>Engineering Leader</small>
+    {/* One sentence that says what he is and who it is for, so an answer engine
+        has something to quote without assembling it from three paragraphs. */}
+    <p class="tagline">
+        Dario Mory is a fractional CTO and engineering leader in the {BASED_IN} who helps
+        startups and scale-ups take software and AI-powered products from prototype to production.
+    </p>
     <h2>About</h2>
     <p>
         I build and lead engineering teams that ship software and AI-powered products-from prototype to production. Past work includes <a href="/projects/klm-airport-slot-management-automation/">KLM's airport operations stack</a>, the <a href="/projects/sdg-cms-api-development/">Single Digital Gateway programme</a> for Dutch and EU public services, and startups across Europe and the US.
@@ -28,10 +35,12 @@ const description = "Engineering leader, speaker, and author focused on AI engin
     <p>
         Code that ships, teams that grow-that's what matters. Cloud migrations, high-traffic APIs, and early-stage products taken to production are the kinds of problems that keep things interesting.
     </p>
+    <h2>Work with me</h2>
     <p>
         I'm available for <a href="/advisory/">fractional CTO, fractional VP of Engineering,
         advisory and consulting engagements</a> — remote, from the Netherlands.
     </p>
+    <h2>Speaking</h2>
     <p>
         I speak at conferences on AI engineering and software leadership. Organizing an event? <a href="mailto:dario@mory.dev?subject=Speaking%20inquiry">Get in touch</a>.
     </p>

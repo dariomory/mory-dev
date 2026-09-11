@@ -1,6 +1,6 @@
 ---
 title: 'Fractional CTO vs a Full-Time VP of Engineering'
-description: 'When a fractional CTO is the right hire, when a full-time VP of Engineering is, and the alternatives most comparisons leave out — from someone who takes fractional engagements and turns down the ones that should be full-time.'
+description: 'When a fractional CTO is the right hire, when a full-time VP of Engineering is, and the alternatives most comparisons leave out.'
 image: '/fractional-cto-vs-vp-engineering-thumbnail.webp'
 pubDate: 2026-09-10
 tags:

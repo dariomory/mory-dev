@@ -65,10 +65,17 @@ const breadcrumbSchema = {
             />
         </div>
     </div>
+    <h1>Works</h1>
+    <p class="intro">
+        Client projects and open-source contributions by Dario Mory, from
+        <a href="/projects/klm-airport-slot-management-automation/">KLM's airport operations stack</a> and
+        the <a href="/projects/sdg-cms-api-development/">EU Single Digital Gateway</a> to startups across
+        Europe and the US. Software released under mory.dev is listed separately in <a href="/apps/">Apps</a>.
+    </p>
     <h2>Contributions</h2>
     <ul role="list" class="link-card-grid">
-        {allContributions.map((card) => <Card 
-            url={card.url} 
+        {allContributions.map((card) => <Card
+            url={`${card.url}/`}
             image={card.frontmatter.image.url} 
             title={card.frontmatter.title} 
             body={card.frontmatter.description}
@@ -77,8 +84,8 @@ const breadcrumbSchema = {
     </ul>
     <h2>Projects</h2>
     <ul role="list" class="link-card-grid">
-        {allProjects.map((card) => <Card 
-            url={card.url} 
+        {allProjects.map((card) => <Card
+            url={`${card.url}/`}
             image={card.frontmatter.image.url} 
             title={card.frontmatter.title} 
             body={card.frontmatter.description}
@@ -86,3 +93,29 @@ const breadcrumbSchema = {
         />)}
     </ul>
 </Layout>
+<style>
+    h1 {
+        font-size: 1.8em;
+        text-decoration: underline #375a7f;
+        text-decoration-thickness: 4px;
+        text-underline-offset: 6px;
+        margin-top: 0;
+        margin-bottom: 0.6rem;
+    }
+
+    .intro {
+        text-indent: 0;
+        margin-bottom: 1.4rem;
+    }
+
+    .intro a {
+        color: #78c2ad;
+        text-decoration: none;
+    }
+
+    .intro a:hover,
+    .intro a:focus-visible {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+</style>

@@ -1,6 +1,7 @@
 ---
 layout: ../../layouts/MarkdownWorksLayout.astro
 title: 'Bettyblocks'
+seoTitle: 'Bettyblocks: Enterprise Low-Code Application Platform'
 description: 'Enterprise low-code / no-code application platform enabling rapid web application development.'
 image:
     url: '/bettyblocks.svg'

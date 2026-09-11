@@ -1,6 +1,6 @@
 ---
 title: 'How I Mapped Spotify''s Undocumented Endpoints'
-description: 'An exploration of Spotify''s internal API architecture - capturing traffic, reverse engineering Protocol Buffer schemas, and the cat-and-mouse reality of undocumented endpoints.'
+description: 'How Spotify''s internal API works: capturing traffic, reverse engineering Protocol Buffer schemas, and the cat-and-mouse of undocumented endpoints.'
 image: '/how-i-mapped-spotifys-undocumented-endpoints-thumbnail.webp'
 pubDate: 2026-04-25
 tags:

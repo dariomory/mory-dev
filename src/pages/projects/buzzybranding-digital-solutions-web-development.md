@@ -1,6 +1,7 @@
 ---
 layout: ../../layouts/MarkdownWorksLayout.astro
 title: 'Buzzybranding'
+seoTitle: 'Buzzybranding: Automated Lead Generation for an Agency'
 description: 'Digital branding agency providing web solutions and branding tools for businesses.'
 image:
     url: '/buzzybranding.png'

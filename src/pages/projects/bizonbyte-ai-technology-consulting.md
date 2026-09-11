@@ -1,6 +1,7 @@
 ---
 layout: ../../layouts/MarkdownWorksLayout.astro
 title: 'Bizonbyte'
+seoTitle: 'Bizonbyte: Website Platform for an AI Consultancy'
 description: 'The leading consulting company for AI and technology solutions in the Netherlands.'
 image:
     url: '/bizonbyte.png'

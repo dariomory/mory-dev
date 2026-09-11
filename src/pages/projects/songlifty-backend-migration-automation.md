@@ -1,6 +1,7 @@
 ---
 layout: ../../layouts/MarkdownWorksLayout.astro
 title: 'Songlifty'
+seoTitle: 'Songlifty: Backend Migration and Automation Tooling'
 description: 'Online music promotion company helping artists increase visibility across Spotify, YouTube, and social media platforms.'
 image:
     url: '/songlifty.png'

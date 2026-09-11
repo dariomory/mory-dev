@@ -1,6 +1,7 @@
 ---
 layout: ../../layouts/MarkdownWorksLayout.astro
 title: 'Artis'
+seoTitle: 'Artis: Timed-Entry Ticketing for Amsterdam''s Royal Zoo'
 description: 'Online booking and ticketing system for Artis Royal Zoo, handling reservations, capacity management, and visitor flow.'
 image:
     url: '/artis.png'

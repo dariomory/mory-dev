@@ -8,7 +8,10 @@ const { frontmatter, url } = Astro.props;
 const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? 'https://www.mory.dev';
 const canonicalPath = `${url}/`;
 const canonicalUrl = new URL(canonicalPath, siteUrl + '/').href;
-const pageTitle = `${frontmatter.title} — Dario Mory`;
+/* A client's name alone ("Artis — Dario Mory") says nothing about the work, so a
+   page can carry a longer seoTitle for the <title>. The card and the h1 keep the
+   plain name. */
+const pageTitle = `${frontmatter.seoTitle ?? frontmatter.title} — Dario Mory`;
 
 /* Contributions are changes to someone else's codebase; projects are delivered
    work. Different schema types, so a reader of the graph can tell them apart. */
